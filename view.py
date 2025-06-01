@@ -35,16 +35,36 @@ class View:
         self.root = root
         self.flt_tab = flt_tab
         self.chr_tab = chr_tab
-        self.flt_frame = []
-        self.chr_frame = []
+        self.flt_frames = []
+        self.chr_frames = []
         self.controller = controller
     
-    def add_filter(self, flt):
-        frame = ttk.Frame(self.flt_tab, relief = tk.GROOVE, border = 10)
-        label = ttk.Label(frame, text = flt)
-        label.pack()
-        frame.pack(fill = "x")
-        self.flt_frame.append(frame)
+    def add_filters(self, flt_list: list):
+        for flt in flt_list:
+            frame = ttk.Frame(self.flt_tab, relief = tk.GROOVE, border = 10)
+
+            lbl = []
+            lbl.append(ttk.Label(frame, text = "name:"))
+            lbl.append(ttk.Label(frame, text = "key:"))
+            lbl.append(ttk.Label(frame, text = "tooltip:"))
+            lbl.append(ttk.Label(frame, text = "checked:"))
+
+            txt = []
+            txt.append(ttk.Label(frame, text = flt["name"], justify = "left"))
+            txt.append(ttk.Label(frame, text = flt["key"], justify = "left"))
+            txt.append(ttk.Label(frame, text = flt.get("tooltip", ""),
+                      justify = "left"))
+            txt.append(ttk.Label(frame, text = flt.get("checked", ""),
+                      justify = "left"))
+            for i in range(len(lbl)):
+                lbl[i].grid(row = i, column = 0)
+                txt[i].grid(row = i, column = 1, sticky = "w")
+            frame.pack(fill = "x")
+            self.flt_frames.append(frame)
+    
+    def destroy_filters(self):
+        for frame in self.flt_frames:
+            frame.destroy()
 
     def start(self):
         self.root.mainloop()
