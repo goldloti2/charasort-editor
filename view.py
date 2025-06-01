@@ -42,13 +42,11 @@ class View:
     def add_filters(self, flt_list: list):
         for flt in flt_list:
             frame = ttk.Frame(self.flt_tab, relief = tk.GROOVE, border = 10)
-
             lbl = []
             lbl.append(ttk.Label(frame, text = "name:"))
             lbl.append(ttk.Label(frame, text = "key:"))
             lbl.append(ttk.Label(frame, text = "tooltip:"))
             lbl.append(ttk.Label(frame, text = "checked:"))
-
             txt = []
             txt.append(ttk.Label(frame, text = flt["name"], justify = "left"))
             txt.append(ttk.Label(frame, text = flt["key"], justify = "left"))
@@ -59,11 +57,32 @@ class View:
             for i in range(len(lbl)):
                 lbl[i].grid(row = i, column = 0)
                 txt[i].grid(row = i, column = 1, sticky = "w")
+            
             frame.pack(fill = "x")
             self.flt_frames.append(frame)
     
     def destroy_filters(self):
         for frame in self.flt_frames:
+            frame.destroy()
+    
+    def add_characters(self, chr_list: list):
+        for chr in chr_list:
+            frame = ttk.Frame(self.chr_tab, relief = tk.GROOVE, border = 10)
+            lbl = []
+            lbl.append(ttk.Label(frame, text = "name:"))
+            lbl.append(ttk.Label(frame, text = "img:"))
+            txt = []
+            txt.append(ttk.Label(frame, text = chr["name"], justify = "left"))
+            txt.append(ttk.Label(frame, text = chr["img"], justify = "left"))
+            for i in range(len(lbl)):
+                lbl[i].grid(row = i, column = 0)
+                txt[i].grid(row = i, column = 1, sticky = "w")
+            
+            frame.pack(fill = "x")
+            self.chr_frames.append(frame)
+    
+    def destroy_characters(self):
+        for frame in self.chr_frames:
             frame.destroy()
 
     def start(self):

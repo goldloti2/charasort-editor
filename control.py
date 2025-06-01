@@ -12,10 +12,15 @@ class Controller:
     def update_filters(self):
         self.window.destroy_filters()
         self.window.add_filters(self.model.flt_list)
+    
+    def update_characters(self):
+        self.window.destroy_characters()
+        self.window.add_characters(self.model.chr_list)
 
     def open_file(self, path = "test.js"):
         self.model = Model(path)
         self.update_filters()
+        self.update_characters()
 
 
 
