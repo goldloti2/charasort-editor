@@ -6,7 +6,6 @@ dataSet[dataSetVersion].options = [
     name: "Filter by Type",
     key: "type",
     tooltip: "Check this to restrict to characters attack type.",
-    checked: false,
     sub: [
       { name: "Glacio",  key: "glacio" },
       { name: "Fusion",  key: "fusion" },
