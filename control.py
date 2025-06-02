@@ -27,7 +27,18 @@ class Controller:
         self.window.refresh_filters(flt_list)
     
     def update_characters(self):
-        self.window.refresh_characters(self.model.chr_list)
+        chr_list = []
+        for chr in self.model.chr_list:
+            node = []
+            node.append(("label", "name:", chr["name"]))
+            node.append(("label", "img:", chr["img"]))
+            opts = [("filter key:", "option:")]
+            chr_opts = chr["opts"]
+            for opt in chr_opts:
+                opts.append((opt, chr_opts[opt]))
+            node.append(("sub_frame", "filter options:", opts))
+            chr_list.append(node)
+        self.window.refresh_characters(chr_list)
 
     def open_file(self, path = "test.js"):
         self.model = Model(path)

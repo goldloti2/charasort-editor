@@ -103,14 +103,13 @@ class View:
             c_type, label, content = attr
             if c_type == "label":
                 k_label = ttk.Label(frame, text = label)
-                c_label = ttk.Label(frame, text = content)
+                c_label = ttk.Label(frame, text = content, justify = "left")
                 k_label.grid(row = row, column = 0)
                 c_label.grid(row = row, column = 1, sticky = "w")
             elif c_type == "sub_frame":
                 sub_frame = ttk.Labelframe(frame, text = label,
                                            relief = tk.GROOVE, border = 10)
-                sub_frame.grid(row = row, column = 0,
-                               columnspan = 2, sticky = "w")
+                sub_frame.grid(row = row, column = 1, sticky = "w")
                 widget = ttk.Label(sub_frame, text = content[0][0])
                 widget.grid(row = 0, column = 0)
                 widget = ttk.Label(sub_frame, text = content[0][1])
@@ -141,19 +140,7 @@ class View:
     def refresh_characters(self, chr_list: list):
         self.destroy_characters()
         for chr in chr_list:
-            frame = ttk.Frame(self.chr_tab, relief = tk.GROOVE, border = 10)
-            lbl = []
-            lbl.append(ttk.Label(frame, text = "name:"))
-            lbl.append(ttk.Label(frame, text = "img:"))
-            txt = []
-            txt.append(ttk.Label(frame, text = chr["name"], justify = "left"))
-            txt.append(ttk.Label(frame, text = chr["img"], justify = "left"))
-            for i in range(len(lbl)):
-                lbl[i].grid(row = i, column = 0)
-                txt[i].grid(row = i, column = 1, sticky = "w")
-            
-            frame.pack(fill = "x")
-            self.chr_frames.append(frame)
+            self.chr_frames.append(self.create_frame(chr, "character"))
     
     def destroy_characters(self):
         for frame in self.chr_frames:
