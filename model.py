@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Model:
     def __init__(self, path: str):
-        with open(path, "r") as file:
+        with open(path, "r", encoding = "UTF-8") as file:
             tree = io.read(es5, file)
 
         walker = Walker()

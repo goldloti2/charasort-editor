@@ -16,7 +16,7 @@ class View:
 
         menubar = tk.Menu(root)
         filemenu = tk.Menu(menubar)
-        filemenu.add_command(label = "Open", command = controller.open_file)
+        filemenu.add_command(label = "Open", command = self.menu_open)
         filemenu.add_command(label = "Save")
         filemenu.add_command(label = "Save As")
         menubar.add_cascade(label = "File", menu = filemenu)
@@ -38,6 +38,13 @@ class View:
         self.flt_frames = []
         self.chr_frames = []
         self.controller = controller
+    
+    def menu_open(self):
+        path = filedialog.askopenfilename(initialdir = ".",
+                                          filetypes = [("JavaScript (*.js)", "*.js"),
+                                                       ("all (*)", "*")])
+        if path != "":
+            self.controller.open_file(path)
     
     def create_frame(self, object: dict, parent: str) -> ttk.Frame:
         if parent == "filter":
