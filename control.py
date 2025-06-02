@@ -24,7 +24,7 @@ class Controller:
                     subs.append((sub["name"], sub["key"]))
                 node.append(("sub_frame", "sub:", subs))
             flt_list.append(node)
-        self.window.refresh_filters(flt_list)
+        self.window.refresh_tabs(flt_list, "filter")
     
     def update_characters(self):
         chr_list = []
@@ -38,7 +38,7 @@ class Controller:
                 opts.append((opt, chr_opts[opt]))
             node.append(("sub_frame", "filter options:", opts))
             chr_list.append(node)
-        self.window.refresh_characters(chr_list)
+        self.window.refresh_tabs(chr_list, "character")
 
     def open_file(self, path = "test.js"):
         self.model = Model(path)

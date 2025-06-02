@@ -127,25 +127,29 @@ class View:
         frame.pack(fill = "x")
         return frame
     
-    def refresh_filters(self, flt_list: list):
-        self.destroy_filters()
-        for flt in flt_list:
-            self.flt_frames.append(self.create_frame(flt, "filter"))
+    def refresh_tabs(self, node_list: list, tab: str):
+        self.destroy_tabs(tab)
+        frames = []
+        for node in node_list:
+            frames.append(self.create_frame(node, tab))
+        if tab == "filter":
+            self.flt_frames = frames
+        elif tab == "character":
+            self.chr_frames = frames
+        else:
+            raise ValueError(f"tab '{tab}' not found at refresh_tabs")
     
-    def destroy_filters(self):
-        for frame in self.flt_frames:
+    def destroy_tabs(self, tab: str):
+        if tab == "filter":
+            destroy = self.flt_frames
+            self.flt_frames = []
+        elif tab == "character":
+            destroy = self.chr_frames
+            self.chr_frames = []
+        else:
+            raise ValueError(f"tab '{tab}' not found at destroy_tabs")
+        for frame in destroy:
             frame.destroy()
-        self.flt_frames = []
-    
-    def refresh_characters(self, chr_list: list):
-        self.destroy_characters()
-        for chr in chr_list:
-            self.chr_frames.append(self.create_frame(chr, "character"))
-    
-    def destroy_characters(self):
-        for frame in self.chr_frames:
-            frame.destroy()
-        self.chr_frames = []
 
     def start(self):
         self.root.mainloop()
