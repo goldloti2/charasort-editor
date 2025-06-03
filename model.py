@@ -1,4 +1,5 @@
 from calmjs.parse import asttypes, es5, io
+from calmjs.parse.unparsers.es5 import pretty_print
 from calmjs.parse.walkers import Walker
 
 
@@ -26,6 +27,10 @@ class Model:
         self.characters = characters
         self.flt_list = self.tree_to_list(filters)
         self.chr_list = self.tree_to_list(characters)
+
+    def save_file(self, path: str):
+        with open(path, "w") as file:
+            print(pretty_print(self.tree, indent_str="    "), file=file)
 
     def tree_to_list(self, tree: asttypes.Array) -> list:
         def parse_node(node):

@@ -1,5 +1,6 @@
 import tkinter as tk
-from tkinter import filedialog, ttk
+from datetime import datetime
+from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
@@ -70,8 +71,8 @@ class View:
 
         menubar = tk.Menu(root)
         menubar.add_command(label="Open", command=self.menu_open)
-        menubar.add_command(label="Save")
-        menubar.add_command(label="Save To")
+        menubar.add_command(label="Save", command=self.menu_save)
+        menubar.add_command(label="Save To", command=self.menu_save_to)
         root.config(menu=menubar)
 
         tabcontrol = ttk.Notebook()
@@ -94,6 +95,24 @@ class View:
         )
         if path != "":
             self.controller.open_file(path)
+            self.path = path
+
+    def menu_save(self):
+        result = messagebox.askyesno(
+            "Overwrite", "Do you want to overwrite the old file?"
+        )
+        if result:
+            self.controller.save_file()
+
+    def menu_save_to(self):
+        path = filedialog.asksaveasfilename(
+            initialdir=".",
+            initialfile=f"{datetime.now().strftime('%Y-%m-%d')}.js",
+            defaultextension=".js",
+            filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")],
+        )
+        if path != "":
+            self.controller.save_file(path)
 
     def create_frame(self, object: dict, parent: str) -> ttk.Frame:
         if parent == "filter":

@@ -11,6 +11,19 @@ class Controller:
         self.open_file()
         self.window.start()
 
+    def open_file(self, path="test.js"):
+        self.path = path
+        self.model = Model(path)
+        self.update_filters()
+        self.update_characters()
+
+    def save_file(self, path=""):
+        if path == "":
+            self.model.save_file(self.path)
+        else:
+            self.path = path
+            self.model.save_file(path)
+
     def update_filters(self):
         flt_list = []
         for flt in self.model.flt_list:
@@ -40,11 +53,6 @@ class Controller:
             node.append(("sub_frame", "filter options:", opts))
             chr_list.append(node)
         self.window.refresh_tabs(chr_list, "character")
-
-    def open_file(self, path="test.js"):
-        self.model = Model(path)
-        self.update_filters()
-        self.update_characters()
 
 
 if __name__ == "__main__":
