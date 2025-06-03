@@ -19,12 +19,12 @@ class VerticalScrolledFrame(ttk.Frame):
         super().__init__(parent, *args, **kw)
 
         # Create a canvas object and a vertical scrollbar for scrolling it.
-        vscrollbar = ttk.Scrollbar(self, orient="vertical")
-        vscrollbar.pack(fill="y", side="right", expand=0)
+        vscrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL)
+        vscrollbar.pack(fill=tk.Y, side=tk.RIGHT, expand=0)
         canvas = tk.Canvas(
             self, bd=0, highlightthickness=0, yscrollcommand=vscrollbar.set
         )
-        canvas.pack(side="left", fill="both", expand=1)
+        canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
         vscrollbar.config(command=canvas.yview)
 
         # Reset the view
@@ -34,7 +34,7 @@ class VerticalScrolledFrame(ttk.Frame):
         # Create a frame inside the canvas which will be scrolled with it.
         self.interior = interior = ttk.Frame(canvas)
         interior.columnconfigure(0, weight=1)
-        interior_id = canvas.create_window(0, 0, window=interior, anchor="nw")
+        interior_id = canvas.create_window(0, 0, window=interior, anchor=tk.NW)
 
         # Track changes to the canvas and frame width and sync them,
         # also updating the scrollbar.
@@ -80,7 +80,7 @@ class View:
         chr_tab_base = VerticalScrolledFrame(tabcontrol)
         tabcontrol.add(flt_tab_base, text="Filters")
         tabcontrol.add(chr_tab_base, text="Characters")
-        tabcontrol.pack(expand=1, fill="both")
+        tabcontrol.pack(expand=1, fill=tk.BOTH)
 
         self.root = root
         self.flt_tab = flt_tab_base.interior
@@ -127,14 +127,14 @@ class View:
             c_type, label, content = attr
             if c_type == "label":
                 k_label = ttk.Label(frame, text=label)
-                c_label = ttk.Label(frame, text=content, justify="left")
+                c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
-                c_label.grid(row=row, column=1, sticky="w")
+                c_label.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
                 sub_frame = ttk.Labelframe(
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
-                sub_frame.grid(row=row, column=0, columnspan=2, sticky="w")
+                sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
                 widget = ttk.Label(sub_frame, text=content[0][0])
                 widget.grid(row=0, column=0)
                 widget = ttk.Label(sub_frame, text=content[0][1])
@@ -142,14 +142,14 @@ class View:
                 sub_row = 1
                 for sub_content in content[1:]:
                     widget = ttk.Label(sub_frame, text=sub_content[0])
-                    widget.grid(row=sub_row, column=1, sticky="w")
+                    widget.grid(row=sub_row, column=1, sticky=tk.W)
                     widget = ttk.Label(sub_frame, text=sub_content[1])
-                    widget.grid(row=sub_row, column=3, sticky="w")
+                    widget.grid(row=sub_row, column=3, sticky=tk.W)
                     sub_row += 1
             else:
                 raise ValueError(f"c_type '{c_type}' not found at create_frame")
             row += 1
-        frame.grid(column=0, sticky="ew")
+        frame.grid(column=0, sticky=tk.EW)
         return frame
 
     def refresh_tabs(self, node_list: list, tab: str):
