@@ -96,6 +96,7 @@ class View:
             frame = ttk.Frame(self.chr_tab, relief = tk.GROOVE, border = 10)
         else:
             raise ValueError(f"parent '{parent}' not found at create_frame")
+        frame.columnconfigure(1, weight = 1)
         row = 0
         for attr in object:
             c_type, label, content = attr
@@ -107,7 +108,8 @@ class View:
             elif c_type == "sub_frame":
                 sub_frame = ttk.Labelframe(frame, text = label,
                                            relief = tk.GROOVE, border = 10)
-                sub_frame.grid(row = row, column = 1, sticky = "w")
+                sub_frame.grid(row = row, column = 0,
+                               columnspan = 2, sticky = "w")
                 widget = ttk.Label(sub_frame, text = content[0][0])
                 widget.grid(row = 0, column = 0)
                 widget = ttk.Label(sub_frame, text = content[0][1])
