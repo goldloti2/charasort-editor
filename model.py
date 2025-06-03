@@ -34,23 +34,13 @@ class Model:
         self.chr_list = self.tree_to_list(characters)
     
     def tree_to_list(self, tree: asttypes.Array) -> list:
-        new_list = []
-        for child in tree.children():
-            node = {}
-            for prop in child.children():
-                if isinstance(prop.right, asttypes.Array):      # sub[]
-                    value = self.tree_to_list(prop.right)
-                elif isinstance(prop.right, asttypes.Object):   # opts{}
-                    value = {}
-                    for opts in prop.right.children():
-                        if isinstance(opts.right, asttypes.Array):
-                            opts_list = [opt.value
-                                         for opt in opts.right.children()]
-                            value[opts.left.value] = opts_list
-                        else:
-                            value[opts.left.value] = opts.right.value
-                else:
-                    value = prop.right.value
-                node[prop.left.value] = value
-            new_list.append(node)
-        return new_list
+        def parse_node(node):
+            if isinstance(node, asttypes.Array):
+                return [parse_node(child) for child in node.children()]
+            elif isinstance(node, asttypes.Object):
+                return {prop.left.value : parse_node(prop.right)
+                        for prop in node.children()}
+            else:
+                return node.value
+        
+        return [parse_node(child) for child in tree.children()]
