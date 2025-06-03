@@ -160,27 +160,31 @@ class View:
         # add buttons
         button_frame = ttk.Frame(frame)
         button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
+        button_edit = ttk.Button(button_frame, text="edit", command=None)
+        button_edit.pack(fill=tk.X)
+        button_delete = ttk.Button(button_frame, text="delete", command=None)
+        button_delete.pack(fill=tk.X)
         if parent == "filter":
             button_up = ttk.Button(
                 button_frame, text="↑", command=lambda: self.button_move_up(frame)
             )
-            button_up.pack()
+            button_up.pack(fill=tk.X)
             button_down = ttk.Button(
                 button_frame, text="↓", command=lambda: self.button_move_down(frame)
             )
-            button_down.pack()
+            button_down.pack(fill=tk.X)
         return frame
 
     def refresh_tabs(self, node_list: list, tab: str):
         self.destroy_tabs(tab)
         frame = self.create_frame(node_list[0], tab)
         if tab == "filter":
-            frame.children["!frame"].children["!button"].config(state=tk.DISABLED)
+            frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
         for node in node_list[1:-1]:
             self.create_frame(node, tab)
         frame = self.create_frame(node_list[-1], tab)
         if tab == "filter":
-            frame.children["!frame"].children["!button2"].config(state=tk.DISABLED)
+            frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
     def destroy_tabs(self, tab: str):
         if tab == "filter":
