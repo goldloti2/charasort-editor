@@ -63,11 +63,9 @@ class View:
         root.resizable(False, False)
 
         menubar = tk.Menu(root)
-        filemenu = tk.Menu(menubar)
-        filemenu.add_command(label = "Open", command = self.menu_open)
-        filemenu.add_command(label = "Save")
-        filemenu.add_command(label = "Save As")
-        menubar.add_cascade(label = "File", menu = filemenu)
+        menubar.add_command(label = "Open", command = self.menu_open)
+        menubar.add_command(label = "Save")
+        menubar.add_command(label = "Save To")
         root.config(menu = menubar)
 
         tabcontrol = ttk.Notebook()
