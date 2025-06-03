@@ -1,15 +1,16 @@
-from view import View
 from model import Model
+from view import View
+
 
 class Controller:
     def __init__(self):
         window = View(self)
         self.window = window
-    
+
     def start(self):
         self.open_file()
         self.window.start()
-    
+
     def update_filters(self):
         flt_list = []
         for flt in self.model.flt_list:
@@ -25,7 +26,7 @@ class Controller:
                 node.append(("sub_frame", "sub:", subs))
             flt_list.append(node)
         self.window.refresh_tabs(flt_list, "filter")
-    
+
     def update_characters(self):
         chr_list = []
         for chr in self.model.chr_list:
@@ -40,11 +41,10 @@ class Controller:
             chr_list.append(node)
         self.window.refresh_tabs(chr_list, "character")
 
-    def open_file(self, path = "test.js"):
+    def open_file(self, path="test.js"):
         self.model = Model(path)
         self.update_filters()
         self.update_characters()
-
 
 
 if __name__ == "__main__":
