@@ -22,7 +22,7 @@ class Model:
                 characters = node.right
 
         self.tree = tree
-        self.waler = walker
+        self.walker = walker
         self.filters = filters
         self.characters = characters
         self.flt_list = self.tree_to_list(filters)
