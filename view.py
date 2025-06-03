@@ -87,6 +87,9 @@ class View:
         self.chr_tab = chr_tab_base.interior
         self.controller = controller
 
+    def start(self):
+        self.root.mainloop()
+
     def menu_open(self):
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
@@ -115,6 +118,7 @@ class View:
             self.controller.save_file(path)
 
     def create_frame(self, object: dict, parent: str) -> ttk.Frame:
+        # create base frame
         if parent == "filter":
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
         elif parent == "character":
@@ -122,6 +126,9 @@ class View:
         else:
             raise ValueError(f"parent '{parent}' not found at create_frame")
         frame.columnconfigure(1, weight=1)
+        frame.grid(column=0, sticky=tk.EW)
+
+        # add information
         row = 0
         for attr in object:
             c_type, label, content = attr
@@ -149,14 +156,31 @@ class View:
             else:
                 raise ValueError(f"c_type '{c_type}' not found at create_frame")
             row += 1
-        frame.grid(column=0, sticky=tk.EW)
+
+        # add buttons
+        button_frame = ttk.Frame(frame)
+        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
+        if parent == "filter":
+            button_up = ttk.Button(
+                button_frame, text="↑", command=lambda: self.button_move_up(frame)
+            )
+            button_up.pack()
+            button_down = ttk.Button(
+                button_frame, text="↓", command=lambda: self.button_move_down(frame)
+            )
+            button_down.pack()
         return frame
 
     def refresh_tabs(self, node_list: list, tab: str):
         self.destroy_tabs(tab)
-        frames = []
-        for node in node_list:
-            frames.append(self.create_frame(node, tab))
+        frame = self.create_frame(node_list[0], tab)
+        if tab == "filter":
+            frame.children["!frame"].children["!button"].config(state=tk.DISABLED)
+        for node in node_list[1:-1]:
+            self.create_frame(node, tab)
+        frame = self.create_frame(node_list[-1], tab)
+        if tab == "filter":
+            frame.children["!frame"].children["!button2"].config(state=tk.DISABLED)
 
     def destroy_tabs(self, tab: str):
         if tab == "filter":
@@ -170,8 +194,11 @@ class View:
         for frame in destroy:
             frame.destroy()
 
-    def start(self):
-        self.root.mainloop()
+    def button_move_up(self, frame: ttk.Frame):
+        self.controller.move_filter(frame.grid_info()["row"], "up")
+
+    def button_move_down(self, frame: ttk.Frame):
+        self.controller.move_filter(frame.grid_info()["row"], "down")
 
 
 if __name__ == "__main__":

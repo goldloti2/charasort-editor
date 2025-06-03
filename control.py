@@ -54,6 +54,10 @@ class Controller:
             chr_list.append(node)
         self.window.refresh_tabs(chr_list, "character")
 
+    def move_filter(self, index: int, direction: str):
+        self.model.move_filter(index, direction)
+        self.update_filters()
+
 
 if __name__ == "__main__":
     app = Controller()

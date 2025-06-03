@@ -32,6 +32,17 @@ class Model:
         with open(path, "w") as file:
             print(pretty_print(self.tree, indent_str="    "), file=file)
 
+    def move_filter(self, index: int, direction: str):
+        if direction == "up":
+            swap_idx = index - 1
+        elif direction == "down":
+            swap_idx = index + 1
+        swap_list = self.filters.children()
+        swap = swap_list[index]
+        swap_list[index] = swap_list[swap_idx]
+        swap_list[swap_idx] = swap
+        self.flt_list = self.tree_to_list(self.filters)
+
     def tree_to_list(self, tree: asttypes.Array) -> list:
         def parse_node(node):
             if isinstance(node, asttypes.Array):
