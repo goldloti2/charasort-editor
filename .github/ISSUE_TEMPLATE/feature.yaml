@@ -1,0 +1,70 @@
+name: Dev Task
+description: Track and describe progress on view, controller, and model tasks.
+title: "[DevTask] "
+body:
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🖼️ View Tasks
+
+        **Example Checklist:**
+        ```
+        - [ ] CREATE WIDGET
+        - [ ] RETURN INPUT
+        ```
+
+  - type: textarea
+    id: view_tasks
+    attributes:
+      label: View Tasks
+      description: UI creation, input/output handling
+      placeholder: |
+        - [ ] CREATE WIDGET
+        - [ ] RETURN INPUT
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🧠 Controller Tasks
+
+        **Example Checklist:**
+        ```
+        - [ ] PASS INPUT TO MODEL
+        - [ ] PROCESS MODEL OUTPUT FOR VIEW
+        - [ ] UPDATE VIEW
+        ```
+
+  - type: textarea
+    id: controller_tasks
+    attributes:
+      label: Controller Tasks
+      description: Handle data flow between view and model
+      placeholder: |
+        - [ ] PASS INPUT TO MODEL
+        - [ ] PROCESS MODEL OUTPUT FOR VIEW
+        - [ ] UPDATE VIEW
+
+  - type: markdown
+    attributes:
+      value: |
+        ## 🗃️ Model Tasks
+
+        **Example Checklist:**
+        ```
+        - [ ] PROCESS INPUT
+        - [ ] FIND POSITION IN THE TREE
+        - [ ] EDIT THE TREE
+          - [ ] test root tree
+        ```
+
+  - type: textarea
+    id: model_tasks
+    attributes:
+      label: Model Tasks
+      description: Data processing, tree operations, and logic
+      placeholder: |
+        - [ ] PROCESS INPUT
+        - [ ] FIND POSITION IN THE TREE
+        - [ ] EDIT THE TREE
+          - [ ] test root tree
