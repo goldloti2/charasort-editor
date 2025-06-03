@@ -92,6 +92,8 @@ class View:
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
         if path != "":
+            self.destroy_tabs("filter")
+            self.destroy_tabs("character")
             self.controller.open_file(path)
             self.path = path
 
@@ -163,6 +165,8 @@ class View:
             destroy = self.chr_tab.winfo_children()
         else:
             raise ValueError(f"tab '{tab}' not found at destroy_tabs")
+        if not destroy:
+            return
         for frame in destroy:
             frame.destroy()
 
