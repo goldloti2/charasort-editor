@@ -29,6 +29,7 @@ class VerticalScrolledFrame(ttk.Frame):
 
         # Create a frame inside the canvas which will be scrolled with it.
         self.interior = interior = ttk.Frame(canvas)
+        interior.columnconfigure(0, weight = 1)
         interior_id = canvas.create_window(0, 0, window = interior,
                                            anchor = "nw")
 
@@ -124,7 +125,7 @@ class View:
             else:
                 raise ValueError(f"c_type '{c_type}' not found at create_frame")
             row += 1
-        frame.pack(fill = "x")
+        frame.grid(column = 0, sticky = "ew")
         return frame
     
     def refresh_tabs(self, node_list: list, tab: str):
