@@ -85,8 +85,6 @@ class View:
         self.root = root
         self.flt_tab = flt_tab_base.interior
         self.chr_tab = chr_tab_base.interior
-        self.flt_frames = []
-        self.chr_frames = []
         self.controller = controller
 
     def menu_open(self):
@@ -157,20 +155,12 @@ class View:
         frames = []
         for node in node_list:
             frames.append(self.create_frame(node, tab))
-        if tab == "filter":
-            self.flt_frames = frames
-        elif tab == "character":
-            self.chr_frames = frames
-        else:
-            raise ValueError(f"tab '{tab}' not found at refresh_tabs")
 
     def destroy_tabs(self, tab: str):
         if tab == "filter":
-            destroy = self.flt_frames
-            self.flt_frames = []
+            destroy = self.flt_tab.winfo_children()
         elif tab == "character":
-            destroy = self.chr_frames
-            self.chr_frames = []
+            destroy = self.chr_tab.winfo_children()
         else:
             raise ValueError(f"tab '{tab}' not found at destroy_tabs")
         for frame in destroy:
