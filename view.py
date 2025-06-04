@@ -132,8 +132,6 @@ class View:
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
         elif parent == "character":
             frame = ttk.Frame(self.chr_tab, relief=tk.GROOVE, border=10)
-        else:
-            raise ValueError(f"parent '{parent}' not found at create_frame")
         frame.columnconfigure(1, weight=1)
         frame.grid(column=0, sticky=tk.EW)
 
@@ -163,7 +161,7 @@ class View:
                     widget.grid(row=sub_row, column=3, sticky=tk.W)
                     sub_row += 1
             else:
-                raise ValueError(f"c_type '{c_type}' not found at create_frame")
+                raise ValueError(f"c_type '{c_type}' not found")
             row += 1
 
         # add buttons
@@ -206,7 +204,7 @@ class View:
         elif tab == "character":
             destroy = self.chr_tab.winfo_children()
         else:
-            raise ValueError(f"tab '{tab}' not found at destroy_tabs")
+            raise ValueError(f"tab '{tab}' not found")
         if not destroy:
             return
         for frame in destroy:
