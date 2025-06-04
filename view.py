@@ -117,6 +117,15 @@ class View:
         if path:
             self.controller.save_file(path)
 
+    def button_delete(self, frame: ttk.Frame, tab: str):
+        self.controller.delete(frame.grid_info()["row"], tab)
+
+    def button_move_up(self, frame: ttk.Frame):
+        self.controller.move_filter(frame.grid_info()["row"], "up")
+
+    def button_move_down(self, frame: ttk.Frame):
+        self.controller.move_filter(frame.grid_info()["row"], "down")
+
     def create_frame(self, object: dict, parent: str) -> ttk.Frame:
         # create base frame
         if parent == "filter":
@@ -202,15 +211,6 @@ class View:
             return
         for frame in destroy:
             frame.destroy()
-
-    def button_delete(self, frame: ttk.Frame, tab: str):
-        self.controller.delete(frame.grid_info()["row"], tab)
-
-    def button_move_up(self, frame: ttk.Frame):
-        self.controller.move_filter(frame.grid_info()["row"], "up")
-
-    def button_move_down(self, frame: ttk.Frame):
-        self.controller.move_filter(frame.grid_info()["row"], "down")
 
 
 if __name__ == "__main__":
