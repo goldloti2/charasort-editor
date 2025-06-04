@@ -44,10 +44,10 @@ class Model:
         self.flt_list = self.tree_to_list(self.filters)
 
     def delete(self, index: int, tab: str):
-        if tab == "filter":
+        if tab == "filters":
             self.filters.children().pop(index)
             self.flt_list = self.tree_to_list(self.filters)
-        elif tab == "character":
+        elif tab == "characters":
             self.characters.children().pop(index)
             self.chr_list = self.tree_to_list(self.characters)
 

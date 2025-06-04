@@ -26,9 +26,9 @@ class Controller:
 
     def delete(self, index: int, tab: str):
         self.model.delete(index, tab)
-        if tab == "filter":
+        if tab == "filters":
             self.update_filters()
-        elif tab == "character":
+        elif tab == "characters":
             self.update_characters()
 
     def move_filter(self, index: int, direction: str):
@@ -50,9 +50,9 @@ class Controller:
                 node.append(("sub_frame", "sub:", subs))
             flt_list.append(node)
         if flt_list:
-            self.window.refresh_tabs(flt_list, "filter")
+            self.window.refresh_tabs(flt_list, "filters")
         else:
-            self.window.destroy_tabs("filter")
+            self.window.destroy_tabs("filters")
 
     def update_characters(self):
         chr_list = []
@@ -67,7 +67,7 @@ class Controller:
             node.append(("sub_frame", "filter options:", opts))
             chr_list.append(node)
         if chr_list:
-            self.window.refresh_tabs(chr_list, "character")
+            self.window.refresh_tabs(chr_list, "characters")
         else:
             self.window.destroy_tabs("character")
 

@@ -93,19 +93,19 @@ class View:
     def refresh_tabs(self, node_list: list, tab: str):
         self.destroy_tabs(tab)
         frame = self.create_frame(node_list[0], tab)
-        if tab == "filter":
+        if tab == "filters":
             frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
         for node in node_list[1:-1]:
             self.create_frame(node, tab)
         if len(node_list) > 1:
             frame = self.create_frame(node_list[-1], tab)
-        if tab == "filter":
+        if tab == "filters":
             frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
     def destroy_tabs(self, tab: str):
-        if tab == "filter":
+        if tab == "filters":
             destroy = self.flt_tab.winfo_children()
-        elif tab == "character":
+        elif tab == "characters":
             destroy = self.chr_tab.winfo_children()
         else:
             raise ValueError(f"tab '{tab}' not found")
@@ -116,9 +116,9 @@ class View:
 
     def create_frame(self, object: dict, tab: str) -> ttk.Frame:
         # create base frame
-        if tab == "filter":
+        if tab == "filters":
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
-        elif tab == "character":
+        elif tab == "characters":
             frame = ttk.Frame(self.chr_tab, relief=tk.GROOVE, border=10)
         frame.columnconfigure(1, weight=1)
         frame.grid(column=0, sticky=tk.EW)
@@ -163,7 +163,7 @@ class View:
             command=lambda: self.button_delete(frame, tab),
         )
         button_delete.pack(fill=tk.X)
-        if tab == "filter":
+        if tab == "filters":
             button_up = ttk.Button(
                 button_frame, text="↑", command=lambda: self.button_move_up(frame)
             )
@@ -179,8 +179,8 @@ class View:
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
         if path:
-            self.destroy_tabs("filter")
-            self.destroy_tabs("character")
+            self.destroy_tabs("filters")
+            self.destroy_tabs("characters")
             self.controller.open_file(path)
             self.path = path
 
