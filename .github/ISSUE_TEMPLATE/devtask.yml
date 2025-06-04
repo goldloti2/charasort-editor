@@ -8,7 +8,8 @@ body:
     attributes:
       label: 📝 TODO List
       description: Describe the overall goal or purpose of this task
-    required: false
+    validations:
+      required: false
 
   - type: markdown
     attributes:
@@ -29,7 +30,8 @@ body:
       placeholder: |
         - [ ] CREATE WIDGET
         - [ ] RETURN INPUT
-    required: true
+    validations:
+      required: true
 
   - type: markdown
     attributes:
@@ -52,7 +54,8 @@ body:
         - [ ] PASS INPUT TO MODEL
         - [ ] PROCESS MODEL OUTPUT FOR VIEW
         - [ ] UPDATE VIEW
-    required: true
+    validations:
+      required: true
 
   - type: markdown
     attributes:
@@ -77,4 +80,5 @@ body:
         - [ ] FIND POSITION IN THE TREE
         - [ ] EDIT THE TREE
           - [ ] test root tree
-    required: true
+    validations:
+      required: true
