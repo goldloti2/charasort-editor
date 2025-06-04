@@ -1,39 +1,52 @@
-# charasort editor
+# Charasort Editor
 
-This is an editor for charasort ([GitHub](https://github.com/execfera/charasort)), designed to make editing characters and filters more convenient.
+A simple tool for editing [charasort](https://github.com/execfera/charasort) data files, making it easier to manage characters and filters.
 
 ## Requirements
 
-- Python 3.X
+- Python 3.8 or higher  
+- Python package:
+  - `calmjs.parse`
 
-## Usage (TBD)
+## Overview
 
-This editor first take `src/js/data/YYYY-MM-DD.js` as input, then parses and seperates it into **Filters** and **Characters**. After editing, it can either modify the original file or save the changes to a new file.
+This editor parses a JavaScript data file (typically found at `src/js/data/YYYY-MM-DD.js`) and separates it into two editable components:
 
-### Filters Structure
+- **Filters** – Used to categorize characters.
+- **Characters** – The list of characters and their associated filter options.
 
-```
+After making edits, the modified data can either overwrite the original file or be saved to a new one.
+
+## Data Format
+
+### Filters
+
+Each filter is a dictionary with the following structure:
+
+```javascript
 {
-    // Required
-    name: string,
-    key:  string,
+  // Required fields
+  name: string,
+  key: string,
 
-    // Optional
-    tooltip: string,
-    checked: boolean,
-    sub: [
-        {
-            name: string,
-            key:  string 
-        },
-        ...
-    ]
+  // Optional fields
+  tooltip: string,
+  checked: boolean,
+  sub: [
+    {
+      name: string,
+      key: string
+    },
+    ...
+  ]
 }
 ```
 
-### Characters Structure
+### Characters
 
-```
+Each character entry follows this format:
+
+``` javascript
 {
     name: string,
     img:  string,
@@ -44,5 +57,7 @@ This editor first take `src/js/data/YYYY-MM-DD.js` as input, then parses and sep
 }
 ```
 
-- `key` in `opts` must be a subset of `key` values defined in **Filters**.
-- If `key` in **Filters** includes `sub` field, then the corresponding `key` in `opts` should be a list of strings, where each string is a valid `key` from `sub`.
+- Each `key` in `opts` must match a corresponding `key` defined in the Filters.
+- If a filter includes a `sub` field, the corresponding `opts[key]` should be a list of strings referencing valid `sub.key` values.
+
+## Usage (TBD)
