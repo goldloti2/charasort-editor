@@ -162,7 +162,11 @@ class View:
         button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
         button_edit = ttk.Button(button_frame, text="edit", command=None)
         button_edit.pack(fill=tk.X)
-        button_delete = ttk.Button(button_frame, text="delete", command=None)
+        button_delete = ttk.Button(
+            button_frame,
+            text="delete",
+            command=lambda: self.button_delete(frame, parent),
+        )
         button_delete.pack(fill=tk.X)
         if parent == "filter":
             button_up = ttk.Button(
@@ -182,7 +186,8 @@ class View:
             frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
         for node in node_list[1:-1]:
             self.create_frame(node, tab)
-        frame = self.create_frame(node_list[-1], tab)
+        if len(node_list) > 1:
+            frame = self.create_frame(node_list[-1], tab)
         if tab == "filter":
             frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
@@ -197,6 +202,9 @@ class View:
             return
         for frame in destroy:
             frame.destroy()
+
+    def button_delete(self, frame: ttk.Frame, tab: str):
+        self.controller.delete(frame.grid_info()["row"], tab)
 
     def button_move_up(self, frame: ttk.Frame):
         self.controller.move_filter(frame.grid_info()["row"], "up")

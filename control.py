@@ -38,7 +38,10 @@ class Controller:
                     subs.append((sub["name"], sub["key"]))
                 node.append(("sub_frame", "sub:", subs))
             flt_list.append(node)
-        self.window.refresh_tabs(flt_list, "filter")
+        if flt_list:
+            self.window.refresh_tabs(flt_list, "filter")
+        else:
+            self.window.destroy_tabs("filter")
 
     def update_characters(self):
         chr_list = []
@@ -52,11 +55,21 @@ class Controller:
                 opts.append((opt, chr_opts[opt]))
             node.append(("sub_frame", "filter options:", opts))
             chr_list.append(node)
-        self.window.refresh_tabs(chr_list, "character")
+        if chr_list:
+            self.window.refresh_tabs(chr_list, "character")
+        else:
+            self.window.destroy_tabs("character")
 
     def move_filter(self, index: int, direction: str):
         self.model.move_filter(index, direction)
         self.update_filters()
+
+    def delete(self, index: int, parent: str):
+        self.model.delete(index, parent)
+        if parent == "filter":
+            self.update_filters()
+        elif parent == "character":
+            self.update_characters()
 
 
 if __name__ == "__main__":

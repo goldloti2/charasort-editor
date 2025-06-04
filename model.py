@@ -43,6 +43,14 @@ class Model:
         swap_list[swap_idx] = swap
         self.flt_list = self.tree_to_list(self.filters)
 
+    def delete(self, index: int, parent: str):
+        if parent == "filter":
+            self.filters.children().pop(index)
+            self.flt_list = self.tree_to_list(self.filters)
+        elif parent == "character":
+            self.characters.children().pop(index)
+            self.chr_list = self.tree_to_list(self.characters)
+
     def tree_to_list(self, tree: asttypes.Array) -> list:
         def parse_node(node):
             if isinstance(node, asttypes.Array):
