@@ -64,11 +64,11 @@ class Controller:
         self.model.move_filter(index, direction)
         self.update_filters()
 
-    def delete(self, index: int, parent: str):
-        self.model.delete(index, parent)
-        if parent == "filter":
+    def delete(self, index: int, tab: str):
+        self.model.delete(index, tab)
+        if tab == "filter":
             self.update_filters()
-        elif parent == "character":
+        elif tab == "character":
             self.update_characters()
 
 

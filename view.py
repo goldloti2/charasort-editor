@@ -126,11 +126,11 @@ class View:
     def button_move_down(self, frame: ttk.Frame):
         self.controller.move_filter(frame.grid_info()["row"], "down")
 
-    def create_frame(self, object: dict, parent: str) -> ttk.Frame:
+    def create_frame(self, object: dict, tab: str) -> ttk.Frame:
         # create base frame
-        if parent == "filter":
+        if tab == "filter":
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
-        elif parent == "character":
+        elif tab == "character":
             frame = ttk.Frame(self.chr_tab, relief=tk.GROOVE, border=10)
         frame.columnconfigure(1, weight=1)
         frame.grid(column=0, sticky=tk.EW)
@@ -172,10 +172,10 @@ class View:
         button_delete = ttk.Button(
             button_frame,
             text="delete",
-            command=lambda: self.button_delete(frame, parent),
+            command=lambda: self.button_delete(frame, tab),
         )
         button_delete.pack(fill=tk.X)
-        if parent == "filter":
+        if tab == "filter":
             button_up = ttk.Button(
                 button_frame, text="↑", command=lambda: self.button_move_up(frame)
             )

@@ -43,11 +43,11 @@ class Model:
         swap_list[swap_idx] = swap
         self.flt_list = self.tree_to_list(self.filters)
 
-    def delete(self, index: int, parent: str):
-        if parent == "filter":
+    def delete(self, index: int, tab: str):
+        if tab == "filter":
             self.filters.children().pop(index)
             self.flt_list = self.tree_to_list(self.filters)
-        elif parent == "character":
+        elif tab == "character":
             self.characters.children().pop(index)
             self.chr_list = self.tree_to_list(self.characters)
 
