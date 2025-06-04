@@ -49,7 +49,7 @@ class Controller:
         node.append(("label", "name:", flt["name"]))
         node.append(("label", "key:", flt["key"]))
         node.append(("label", "tooltip:", flt.get("tooltip", "")))
-        node.append(("label", "checked:", flt.get("checked", None)))
+        node.append(("check", "checked:", flt.get("checked", None) == "true"))
         if "sub" in flt:
             subs = [("name:", "key:")]
             for sub in flt["sub"]:

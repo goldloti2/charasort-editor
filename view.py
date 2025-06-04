@@ -132,6 +132,15 @@ class View:
                 c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.W)
+            elif c_type == "check":
+                k_label = ttk.Label(frame, text=label)
+                c_check = tk.Checkbutton(frame, state=tk.DISABLED)
+                if content:
+                    c_check.select()
+                else:
+                    c_check.deselect()
+                k_label.grid(row=row, column=0)
+                c_check.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
                 sub_frame = ttk.Labelframe(
                     frame, text=label, relief=tk.GROOVE, border=10
