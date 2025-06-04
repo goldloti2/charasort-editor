@@ -108,7 +108,7 @@ class View:
         elif tab == "characters":
             destroy = self.chr_tab.winfo_children()
         else:
-            raise ValueError(f"tab '{tab}' not found")
+            raise ValueError(f"tab '{tab}' not found in view.destroy_tabs")
         if not destroy:
             return
         for frame in destroy:
@@ -149,7 +149,7 @@ class View:
                     widget.grid(row=sub_row, column=3, sticky=tk.W)
                     sub_row += 1
             else:
-                raise ValueError(f"c_type '{c_type}' not found")
+                raise ValueError(f"c_type '{c_type}' not found in view.create_frame")
             row += 1
 
         # add buttons
