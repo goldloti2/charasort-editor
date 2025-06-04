@@ -94,7 +94,7 @@ class View:
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
-        if path != "":
+        if path:
             self.destroy_tabs("filter")
             self.destroy_tabs("character")
             self.controller.open_file(path)
@@ -114,7 +114,7 @@ class View:
             defaultextension=".js",
             filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")],
         )
-        if path != "":
+        if path:
             self.controller.save_file(path)
 
     def create_frame(self, object: dict, parent: str) -> ttk.Frame:

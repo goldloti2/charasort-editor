@@ -18,7 +18,7 @@ class Controller:
         self.update_characters()
 
     def save_file(self, path=""):
-        if path == "":
+        if not path:
             self.model.save_file(self.path)
         else:
             self.path = path
