@@ -1,0 +1,25 @@
+name: Enhancement Suggestion
+description: Suggest improvements or new features for the system.
+title: "[Enhance] "
+body:
+
+  - type: textarea
+    id: description
+    attributes:
+      label: 📝 Description
+      description: Provide a detailed description of the suggested enhancement.
+    required: true
+
+  - type: checkboxes
+    id: affected_parts
+    attributes:
+      label: Affected Part
+      description: Select the parts of the system this suggestion applies to.
+      options:
+        - label: 🖼️ View
+          value: view
+        - label: 🧠 Controller
+          value: controller
+        - label: 🗃️ Model
+          value: model
+    required: false

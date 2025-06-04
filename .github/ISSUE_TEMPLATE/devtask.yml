@@ -3,6 +3,13 @@ description: Track and describe progress on view, controller, and model tasks.
 title: "[DevTask] "
 body:
 
+  - type: textarea
+    id: todo_list
+    attributes:
+      label: 📝 TODO List
+      description: Describe the overall goal or purpose of this task
+    required: false
+
   - type: markdown
     attributes:
       value: |
@@ -22,6 +29,7 @@ body:
       placeholder: |
         - [ ] CREATE WIDGET
         - [ ] RETURN INPUT
+    required: true
 
   - type: markdown
     attributes:
@@ -44,6 +52,7 @@ body:
         - [ ] PASS INPUT TO MODEL
         - [ ] PROCESS MODEL OUTPUT FOR VIEW
         - [ ] UPDATE VIEW
+    required: true
 
   - type: markdown
     attributes:
@@ -68,3 +77,4 @@ body:
         - [ ] FIND POSITION IN THE TREE
         - [ ] EDIT THE TREE
           - [ ] test root tree
+    required: true
