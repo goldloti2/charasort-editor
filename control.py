@@ -24,6 +24,17 @@ class Controller:
             self.path = path
             self.model.save_file(path)
 
+    def delete(self, index: int, tab: str):
+        self.model.delete(index, tab)
+        if tab == "filter":
+            self.update_filters()
+        elif tab == "character":
+            self.update_characters()
+
+    def move_filter(self, index: int, direction: str):
+        self.model.move_filter(index, direction)
+        self.update_filters()
+
     def update_filters(self):
         flt_list = []
         for flt in self.model.flt_list:
@@ -59,17 +70,6 @@ class Controller:
             self.window.refresh_tabs(chr_list, "character")
         else:
             self.window.destroy_tabs("character")
-
-    def move_filter(self, index: int, direction: str):
-        self.model.move_filter(index, direction)
-        self.update_filters()
-
-    def delete(self, index: int, tab: str):
-        self.model.delete(index, tab)
-        if tab == "filter":
-            self.update_filters()
-        elif tab == "character":
-            self.update_characters()
 
 
 if __name__ == "__main__":
