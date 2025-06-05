@@ -46,12 +46,12 @@ class Controller:
 
     def gen_node_filter(self, flt: dict):
         node = []
-        node.append(("label", "name:", flt["name"]))
-        node.append(("label", "key:", flt["key"]))
-        node.append(("label", "tooltip:", flt.get("tooltip", "")))
-        node.append(("check", "checked:", flt.get("checked", None) == "true"))
+        node.append(("label", "name", flt["name"]))
+        node.append(("label", "key", flt["key"]))
+        node.append(("label", "tooltip", flt.get("tooltip", "")))
+        node.append(("check", "checked", flt.get("checked", None) == "true"))
         if "sub" in flt:
-            subs = [("name:", "key:")]
+            subs = [("name", "key")]
             for sub in flt["sub"]:
                 subs.append((sub["name"], sub["key"]))
             node.append(("sub_frame", "sub:", subs))
@@ -59,13 +59,13 @@ class Controller:
 
     def gen_node_character(self, chr: dict):
         node = []
-        node.append(("label", "name:", chr["name"]))
-        node.append(("label", "img:", chr["img"]))
-        opts = [("filter key:", "option:")]
+        node.append(("label", "name", chr["name"]))
+        node.append(("label", "img", chr["img"]))
+        opts = [("filter key", "option")]
         chr_opts = chr["opts"]
         for opt in chr_opts:
             opts.append((opt, chr_opts[opt]))
-        node.append(("sub_frame", "filter options:", opts))
+        node.append(("sub_frame", "filter options", opts))
         return node
 
 

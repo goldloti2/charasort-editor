@@ -128,12 +128,12 @@ class View:
         for attr in object:
             c_type, label, content = attr
             if c_type == "label":
-                k_label = ttk.Label(frame, text=label)
+                k_label = ttk.Label(frame, text=label + ":")
                 c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "check":
-                k_label = ttk.Label(frame, text=label)
+                k_label = ttk.Label(frame, text=label + ":")
                 c_check = tk.Checkbutton(frame, state=tk.DISABLED)
                 if content:
                     c_check.select()
@@ -146,9 +146,9 @@ class View:
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
                 sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
-                widget = ttk.Label(sub_frame, text=content[0][0])
+                widget = ttk.Label(sub_frame, text=content[0][0] + ":")
                 widget.grid(row=0, column=0)
-                widget = ttk.Label(sub_frame, text=content[0][1])
+                widget = ttk.Label(sub_frame, text=content[0][1] + ":")
                 widget.grid(row=0, column=2)
                 sub_row = 1
                 for sub_content in content[1:]:
