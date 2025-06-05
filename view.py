@@ -281,7 +281,7 @@ class View:
         frame.columnconfigure(1, weight=1, pad=10)
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
-        return_object = []
+        return_object = {}
         row = 0
         for attr in object:
             frame.rowconfigure(row, pad=10)
@@ -316,7 +316,7 @@ class View:
                     sub_row += 1
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view.button_edit")
-            return_object.append((label, self._variable.get()))
+            return_object[label] = self._variable
             row += 1
         print(return_object)
 
