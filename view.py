@@ -80,25 +80,22 @@ class View:
         chr_tab_base = VerticalScrolledFrame(tabcontrol)
         tabcontrol.add(flt_tab_base, text="Filters")
         tabcontrol.add(chr_tab_base, text="Characters")
-        tabcontrol.bind("<<NotebookTabChanged>>", self._tab_event_change)
         tabcontrol.pack(expand=1, fill=tk.BOTH)
 
-        sub_detail_str = tk.StringVar()
-        sub_detail_label = ttk.Label(
-            root,
-            textvariable=sub_detail_str,
-            wraplength=150,
+        detail_label_style = ttk.Style()
+        detail_label_style.configure(
+            "detail_label.TLabel",
             background="white",
             border=1,
             padding=1,
             relief=tk.SOLID,
+            wraplength=150,
         )
 
         self.root = root
         self.flt_tab = flt_tab_base.interior
         self.chr_tab = chr_tab_base.interior
-        self.sub_detail_str = sub_detail_str
-        self.sub_detail_label = sub_detail_label
+        self.detail_label_style = detail_label_style
         self.controller = controller
 
     def start(self):
@@ -174,8 +171,15 @@ class View:
                 scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
                 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
                 tree.configure(yscrollcommand=scrollbar.set)
-                tree.bind("<ButtonRelease-1>", self._treeview_event_select)
-                tree.bind("<Escape>", self._treeview_event_deselect)
+                detail_label = ttk.Label(frame, style="detail_label.TLabel")
+                tree.bind(
+                    "<ButtonRelease-1>",
+                    lambda event: self._treeview_select(event, detail_label),
+                )
+                tree.bind(
+                    "<Escape>",
+                    lambda event: self._treeview_deselect(event, detail_label),
+                )
                 tree.pack(expand=1, fill=tk.BOTH)
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view.create_frame")
@@ -203,30 +207,23 @@ class View:
             button_down.pack(fill=tk.X)
         return frame
 
-    def _treeview_event_select(self, event: tk.Event):
+    def _treeview_select(self, event: tk.Event, label: ttk.Label):
         focus = event.widget.focus()
         if focus:
             item = event.widget.item(focus, "values")
-            self.sub_detail_str.set(item[1])
-            cursor_x = event.x_root - self.root.winfo_rootx()
-            cursor_y = event.y_root - self.root.winfo_rooty()
-            self.sub_detail_label.place(
+            label.config(text=item[1])
+            cursor_x = event.x + event.widget.master.winfo_x()
+            cursor_y = event.y + event.widget.master.winfo_y()
+            label.place(
                 anchor=tk.NW,
                 x=cursor_x,
                 y=cursor_y,
                 width=155,
             )
 
-    def _treeview_event_deselect(self, event: tk.Event):
+    def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
         event.widget.selection_remove(event.widget.focus())
-        self._sub_detail_hide()
-
-    def _tab_event_change(self, event: tk.Event):
-        self._sub_detail_hide()
-
-    def _sub_detail_hide(self):
-        self.sub_detail_label.place_forget()
-        self.sub_detail_str.set("")
+        label.place_forget()
 
     def _menu_open(self):
         path = filedialog.askopenfilename(
