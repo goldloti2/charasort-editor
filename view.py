@@ -80,11 +80,25 @@ class View:
         chr_tab_base = VerticalScrolledFrame(tabcontrol)
         tabcontrol.add(flt_tab_base, text="Filters")
         tabcontrol.add(chr_tab_base, text="Characters")
+        tabcontrol.bind("<<NotebookTabChanged>>", self.on_tab_change)
         tabcontrol.pack(expand=1, fill=tk.BOTH)
+
+        sub_detail_str = tk.StringVar()
+        sub_detail_label = ttk.Label(
+            root,
+            textvariable=sub_detail_str,
+            wraplength=150,
+            background="white",
+            border=1,
+            padding=1,
+            relief=tk.SOLID,
+        )
 
         self.root = root
         self.flt_tab = flt_tab_base.interior
         self.chr_tab = chr_tab_base.interior
+        self.sub_detail_str = sub_detail_str
+        self.sub_detail_label = sub_detail_label
         self.controller = controller
 
     def start(self):
@@ -146,17 +160,23 @@ class View:
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
                 sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
-                widget = ttk.Label(sub_frame, text=content[0][0] + ":")
-                widget.grid(row=0, column=0)
-                widget = ttk.Label(sub_frame, text=content[0][1] + ":")
-                widget.grid(row=0, column=2)
-                sub_row = 1
+                tree = ttk.Treeview(
+                    sub_frame,
+                    columns=content[0],
+                    height=10,
+                    selectmode=tk.BROWSE,
+                    show="headings",
+                )
+                tree.heading("#1", text=content[0][0])
+                tree.heading("#2", text=content[0][1])
                 for sub_content in content[1:]:
-                    widget = ttk.Label(sub_frame, text=sub_content[0])
-                    widget.grid(row=sub_row, column=1, sticky=tk.W)
-                    widget = ttk.Label(sub_frame, text=sub_content[1])
-                    widget.grid(row=sub_row, column=3, sticky=tk.W)
-                    sub_row += 1
+                    tree.insert("", "end", values=sub_content)
+                scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
+                scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+                tree.configure(yscrollcommand=scrollbar.set)
+                tree.bind("<ButtonRelease-1>", self.treeview_on_select)
+                tree.bind("<Escape>", self.treeview_deselect_all)
+                tree.pack(expand=1, fill=tk.BOTH)
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view.create_frame")
             row += 1
@@ -182,6 +202,31 @@ class View:
             )
             button_down.pack(fill=tk.X)
         return frame
+
+    def treeview_on_select(self, event: tk.Event):
+        focus = event.widget.focus()
+        if focus:
+            item = event.widget.item(focus, "values")
+            self.sub_detail_str.set(item[1])
+            cursor_x = event.x_root - self.root.winfo_rootx()
+            cursor_y = event.y_root - self.root.winfo_rooty()
+            self.sub_detail_label.place(
+                anchor=tk.NW,
+                x=cursor_x,
+                y=cursor_y,
+                width=155,
+            )
+
+    def treeview_deselect_all(self, event: tk.Event):
+        event.widget.selection_remove(event.widget.focus())
+        self.sub_detail_hide()
+
+    def on_tab_change(self, event: tk.Event):
+        self.sub_detail_hide()
+
+    def sub_detail_hide(self):
+        self.sub_detail_label.place_forget()
+        self.sub_detail_str.set("")
 
     def menu_open(self):
         path = filedialog.askopenfilename(
