@@ -303,22 +303,34 @@ class View:
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
                 sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
-                widget = ttk.Label(sub_frame, text=content[0][0] + ":")
-                widget.grid(row=0, column=0)
-                widget = ttk.Label(sub_frame, text=content[0][1] + ":")
-                widget.grid(row=0, column=2)
-                sub_row = 1
+                tree = ttk.Treeview(
+                    sub_frame,
+                    columns=content[0],
+                    height=10,
+                    selectmode=tk.BROWSE,
+                    show="headings",
+                )
+                tree.heading("#1", text=content[0][0])
+                tree.heading("#2", text=content[0][1])
                 for sub_content in content[1:]:
-                    widget = ttk.Label(sub_frame, text=sub_content[0])
-                    widget.grid(row=sub_row, column=1, sticky=tk.W)
-                    widget = ttk.Label(sub_frame, text=sub_content[1])
-                    widget.grid(row=sub_row, column=3, sticky=tk.W)
-                    sub_row += 1
+                    tree.insert("", "end", values=sub_content)
+                scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
+                scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+                tree.configure(yscrollcommand=scrollbar.set)
+                detail_label = ttk.Label(frame, style="detail_label.TLabel")
+                tree.bind(
+                    "<ButtonRelease-1>",
+                    lambda event: self._treeview_select(event, detail_label),
+                )
+                tree.bind(
+                    "<Escape>",
+                    lambda event: self._treeview_deselect(event, detail_label),
+                )
+                tree.pack(expand=1, fill=tk.BOTH)
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view.button_edit")
             return_object[label] = self._variable
             row += 1
-        print(return_object)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_object(frame.grid_info()["row"], tab)
