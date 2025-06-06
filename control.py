@@ -14,8 +14,8 @@ class Controller:
     def open_file(self, path="test.js"):
         self.path = path
         self.model = Model(path)
-        self.update("filters")
-        self.update("characters")
+        self._update_tab("filters")
+        self._update_tab("characters")
 
     def save_file(self, path=""):
         if not path:
@@ -24,27 +24,27 @@ class Controller:
             self.path = path
             self.model.save_file(path)
 
-    def delete(self, index: int, tab: str):
-        self.model.delete(index, tab)
-        self.update(tab)
+    def delete_object(self, index: int, tab: str):
+        self.model.delete_object(index, tab)
+        self._update_tab(tab)
 
     def move_filter(self, index: int, direction: str):
         self.model.move_filter(index, direction)
-        self.update("filters")
+        self._update_tab("filters")
 
-    def update(self, tab: str):
+    def _update_tab(self, tab: str):
         if tab == "filters":
-            new_list = [self.gen_node_filter(flt) for flt in self.model.flt_list]
+            new_list = [self._gen_node_filter(flt) for flt in self.model.flt_list]
         elif tab == "characters":
-            new_list = [self.gen_node_character(chr) for chr in self.model.chr_list]
+            new_list = [self._gen_node_character(chr) for chr in self.model.chr_list]
         else:
-            raise ValueError(f"tab '{tab}' not found in controller.update")
+            raise ValueError(f"tab '{tab}' not found in controller._update_tab")
         if new_list:
             self.window.refresh_tabs(new_list, tab)
         else:
             self.window.destroy_tabs(tab)
 
-    def gen_node_filter(self, flt: dict):
+    def _gen_node_filter(self, flt: dict):
         node = []
         node.append(("label", "name", flt["name"]))
         node.append(("label", "key", flt["key"]))
@@ -57,7 +57,7 @@ class Controller:
             node.append(("sub_frame", "sub:", subs))
         return node
 
-    def gen_node_character(self, chr: dict):
+    def _gen_node_character(self, chr: dict):
         node = []
         node.append(("label", "name", chr["name"]))
         node.append(("label", "img", chr["img"]))

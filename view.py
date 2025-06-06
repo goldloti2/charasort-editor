@@ -70,9 +70,9 @@ class View:
         root.resizable(False, False)
 
         menubar = tk.Menu(root)
-        menubar.add_command(label="Open", command=self.menu_open)
-        menubar.add_command(label="Save", command=self.menu_save)
-        menubar.add_command(label="Save To", command=self.menu_save_to)
+        menubar.add_command(label="Open", command=self._menu_open)
+        menubar.add_command(label="Save", command=self._menu_save)
+        menubar.add_command(label="Save To", command=self._menu_save_to)
         root.config(menu=menubar)
 
         tabcontrol = ttk.Notebook()
@@ -80,7 +80,7 @@ class View:
         chr_tab_base = VerticalScrolledFrame(tabcontrol)
         tabcontrol.add(flt_tab_base, text="Filters")
         tabcontrol.add(chr_tab_base, text="Characters")
-        tabcontrol.bind("<<NotebookTabChanged>>", self.on_tab_change)
+        tabcontrol.bind("<<NotebookTabChanged>>", self._tab_event_change)
         tabcontrol.pack(expand=1, fill=tk.BOTH)
 
         sub_detail_str = tk.StringVar()
@@ -174,8 +174,8 @@ class View:
                 scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
                 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
                 tree.configure(yscrollcommand=scrollbar.set)
-                tree.bind("<ButtonRelease-1>", self.treeview_on_select)
-                tree.bind("<Escape>", self.treeview_deselect_all)
+                tree.bind("<ButtonRelease-1>", self._treeview_event_select)
+                tree.bind("<Escape>", self._treeview_event_deselect)
                 tree.pack(expand=1, fill=tk.BOTH)
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view.create_frame")
@@ -189,21 +189,21 @@ class View:
         button_delete = ttk.Button(
             button_frame,
             text="delete",
-            command=lambda: self.button_delete(frame, tab),
+            command=lambda: self._button_delete(frame, tab),
         )
         button_delete.pack(fill=tk.X)
         if tab == "filters":
             button_up = ttk.Button(
-                button_frame, text="↑", command=lambda: self.button_move_up(frame)
+                button_frame, text="↑", command=lambda: self._button_move_up(frame)
             )
             button_up.pack(fill=tk.X)
             button_down = ttk.Button(
-                button_frame, text="↓", command=lambda: self.button_move_down(frame)
+                button_frame, text="↓", command=lambda: self._button_move_down(frame)
             )
             button_down.pack(fill=tk.X)
         return frame
 
-    def treeview_on_select(self, event: tk.Event):
+    def _treeview_event_select(self, event: tk.Event):
         focus = event.widget.focus()
         if focus:
             item = event.widget.item(focus, "values")
@@ -217,18 +217,18 @@ class View:
                 width=155,
             )
 
-    def treeview_deselect_all(self, event: tk.Event):
+    def _treeview_event_deselect(self, event: tk.Event):
         event.widget.selection_remove(event.widget.focus())
-        self.sub_detail_hide()
+        self._sub_detail_hide()
 
-    def on_tab_change(self, event: tk.Event):
-        self.sub_detail_hide()
+    def _tab_event_change(self, event: tk.Event):
+        self._sub_detail_hide()
 
-    def sub_detail_hide(self):
+    def _sub_detail_hide(self):
         self.sub_detail_label.place_forget()
         self.sub_detail_str.set("")
 
-    def menu_open(self):
+    def _menu_open(self):
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
@@ -236,16 +236,15 @@ class View:
             self.destroy_tabs("filters")
             self.destroy_tabs("characters")
             self.controller.open_file(path)
-            self.path = path
 
-    def menu_save(self):
+    def _menu_save(self):
         result = messagebox.askyesno(
             "Overwrite", "Do you want to overwrite the old file?"
         )
         if result:
             self.controller.save_file()
 
-    def menu_save_to(self):
+    def _menu_save_to(self):
         path = filedialog.asksaveasfilename(
             initialdir=".",
             initialfile=f"{datetime.now().strftime('%Y-%m-%d')}.js",
@@ -255,13 +254,13 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def button_delete(self, frame: ttk.Frame, tab: str):
-        self.controller.delete(frame.grid_info()["row"], tab)
+    def _button_delete(self, frame: ttk.Frame, tab: str):
+        self.controller.delete_object(frame.grid_info()["row"], tab)
 
-    def button_move_up(self, frame: ttk.Frame):
+    def _button_move_up(self, frame: ttk.Frame):
         self.controller.move_filter(frame.grid_info()["row"], "up")
 
-    def button_move_down(self, frame: ttk.Frame):
+    def _button_move_down(self, frame: ttk.Frame):
         self.controller.move_filter(frame.grid_info()["row"], "down")
 
 

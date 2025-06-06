@@ -25,8 +25,8 @@ class Model:
         self.walker = walker
         self.filters = filters
         self.characters = characters
-        self.flt_list = self.tree_to_list(filters)
-        self.chr_list = self.tree_to_list(characters)
+        self.flt_list = self._tree_to_list(filters)
+        self.chr_list = self._tree_to_list(characters)
 
     def save_file(self, path: str):
         with open(path, "w") as file:
@@ -41,17 +41,17 @@ class Model:
         swap = swap_list[index]
         swap_list[index] = swap_list[swap_idx]
         swap_list[swap_idx] = swap
-        self.flt_list = self.tree_to_list(self.filters)
+        self.flt_list = self._tree_to_list(self.filters)
 
-    def delete(self, index: int, tab: str):
+    def delete_object(self, index: int, tab: str):
         if tab == "filters":
             self.filters.children().pop(index)
-            self.flt_list = self.tree_to_list(self.filters)
+            self.flt_list = self._tree_to_list(self.filters)
         elif tab == "characters":
             self.characters.children().pop(index)
-            self.chr_list = self.tree_to_list(self.characters)
+            self.chr_list = self._tree_to_list(self.characters)
 
-    def tree_to_list(self, tree: asttypes.Array) -> list:
+    def _tree_to_list(self, tree: asttypes.Array) -> list:
         def parse_node(node):
             if isinstance(node, asttypes.Array):
                 return [parse_node(child) for child in node.children()]
