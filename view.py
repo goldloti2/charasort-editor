@@ -142,7 +142,7 @@ class View:
         button_frame = ttk.Frame(frame)
         button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
         button_edit = ttk.Button(
-            button_frame, text="edit", command=lambda: self.button_edit(frame, tab)
+            button_frame, text="edit", command=lambda: self._button_edit(frame, tab)
         )
         button_edit.pack(fill=tk.X)
         button_delete = ttk.Button(
@@ -258,7 +258,7 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def button_edit(self, frame: ttk.Frame, tab: str):
+    def _button_edit(self, frame: ttk.Frame, tab: str):
         if self.edit_window:
             self.edit_window.focus()
             return
