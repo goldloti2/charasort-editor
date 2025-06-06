@@ -61,7 +61,7 @@ class Controller:
         node = []
         node.append(("label", "name", chr["name"]))
         node.append(("label", "img", chr["img"]))
-        opts = [("filter key", "option")]
+        opts = [("key", "option")]
         chr_opts = chr["opts"]
         for opt in chr_opts:
             opts.append((opt, chr_opts[opt]))
