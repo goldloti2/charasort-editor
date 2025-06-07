@@ -162,26 +162,25 @@ class View:
     def _display_object_info(self, object: dict, frame: ttk.Frame):
         row = 0
         for attr in object:
+            frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type == "label":
                 k_label = ttk.Label(frame, text=label + ":")
                 c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
-                c_label.grid(row=row, column=1, sticky=tk.W)
+                c_label.grid(row=row, column=1, sticky=tk.EW)
             elif c_type == "check":
                 k_label = ttk.Label(frame, text=label + ":")
-                c_check = tk.Checkbutton(frame, state=tk.DISABLED)
-                if content:
-                    c_check.select()
-                else:
-                    c_check.deselect()
+                var = tk.BooleanVar(value=content)
+                c_check = ttk.Checkbutton(frame, variable=var, state=tk.DISABLED)
+                c_check.var = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
                 sub_frame = ttk.Labelframe(
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
-                sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
+                sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.EW)
                 tree = ttk.Treeview(
                     sub_frame,
                     columns=content[0],
@@ -190,7 +189,9 @@ class View:
                     show="headings",
                 )
                 tree.heading("#1", text=content[0][0])
+                tree.column("#1", minwidth=20, width=100)
                 tree.heading("#2", text=content[0][1])
+                tree.column("#2", minwidth=20)
                 for sub_content in content[1:]:
                     tree.insert("", "end", values=sub_content)
                 scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
