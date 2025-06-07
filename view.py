@@ -103,13 +103,13 @@ class View:
 
     def refresh_tabs(self, node_list: list, tab: str):
         self.destroy_tabs(tab)
-        frame = self.create_frame(node_list[0], tab)
+        frame = self._display_frame(node_list[0], tab)
         if tab == "filters":
             frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
         for node in node_list[1:-1]:
-            self.create_frame(node, tab)
+            self._display_frame(node, tab)
         if len(node_list) > 1:
-            frame = self.create_frame(node_list[-1], tab)
+            frame = self._display_frame(node_list[-1], tab)
         if tab == "filters":
             frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
@@ -125,7 +125,7 @@ class View:
         for frame in destroy:
             frame.destroy()
 
-    def create_frame(self, object: dict, tab: str) -> ttk.Frame:
+    def _display_frame(self, object: dict, tab: str) -> ttk.Frame:
         # create base frame
         if tab == "filters":
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
@@ -135,6 +135,31 @@ class View:
         frame.grid(column=0, sticky=tk.EW)
 
         # add information
+        self._display_object_info(object, frame)
+
+        # add buttons
+        button_frame = ttk.Frame(frame)
+        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
+        button_edit = ttk.Button(button_frame, text="edit", command=None)
+        button_edit.pack(fill=tk.X)
+        button_delete = ttk.Button(
+            button_frame,
+            text="delete",
+            command=lambda: self._button_delete(frame, tab),
+        )
+        button_delete.pack(fill=tk.X)
+        if tab == "filters":
+            button_up = ttk.Button(
+                button_frame, text="↑", command=lambda: self._button_move_up(frame)
+            )
+            button_up.pack(fill=tk.X)
+            button_down = ttk.Button(
+                button_frame, text="↓", command=lambda: self._button_move_down(frame)
+            )
+            button_down.pack(fill=tk.X)
+        return frame
+
+    def _display_object_info(self, object: dict, frame: ttk.Frame):
         row = 0
         for attr in object:
             c_type, label, content = attr
@@ -182,30 +207,8 @@ class View:
                 )
                 tree.pack(expand=1, fill=tk.BOTH)
             else:
-                raise ValueError(f"c_type '{c_type}' not found in view.create_frame")
+                raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
-
-        # add buttons
-        button_frame = ttk.Frame(frame)
-        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
-        button_edit = ttk.Button(button_frame, text="edit", command=None)
-        button_edit.pack(fill=tk.X)
-        button_delete = ttk.Button(
-            button_frame,
-            text="delete",
-            command=lambda: self._button_delete(frame, tab),
-        )
-        button_delete.pack(fill=tk.X)
-        if tab == "filters":
-            button_up = ttk.Button(
-                button_frame, text="↑", command=lambda: self._button_move_up(frame)
-            )
-            button_up.pack(fill=tk.X)
-            button_down = ttk.Button(
-                button_frame, text="↓", command=lambda: self._button_move_down(frame)
-            )
-            button_down.pack(fill=tk.X)
-        return frame
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         focus = event.widget.focus()
