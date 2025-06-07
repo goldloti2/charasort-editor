@@ -288,10 +288,23 @@ class View:
         frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
         frame.columnconfigure(0, pad=10)
         frame.columnconfigure(1, weight=1, pad=10)
+        frame.columnconfigure(2, pad=10)
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
+        # add information
         return_object = self._display_object_info(object, frame, True)
         print(return_object)
+
+        # add buttons
+        button_save = ttk.Button(frame, text="save", command=None)
+        button_save.grid(row=0, column=2)
+        button_cancel = ttk.Button(
+            frame, text="cancel", command=self._edit_window_close
+        )
+        button_cancel.grid(row=1, column=2)
+        button_edit = ttk.Button(frame, text="edit option", command=None)
+        row = 4 if len(return_object) > 3 else 3
+        button_edit.grid(row=row, column=2, sticky=tk.N)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_object(frame.grid_info()["row"], tab)
