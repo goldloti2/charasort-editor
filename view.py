@@ -232,6 +232,10 @@ class View:
         event.widget.selection_remove(event.widget.focus())
         label.place_forget()
 
+    def _edit_window_close(self):
+        self.edit_window.destroy()
+        self.edit_window = None
+
     def _menu_open(self):
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
@@ -263,17 +267,13 @@ class View:
             self.edit_window.focus()
             return
 
-        def on_close():
-            self.edit_window.destroy()
-            self.edit_window = None
-
         object = self.controller.get(frame.grid_info()["row"], tab)
 
         self.edit_window = edit_window = tk.Toplevel(self.root)
         edit_window.title(f"'{object[0][2]}' editing...")
         edit_window.geometry("450x600")
         edit_window.resizable(False, True)
-        edit_window.protocol("WM_DELETE_WINDOW", on_close)
+        edit_window.protocol("WM_DELETE_WINDOW", self._edit_window_close)
         edit_window.focus()
 
         frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
