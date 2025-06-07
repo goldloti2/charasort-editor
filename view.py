@@ -136,7 +136,7 @@ class View:
         frame.grid(column=0, sticky=tk.EW)
 
         # add information
-        self._display_object_info(object, frame)
+        self._display_object_info(object, frame, False)
 
         # add buttons
         button_frame = ttk.Frame(frame)
@@ -162,21 +162,29 @@ class View:
             button_down.pack(fill=tk.X)
         return frame
 
-    def _display_object_info(self, object: dict, frame: ttk.Frame):
+    def _display_object_info(self, object: dict, frame: ttk.Frame, is_edit: bool):
+        return_object = {}
         row = 0
         for attr in object:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type == "label":
                 k_label = ttk.Label(frame, text=label + ":")
-                c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
+                if is_edit:
+                    var = tk.StringVar(value=content)
+                    c_label = tk.Entry(frame, textvariable=var)
+                    return_object[label] = var
+                else:
+                    c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.EW)
             elif c_type == "check":
                 k_label = ttk.Label(frame, text=label + ":")
                 var = tk.BooleanVar(value=content)
-                c_check = ttk.Checkbutton(frame, variable=var, state=tk.DISABLED)
+                state = tk.NORMAL if is_edit else tk.DISABLED
+                c_check = ttk.Checkbutton(frame, variable=var, state=state)
                 c_check.var = var
+                return_object[label] = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
@@ -213,6 +221,7 @@ class View:
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
+        return return_object
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         focus = event.widget.focus()
@@ -281,56 +290,8 @@ class View:
         frame.columnconfigure(1, weight=1, pad=10)
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
-        return_object = {}
-        row = 0
-        for attr in object:
-            frame.rowconfigure(row, pad=10)
-            c_type, label, content = attr
-            if c_type == "label":
-                self._variable = tk.StringVar(value=content)
-                k_label = ttk.Label(frame, text=label + ":")
-                c_label = tk.Entry(frame, textvariable=self._variable)
-                k_label.grid(row=row, column=0)
-                c_label.grid(row=row, column=1, sticky=tk.EW)
-            elif c_type == "check":
-                self._variable = tk.BooleanVar(value=content)
-                k_label = ttk.Label(frame, text=label + ":")
-                c_check = ttk.Checkbutton(frame, variable=self._variable)
-                k_label.grid(row=row, column=0)
-                c_check.grid(row=row, column=1, sticky=tk.W)
-            elif c_type == "sub_frame":
-                sub_frame = ttk.Labelframe(
-                    frame, text=label, relief=tk.GROOVE, border=10
-                )
-                sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
-                tree = ttk.Treeview(
-                    sub_frame,
-                    columns=content[0],
-                    height=10,
-                    selectmode=tk.BROWSE,
-                    show="headings",
-                )
-                tree.heading("#1", text=content[0][0])
-                tree.heading("#2", text=content[0][1])
-                for sub_content in content[1:]:
-                    tree.insert("", "end", values=sub_content)
-                scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
-                scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-                tree.configure(yscrollcommand=scrollbar.set)
-                detail_label = ttk.Label(frame, style="detail_label.TLabel")
-                tree.bind(
-                    "<ButtonRelease-1>",
-                    lambda event: self._treeview_select(event, detail_label),
-                )
-                tree.bind(
-                    "<Escape>",
-                    lambda event: self._treeview_deselect(event, detail_label),
-                )
-                tree.pack(expand=1, fill=tk.BOTH)
-            else:
-                raise ValueError(f"c_type '{c_type}' not found in view.button_edit")
-            return_object[label] = self._variable
-            row += 1
+        return_object = self._display_object_info(object, frame, True)
+        print(return_object)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_object(frame.grid_info()["row"], tab)
