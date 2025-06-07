@@ -280,7 +280,7 @@ class View:
 
         self.edit_window = edit_window = tk.Toplevel(self.root)
         edit_window.title(f"'{object[0][2]}' editing...")
-        edit_window.geometry("450x600")
+        edit_window.geometry("600x420")
         edit_window.resizable(False, True)
         edit_window.protocol("WM_DELETE_WINDOW", self._edit_window_close)
         edit_window.focus()
@@ -303,7 +303,7 @@ class View:
         )
         button_cancel.grid(row=1, column=2)
         button_edit = ttk.Button(frame, text="edit option", command=None)
-        row = 4 if len(return_object) > 3 else 3
+        row = 4 if len(return_object) > 3 else 2
         button_edit.grid(row=row, column=2, sticky=tk.N)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
