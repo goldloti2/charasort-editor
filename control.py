@@ -54,7 +54,7 @@ class Controller:
             subs = [("name", "key")]
             for sub in flt["sub"]:
                 subs.append((sub["name"], sub["key"]))
-            node.append(("sub_frame", "sub:", subs))
+            node.append(("sub_frame", "sub", subs))
         return node
 
     def _gen_node_character(self, chr: dict):
