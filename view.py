@@ -181,10 +181,11 @@ class View:
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
                 sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.EW)
+                height = 11 if len(content) > 10 else len(content)
                 tree = ttk.Treeview(
                     sub_frame,
                     columns=content[0],
-                    height=10,
+                    height=height,
                     selectmode=tk.BROWSE,
                     show="headings",
                 )

@@ -50,11 +50,11 @@ class Controller:
         node.append(("label", "key", flt["key"]))
         node.append(("label", "tooltip", flt.get("tooltip", "")))
         node.append(("check", "checked", flt.get("checked", None) == "true"))
+        subs = [("name", "key")]
         if "sub" in flt:
-            subs = [("name", "key")]
             for sub in flt["sub"]:
                 subs.append((sub["name"], sub["key"]))
-            node.append(("sub_frame", "sub", subs))
+        node.append(("sub_frame", "sub", subs))
         return node
 
     def _gen_node_character(self, chr: dict):
