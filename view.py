@@ -211,24 +211,6 @@ class View:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
 
-    def _treeview_select(self, event: tk.Event, label: ttk.Label):
-        focus = event.widget.focus()
-        if focus:
-            item = event.widget.item(focus, "values")
-            label.config(text=item[1])
-            cursor_x = event.x + event.widget.master.winfo_x()
-            cursor_y = event.y + event.widget.master.winfo_y()
-            label.place(
-                anchor=tk.NW,
-                x=cursor_x,
-                y=cursor_y,
-                width=155,
-            )
-
-    def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
-        event.widget.selection_remove(event.widget.focus())
-        label.place_forget()
-
     def _menu_open(self):
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
@@ -263,6 +245,24 @@ class View:
 
     def _button_move_down(self, frame: ttk.Frame):
         self.controller.move_filter(frame.grid_info()["row"], "down")
+
+    def _treeview_select(self, event: tk.Event, label: ttk.Label):
+        focus = event.widget.focus()
+        if focus:
+            item = event.widget.item(focus, "values")
+            label.config(text=item[1])
+            cursor_x = event.x + event.widget.master.winfo_x()
+            cursor_y = event.y + event.widget.master.winfo_y()
+            label.place(
+                anchor=tk.NW,
+                x=cursor_x,
+                y=cursor_y,
+                width=155,
+            )
+
+    def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
+        event.widget.selection_remove(event.widget.focus())
+        label.place_forget()
 
 
 if __name__ == "__main__":
