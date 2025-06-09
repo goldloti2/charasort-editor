@@ -248,9 +248,9 @@ class View:
         self.controller.move_filter(frame.grid_info()["row"], "down")
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
-        focus = event.widget.focus()
-        if focus:
-            item = event.widget.item(focus, "values")
+        select = event.widget.selection()
+        if select:
+            item = event.widget.item(select, "values")
             label.config(text=item[1])
             cursor_x = event.x + event.widget.master.winfo_x()
             cursor_y = event.y + event.widget.master.winfo_y()
@@ -262,7 +262,7 @@ class View:
             )
 
     def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
-        event.widget.selection_remove(event.widget.focus())
+        event.widget.selection_remove(event.widget.selection())
         label.place_forget()
 
 
