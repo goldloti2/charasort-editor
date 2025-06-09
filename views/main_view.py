@@ -143,10 +143,49 @@ class View:
         edit_window.geometry("450x600")
         edit_window.resizable(False, True)
 
-        frame = ttk.Frame(edit_window)
-        frame.pack(expand=1, fill=tk.BOTH)
+        frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
+        frame.columnconfigure(0, pad=10)
+        frame.columnconfigure(1, weight=1, pad=10)
+        frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
-        ttk.Label(frame, text=entry).pack(expand=1, fill=tk.BOTH)
+        return_entry = []
+        row = 0
+        for attr in entry:
+            frame.rowconfigure(row, pad=10)
+            c_type, label, content = attr
+            if c_type == "label":
+                self._variable = tk.StringVar(value=content)
+                k_label = ttk.Label(frame, text=label + ":")
+                c_label = tk.Entry(frame, textvariable=self._variable)
+                k_label.grid(row=row, column=0)
+                c_label.grid(row=row, column=1, sticky=tk.EW)
+            elif c_type == "check":
+                self._variable = tk.BooleanVar(value=content)
+                k_label = ttk.Label(frame, text=label + ":")
+                c_check = ttk.Checkbutton(frame, variable=self._variable)
+                k_label.grid(row=row, column=0)
+                c_check.grid(row=row, column=1, sticky=tk.W)
+            elif c_type == "sub_frame":
+                sub_frame = ttk.Labelframe(
+                    frame, text=label, relief=tk.GROOVE, border=10
+                )
+                sub_frame.grid(row=row, column=0, columnspan=2, sticky=tk.W)
+                widget = ttk.Label(sub_frame, text=content[0][0] + ":")
+                widget.grid(row=0, column=0)
+                widget = ttk.Label(sub_frame, text=content[0][1] + ":")
+                widget.grid(row=0, column=2)
+                sub_row = 1
+                for sub_content in content[1:]:
+                    widget = ttk.Label(sub_frame, text=sub_content[0])
+                    widget.grid(row=sub_row, column=1, sticky=tk.W)
+                    widget = ttk.Label(sub_frame, text=sub_content[1])
+                    widget.grid(row=sub_row, column=3, sticky=tk.W)
+                    sub_row += 1
+            else:
+                raise ValueError(f"c_type '{c_type}' not found in view.button_edit")
+            return_entry.append((label, self._variable.get()))
+            row += 1
+        print(return_entry)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
