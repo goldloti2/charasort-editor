@@ -45,6 +45,7 @@ class View:
         self.chr_tab = chr_tab_base.interior
         self.detail_label_style = detail_label_style
         self.controller = controller
+        self.edit_window = None
 
     def start(self):
         self.root.mainloop()
@@ -136,12 +137,22 @@ class View:
             self.controller.save_file(path)
 
     def _button_edit(self, frame: ttk.Frame, tab: str):
+        if self.edit_window:
+            self.edit_window.focus()
+            return
+
+        def on_close():
+            self.edit_window.destroy()
+            self.edit_window = None
+
         entry = self.controller.get(frame.grid_info()["row"], tab)
 
-        edit_window = tk.Toplevel(self.root)
+        self.edit_window = edit_window = tk.Toplevel(self.root)
         edit_window.title(f"'{entry[0][2]}' editing...")
         edit_window.geometry("450x600")
         edit_window.resizable(False, True)
+        edit_window.protocol("WM_DELETE_WINDOW", on_close)
+        edit_window.focus()
 
         frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
         frame.columnconfigure(0, pad=10)
