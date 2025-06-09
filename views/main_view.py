@@ -157,7 +157,8 @@ class View:
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
         # add information
-        return_record = DisplayRecord(record, frame, True).return_record
+        display_record = DisplayRecord(record, frame, True)
+        return_record = display_record.return_record
 
         # add buttons
         button_save = ttk.Button(
@@ -179,7 +180,12 @@ class View:
 
     def _edit_window_save(self, record: dict):
         for key in record:
-            print(key, record[key].get())
+            if key == "tree":
+                tree = record[key]
+                for item in tree.get_children():
+                    print(tree.item(item, "values"))
+            else:
+                print(key, record[key].get())
         self._edit_window_close()
 
     def _edit_window_close(self):
