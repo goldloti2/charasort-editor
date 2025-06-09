@@ -169,8 +169,15 @@ class View:
             frame, text="cancel", command=self._edit_window_close
         )
         button_cancel.grid(row=1, column=2)
-        button_edit = ttk.Button(frame, text="edit option", command=None)
-        button_edit.grid(row=4, column=2, sticky=tk.N)
+
+        frame_edit = ttk.Frame(frame)
+        frame_edit.grid(row=4, column=2, sticky=tk.N)
+        button_add = ttk.Button(frame_edit, text="add option", command=None)
+        button_add.pack(fill=tk.X)
+        button_edit = ttk.Button(frame_edit, text="edit option", command=None)
+        button_edit.pack(fill=tk.X)
+        button_delete = ttk.Button(frame_edit, text="delete option", command=None)
+        button_delete.pack(fill=tk.X)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
