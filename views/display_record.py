@@ -3,21 +3,29 @@ from tkinter import ttk
 
 
 class DisplayRecord:
-    def __init__(self, record: dict, frame: ttk.Frame):
+    def __init__(self, record: dict, frame: ttk.Frame, is_edit: bool):
+        return_record = {}
         row = 0
         for attr in record:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type == "label":
                 k_label = ttk.Label(frame, text=label + ":")
-                c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
+                if is_edit:
+                    var = tk.StringVar(value=content)
+                    c_label = tk.Entry(frame, textvariable=var)
+                    return_record[label] = var
+                else:
+                    c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.EW)
             elif c_type == "check":
                 k_label = ttk.Label(frame, text=label + ":")
                 var = tk.BooleanVar(value=content)
-                c_check = ttk.Checkbutton(frame, variable=var, state=tk.DISABLED)
+                state = tk.NORMAL if is_edit else tk.DISABLED
+                c_check = ttk.Checkbutton(frame, variable=var, state=state)
                 c_check.var = var
+                return_record[label] = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
@@ -56,6 +64,11 @@ class DisplayRecord:
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
+        self._return_record = return_record
+
+    @property
+    def return_record(self):
+        return self._return_record
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         select = self.tree.selection()
