@@ -88,7 +88,9 @@ class View:
         # add buttons
         button_frame = ttk.Frame(frame)
         button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
-        button_edit = ttk.Button(button_frame, text="edit", command=None)
+        button_edit = ttk.Button(
+            button_frame, text="edit", command=lambda: self._button_edit(frame, tab)
+        )
         button_edit.pack(fill=tk.X)
         button_delete = ttk.Button(
             button_frame,
@@ -132,6 +134,9 @@ class View:
         )
         if path:
             self.controller.save_file(path)
+
+    def _button_edit(self, frame: ttk.Frame, tab: str):
+        print(frame.grid_info()["row"], tab)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
