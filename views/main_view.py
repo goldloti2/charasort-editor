@@ -145,7 +145,7 @@ class View:
 
         self.edit_window = edit_window = tk.Toplevel(self.root)
         edit_window.title(f"'{record[0][2]}' editing...")
-        edit_window.geometry("450x600")
+        edit_window.geometry("600x420")
         edit_window.resizable(False, True)
         edit_window.protocol("WM_DELETE_WINDOW", self._edit_window_close)
         edit_window.focus()
@@ -153,10 +153,22 @@ class View:
         frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
         frame.columnconfigure(0, pad=10)
         frame.columnconfigure(1, weight=1, pad=10)
+        frame.columnconfigure(2, pad=10)
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
+        # add information
         return_record = DisplayRecord(record, frame, True).return_record
         print(return_record)
+
+        # add buttons
+        button_save = ttk.Button(frame, text="save", command=None)
+        button_save.grid(row=0, column=2)
+        button_cancel = ttk.Button(
+            frame, text="cancel", command=self._edit_window_close
+        )
+        button_cancel.grid(row=1, column=2)
+        button_edit = ttk.Button(frame, text="edit option", command=None)
+        button_edit.grid(row=4, column=2, sticky=tk.N)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
