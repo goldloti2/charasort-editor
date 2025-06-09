@@ -136,7 +136,17 @@ class View:
             self.controller.save_file(path)
 
     def _button_edit(self, frame: ttk.Frame, tab: str):
-        print(frame.grid_info()["row"], tab)
+        entry = self.controller.get(frame.grid_info()["row"], tab)
+
+        edit_window = tk.Toplevel(self.root)
+        edit_window.title(f"'{entry[0][2]}' editing...")
+        edit_window.geometry("450x600")
+        edit_window.resizable(False, True)
+
+        frame = ttk.Frame(edit_window)
+        frame.pack(expand=1, fill=tk.BOTH)
+
+        ttk.Label(frame, text=entry).pack(expand=1, fill=tk.BOTH)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
