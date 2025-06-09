@@ -182,6 +182,7 @@ class View:
             frame_edit, text="delete option", command=None, state=tk.DISABLED
         )
         button_delete.pack(fill=tk.X)
+        display_entry.add_toggle_button((button_edit, button_delete))
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)

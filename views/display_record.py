@@ -66,10 +66,14 @@ class DisplayRecord:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
         self._return_variables = return_variables
+        self.toggle_button = ()
 
     @property
     def return_variables(self):
         return self._return_variables
+
+    def add_toggle_button(self, button: tuple):
+        self.toggle_button = button
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         select = self._tree.selection()
@@ -82,7 +86,11 @@ class DisplayRecord:
                 y=event.y + self._tree.master.winfo_y(),
                 width=155,
             )
+            for button in self.toggle_button:
+                button.config(state=tk.NORMAL)
 
     def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
         self._tree.selection_remove(self._tree.selection())
         label.place_forget()
+        for button in self.toggle_button:
+            button.config(state=tk.DISABLED)
