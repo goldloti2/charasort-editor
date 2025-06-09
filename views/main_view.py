@@ -158,10 +158,11 @@ class View:
 
         # add information
         return_record = DisplayRecord(record, frame, True).return_record
-        print(return_record)
 
         # add buttons
-        button_save = ttk.Button(frame, text="save", command=None)
+        button_save = ttk.Button(
+            frame, text="save", command=lambda: self._edit_window_save(return_record)
+        )
         button_save.grid(row=0, column=2)
         button_cancel = ttk.Button(
             frame, text="cancel", command=self._edit_window_close
@@ -175,6 +176,11 @@ class View:
 
     def _button_move(self, frame: ttk.Frame, direction: int):
         self.controller.move_filter(frame.grid_info()["row"], direction)
+
+    def _edit_window_save(self, record: dict):
+        for key in record:
+            print(key, record[key].get())
+        self._edit_window_close()
 
     def _edit_window_close(self):
         self.edit_window.destroy()
