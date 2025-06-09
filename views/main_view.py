@@ -192,11 +192,17 @@ class View:
         )
         button_option_delete.pack(fill=tk.X)
         button_option_up = ttk.Button(
-            frame_edit, text="↑", command=None, state=tk.DISABLED
+            frame_edit,
+            text="↑",
+            command=lambda: self._edit_treeview_move_up(tree),
+            state=tk.DISABLED,
         )
         button_option_up.pack(fill=tk.X)
         button_option_down = ttk.Button(
-            frame_edit, text="↓", command=None, state=tk.DISABLED
+            frame_edit,
+            text="↓",
+            command=lambda: self._edit_treeview_move_down(tree),
+            state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)
         display_record.add_toggle_button(
@@ -243,6 +249,24 @@ class View:
             tree.delete(item)
             # TODO: disable buttons
             tree.selection_remove(tree.selection())
+
+    def _edit_treeview_move_up(self, tree: ttk.Treeview):
+        item = tree.selection()
+        if item:
+            index = tree.index(item)
+            swap = tree.prev(item)
+            if swap:
+                tree.move(item, "", index - 1)
+                tree.move(swap, "", index)
+
+    def _edit_treeview_move_down(self, tree: ttk.Treeview):
+        item = tree.selection()
+        if item:
+            index = tree.index(item)
+            swap = tree.next(item)
+            if swap:
+                tree.move(item, "", index + 1)
+                tree.move(swap, "", index)
 
 
 if __name__ == "__main__":
