@@ -4,7 +4,7 @@ from tkinter import ttk
 
 class DisplayRecord:
     def __init__(self, record: dict, frame: ttk.Frame, is_edit: bool):
-        return_record = {}
+        return_variables = {}
         row = 0
         for attr in record:
             frame.rowconfigure(row, pad=5)
@@ -14,7 +14,7 @@ class DisplayRecord:
                 if is_edit:
                     var = tk.StringVar(value=content)
                     c_label = tk.Entry(frame, textvariable=var)
-                    return_record[label] = var
+                    return_variables[label] = var
                 else:
                     c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
@@ -25,7 +25,7 @@ class DisplayRecord:
                 state = tk.NORMAL if is_edit else tk.DISABLED
                 c_check = ttk.Checkbutton(frame, variable=var, state=state)
                 c_check.var = var
-                return_record[label] = var
+                return_variables[label] = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
             elif c_type == "sub_frame":
@@ -60,16 +60,16 @@ class DisplayRecord:
                     lambda event: self._treeview_deselect(event, detail_label),
                 )
                 tree.pack(expand=1, fill=tk.BOTH)
-                return_record["tree"] = tree
+                return_variables["tree"] = tree
                 self._tree = tree
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
-        self._return_record = return_record
+        self._return_variables = return_variables
 
     @property
-    def return_record(self):
-        return self._return_record
+    def return_variables(self):
+        return self._return_variables
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         select = self._tree.selection()

@@ -158,11 +158,11 @@ class View:
 
         # add information
         display_record = DisplayRecord(record, frame, True)
-        return_record = display_record.return_record
+        return_variables = display_record.return_variables
 
         # add buttons
         button_save = ttk.Button(
-            frame, text="save", command=lambda: self._edit_window_save(return_record)
+            frame, text="save", command=lambda: self._edit_window_save(return_variables)
         )
         button_save.grid(row=0, column=2)
         button_cancel = ttk.Button(
@@ -185,14 +185,14 @@ class View:
     def _button_move(self, frame: ttk.Frame, direction: int):
         self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _edit_window_save(self, record: dict):
-        for key in record:
+    def _edit_window_save(self, variable: dict):
+        for key in variable:
             if key == "tree":
-                tree = record[key]
+                tree = variable[key]
                 for item in tree.get_children():
                     print(tree.item(item, "values"))
             else:
-                print(key, record[key].get())
+                print(key, variable[key].get())
         self._edit_window_close()
 
     def _edit_window_close(self):
