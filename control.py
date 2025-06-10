@@ -28,7 +28,7 @@ class Controller:
         self.model.delete_object(index, tab)
         self._update_tab(tab)
 
-    def move_filter(self, index: int, direction: str):
+    def move_filter(self, index: int, direction: int):
         self.model.move_filter(index, direction)
         self._update_tab("filters")
 

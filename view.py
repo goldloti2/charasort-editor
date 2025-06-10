@@ -150,11 +150,11 @@ class View:
         button_delete.pack(fill=tk.X)
         if tab == "filters":
             button_up = ttk.Button(
-                button_frame, text="↑", command=lambda: self._button_move_up(frame)
+                button_frame, text="↑", command=lambda: self._button_move(frame, -1)
             )
             button_up.pack(fill=tk.X)
             button_down = ttk.Button(
-                button_frame, text="↓", command=lambda: self._button_move_down(frame)
+                button_frame, text="↓", command=lambda: self._button_move(frame, 1)
             )
             button_down.pack(fill=tk.X)
         return frame
@@ -241,11 +241,8 @@ class View:
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_object(frame.grid_info()["row"], tab)
 
-    def _button_move_up(self, frame: ttk.Frame):
-        self.controller.move_filter(frame.grid_info()["row"], "up")
-
-    def _button_move_down(self, frame: ttk.Frame):
-        self.controller.move_filter(frame.grid_info()["row"], "down")
+    def _button_move(self, frame: ttk.Frame, direction: int):
+        self.controller.move_filter(frame.grid_info()["row"], direction)
 
     def _treeview_select(self, event: tk.Event, label: ttk.Label):
         select = event.widget.selection()
