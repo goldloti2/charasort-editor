@@ -1,5 +1,5 @@
 from model import Model
-from view import View
+from views import View
 
 
 class Controller:
