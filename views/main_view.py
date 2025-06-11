@@ -153,8 +153,11 @@ class View:
     def _button_move(self, frame: ttk.Frame, direction: int):
         self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _callback_edit_return(self):
+    def _callback_edit_return(self, save: dict):
         self.edit_window = None
+        if save:
+            for key in save:
+                print(key, save[key])
 
 
 if __name__ == "__main__":

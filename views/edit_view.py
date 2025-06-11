@@ -82,15 +82,18 @@ class EditView:
         self._window_close()
 
     def _window_save(self):
+        save = {}
         for key in self.return_variables:
-            print(key, self.return_variables[key].get())
+            save[key] = self.return_variables[key].get()
+        tree_values = []
         for item in self.tree.get_children():
-            print(self.tree.item(item, "values"))
-        self._window_close()
+            tree_values.append(self.tree.item(item, "values"))
+        save["tree"] = tree_values
+        self._window_close(save)
 
-    def _window_close(self):
+    def _window_close(self, save: dict = None):
         self.window.destroy()
-        self.return_callback()
+        self.return_callback(save)
 
     def _treeview_add(self):
         self.tree.insert("", "end", values=("aaa", "bbb"))
