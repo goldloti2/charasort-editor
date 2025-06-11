@@ -69,10 +69,10 @@ class EditView:
         )
 
         # add information
-        display_record = DisplayRecord(record, frame, True)
-        self.return_variables = display_record.return_variables
-        self.tree = display_record.tree
-        display_record.add_toggle_button(self.toggle_button)
+        record_displayer = DisplayRecord(record, frame, True)
+        self.return_variables = record_displayer.return_variables
+        self.tree = record_displayer.tree
+        record_displayer.add_toggle_button(self.toggle_button)
 
     def focus(self):
         self.window.focus()
