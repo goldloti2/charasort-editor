@@ -24,8 +24,8 @@ class Controller:
             self.path = path
             self.model.save_file(path)
 
-    def delete_entry(self, index: int, tab: str):
-        self.model.delete_entry(index, tab)
+    def delete_record(self, index: int, tab: str):
+        self.model.delete_record(index, tab)
         self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):

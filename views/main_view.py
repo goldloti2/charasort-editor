@@ -3,7 +3,7 @@ from datetime import datetime
 from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
-from .display_entry import DisplayEntry
+from .display_record import DisplayRecord
 from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
@@ -73,7 +73,7 @@ class View:
         for frame in destroy:
             frame.destroy()
 
-    def _display_frame(self, entry: dict, tab: str) -> ttk.Frame:
+    def _display_frame(self, record: dict, tab: str) -> ttk.Frame:
         # create base frame
         if tab == "filters":
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
@@ -83,7 +83,7 @@ class View:
         frame.grid(column=0, sticky=tk.EW)
 
         # add information
-        DisplayEntry(entry, frame)
+        DisplayRecord(record, frame)
 
         # add buttons
         button_frame = ttk.Frame(frame)
@@ -134,7 +134,7 @@ class View:
             self.controller.save_file(path)
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
-        self.controller.delete_entry(frame.grid_info()["row"], tab)
+        self.controller.delete_record(frame.grid_info()["row"], tab)
 
     def _button_move(self, frame: ttk.Frame, direction: int):
         self.controller.move_filter(frame.grid_info()["row"], direction)
