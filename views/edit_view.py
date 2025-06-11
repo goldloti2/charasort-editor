@@ -11,7 +11,7 @@ class EditView:
 
         self.window = window = tk.Toplevel(root)
         window.title(f"'{record[0][2]}' editing...")
-        window.geometry("600x420")
+        window.geometry("600x500")
         window.resizable(False, True)
         window.protocol("WM_DELETE_WINDOW", self._window_close)
 
@@ -68,6 +68,40 @@ class EditView:
             button_option_down,
         )
 
+        # add input form
+        form_header = tk.StringVar()
+        input1 = tk.StringVar()
+        input2 = tk.StringVar()
+
+        frame.rowconfigure([5, 6, 7], pad=5)
+        ttk.Label(frame, textvariable=form_header, justify=tk.CENTER).grid(
+            row=5, column=0, columnspan=2, sticky=tk.EW
+        )
+        ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
+        ttk.Label(frame, text="key" + ":", justify=tk.CENTER).grid(row=7, column=0)
+        entry1 = ttk.Entry(frame, textvariable=input1, state=tk.DISABLED)
+        entry1.grid(row=6, column=1, sticky=tk.EW)
+        entry2 = ttk.Entry(frame, textvariable=input2, state=tk.DISABLED)
+        entry2.grid(row=7, column=1, sticky=tk.EW)
+        button_input_done = ttk.Button(
+            frame,
+            text="done",
+            command=None,
+            state=tk.DISABLED,
+        )
+        button_input_done.grid(row=6, column=2)
+        button_input_cancel = ttk.Button(
+            frame,
+            text="cancel",
+            command=None,
+            state=tk.DISABLED,
+        )
+        button_input_cancel.grid(row=7, column=2)
+
+        self.form_header = form_header
+        self.input1 = input1
+        self.input2 = input2
+
         # add information
         record_displayer = DisplayRecord(record, frame, True)
         self.return_variables = record_displayer.return_variables
@@ -95,14 +129,17 @@ class EditView:
         self.return_callback(save)
 
     def _treeview_add(self):
+        self.form_header.set("adding...")
         self.tree.insert("", "end", values=("aaa", "bbb"))
 
     def _treeview_edit(self):
+        self.form_header.set("editing...")
         item = self.tree.selection()
         if item:
             print(self.tree.item(item, "values"))
 
     def _treeview_delete(self):
+        self.form_header.set("deleted!")
         item = self.tree.selection()
         if item:
             print("delete", self.tree.item(item, "values"))
@@ -112,6 +149,7 @@ class EditView:
                 button.config(state=tk.DISABLED)
 
     def _treeview_move(self, direction: int):
+        self.form_header.set("moved!")
         item = self.tree.selection()
         if item:
             index = self.tree.index(item)
