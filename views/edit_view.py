@@ -61,19 +61,18 @@ class EditView:
             state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)
+        self.toggle_button = (
+            button_option_edit,
+            button_option_delete,
+            button_option_up,
+            button_option_down,
+        )
 
         # add information
         display_record = DisplayRecord(record, frame, True)
         self.return_variables = display_record.return_variables
         self.tree = display_record.tree
-        display_record.add_toggle_button(
-            (
-                button_option_edit,
-                button_option_delete,
-                button_option_up,
-                button_option_down,
-            )
-        )
+        display_record.add_toggle_button(self.toggle_button)
 
     def focus(self):
         self.window.focus()
@@ -108,8 +107,9 @@ class EditView:
         if item:
             print("delete", self.tree.item(item, "values"))
             self.tree.delete(item)
-            # TODO: disable buttons
             self.tree.selection_remove(self.tree.selection())
+            for button in self.toggle_button:
+                button.config(state=tk.DISABLED)
 
     def _treeview_move(self, direction: int):
         item = self.tree.selection()
