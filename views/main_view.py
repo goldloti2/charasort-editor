@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
 from .display_record import DisplayRecord
+from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
@@ -143,76 +144,8 @@ class View:
 
         record = self.controller.get(frame.grid_info()["row"], tab)
 
-        self.edit_window = edit_window = tk.Toplevel(self.root)
-        edit_window.title(f"'{record[0][2]}' editing...")
-        edit_window.geometry("600x420")
-        edit_window.resizable(False, True)
-        edit_window.protocol("WM_DELETE_WINDOW", self._edit_window_close)
-        edit_window.focus()
-
-        frame = ttk.Frame(edit_window, relief=tk.GROOVE, border=10)
-        frame.columnconfigure(0, pad=10)
-        frame.columnconfigure(1, weight=1, pad=10)
-        frame.columnconfigure(2, pad=10)
-        frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
-
-        # add information
-        display_record = DisplayRecord(record, frame, True)
-        return_variables = display_record.return_variables
-        tree = return_variables["tree"]
-
-        # add buttons
-        button_save = ttk.Button(
-            frame, text="save", command=lambda: self._edit_window_save(return_variables)
-        )
-        button_save.grid(row=0, column=2)
-        button_cancel = ttk.Button(
-            frame, text="cancel", command=self._edit_window_close
-        )
-        button_cancel.grid(row=1, column=2)
-
-        frame_edit = ttk.Frame(frame)
-        frame_edit.grid(row=4, column=2, sticky=tk.N)
-        button_option_add = ttk.Button(
-            frame_edit, text="add option", command=lambda: self._edit_treeview_add(tree)
-        )
-        button_option_add.pack(fill=tk.X)
-        button_option_edit = ttk.Button(
-            frame_edit,
-            text="edit option",
-            command=lambda: self._edit_treeview_edit(tree),
-            state=tk.DISABLED,
-        )
-        button_option_edit.pack(fill=tk.X)
-        button_option_delete = ttk.Button(
-            frame_edit,
-            text="delete option",
-            command=lambda: self._edit_treeview_delete(tree),
-            state=tk.DISABLED,
-        )
-        button_option_delete.pack(fill=tk.X)
-        button_option_up = ttk.Button(
-            frame_edit,
-            text="↑",
-            command=lambda: self._edit_treeview_move(tree, -1),
-            state=tk.DISABLED,
-        )
-        button_option_up.pack(fill=tk.X)
-        button_option_down = ttk.Button(
-            frame_edit,
-            text="↓",
-            command=lambda: self._edit_treeview_move(tree, 1),
-            state=tk.DISABLED,
-        )
-        button_option_down.pack(fill=tk.X)
-        display_record.add_toggle_button(
-            (
-                button_option_edit,
-                button_option_delete,
-                button_option_up,
-                button_option_down,
-            )
-        )
+        self.edit_window = EditView(self.root, record, self._callback_edit_return)
+        self.edit_window.focus()
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
         self.controller.delete_record(frame.grid_info()["row"], tab)
@@ -220,47 +153,8 @@ class View:
     def _button_move(self, frame: ttk.Frame, direction: int):
         self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _edit_window_save(self, variable: dict):
-        for key in variable:
-            if key == "tree":
-                tree = variable[key]
-                for item in tree.get_children():
-                    print(tree.item(item, "values"))
-            else:
-                print(key, variable[key].get())
-        self._edit_window_close()
-
-    def _edit_window_close(self):
-        self.edit_window.destroy()
+    def _callback_edit_return(self):
         self.edit_window = None
-
-    def _edit_treeview_add(self, tree: ttk.Treeview):
-        tree.insert("", "end", values=("aaa", "bbb"))
-
-    def _edit_treeview_edit(self, tree: ttk.Treeview):
-        item = tree.selection()
-        if item:
-            print(tree.item(item, "values"))
-
-    def _edit_treeview_delete(self, tree: ttk.Treeview):
-        item = tree.selection()
-        if item:
-            print("delete", tree.item(item, "values"))
-            tree.delete(item)
-            # TODO: disable buttons
-            tree.selection_remove(tree.selection())
-
-    def _edit_treeview_move(self, tree: ttk.Treeview, direction: int):
-        item = tree.selection()
-        if item:
-            index = tree.index(item)
-            if direction > 0:
-                swap = tree.next(item)
-            else:
-                swap = tree.prev(item)
-            if swap:
-                tree.move(item, "", index + direction)
-                tree.move(swap, "", index)
 
 
 if __name__ == "__main__":
