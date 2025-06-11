@@ -60,7 +60,6 @@ class DisplayRecord:
                     lambda event: self._treeview_deselect(event, detail_label),
                 )
                 tree.pack(expand=1, fill=tk.BOTH)
-                return_variables["tree"] = tree
                 self._tree = tree
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
@@ -71,6 +70,10 @@ class DisplayRecord:
     @property
     def return_variables(self):
         return self._return_variables
+
+    @property
+    def tree(self):
+        return self._tree
 
     def add_toggle_button(self, button: tuple):
         self.toggle_button = button

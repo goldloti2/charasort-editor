@@ -24,7 +24,7 @@ class EditView:
         # add information
         display_record = DisplayRecord(record, frame, True)
         self.return_variables = display_record.return_variables
-        self.tree = self.return_variables["tree"]
+        self.tree = display_record.tree
 
         # add buttons
         button_save = ttk.Button(frame, text="save", command=self._window_save)
@@ -83,12 +83,9 @@ class EditView:
 
     def _window_save(self):
         for key in self.return_variables:
-            if key == "tree":
-                tree = self.return_variables[key]
-                for item in tree.get_children():
-                    print(tree.item(item, "values"))
-            else:
-                print(key, self.return_variables[key].get())
+            print(key, self.return_variables[key].get())
+        for item in self.tree.get_children():
+            print(self.tree.item(item, "values"))
         self._window_close()
 
     def _window_close(self):
