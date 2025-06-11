@@ -21,11 +21,6 @@ class EditView:
         frame.columnconfigure(2, pad=10)
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
-        # add information
-        display_record = DisplayRecord(record, frame, True)
-        self.return_variables = display_record.return_variables
-        self.tree = display_record.tree
-
         # add buttons
         button_save = ttk.Button(frame, text="save", command=self._window_save)
         button_save.grid(row=0, column=2)
@@ -66,6 +61,11 @@ class EditView:
             state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)
+
+        # add information
+        display_record = DisplayRecord(record, frame, True)
+        self.return_variables = display_record.return_variables
+        self.tree = display_record.tree
         display_record.add_toggle_button(
             (
                 button_option_edit,
