@@ -40,7 +40,7 @@ class Model:
         swap_list[swap_idx] = swap
         self.flt_list = self._tree_to_list(self.filters)
 
-    def delete_object(self, index: int, tab: str):
+    def delete_entry(self, index: int, tab: str):
         if tab == "filters":
             self.filters.children().pop(index)
             self.flt_list = self._tree_to_list(self.filters)

@@ -2,10 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 
 
-class DisplayObject:
-    def __init__(self, object: dict, frame: ttk.Frame):
+class DisplayEntry:
+    def __init__(self, entry: dict, frame: ttk.Frame):
         row = 0
-        for attr in object:
+        for attr in entry:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type == "label":
