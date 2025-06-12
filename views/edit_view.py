@@ -70,8 +70,8 @@ class EditView:
 
         # add input form
         form_header = tk.StringVar()
-        input1 = tk.StringVar()
-        input2 = tk.StringVar()
+        imput_var1 = tk.StringVar()
+        imput_var2 = tk.StringVar()
 
         frame.rowconfigure([5, 6, 7], pad=5)
         ttk.Label(frame, textvariable=form_header, justify=tk.CENTER).grid(
@@ -79,28 +79,28 @@ class EditView:
         )
         ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
         ttk.Label(frame, text="key" + ":", justify=tk.CENTER).grid(row=7, column=0)
-        entry1 = ttk.Entry(frame, textvariable=input1, state=tk.DISABLED)
+        entry1 = ttk.Entry(frame, textvariable=imput_var1, state=tk.DISABLED)
         entry1.grid(row=6, column=1, sticky=tk.EW)
-        entry2 = ttk.Entry(frame, textvariable=input2, state=tk.DISABLED)
+        entry2 = ttk.Entry(frame, textvariable=imput_var2, state=tk.DISABLED)
         entry2.grid(row=7, column=1, sticky=tk.EW)
-        button_input_done = ttk.Button(
+        button_form_done = ttk.Button(
             frame,
             text="done",
             command=None,
             state=tk.DISABLED,
         )
-        button_input_done.grid(row=6, column=2)
-        button_input_cancel = ttk.Button(
+        button_form_done.grid(row=6, column=2)
+        button_form_cancel = ttk.Button(
             frame,
             text="cancel",
             command=None,
             state=tk.DISABLED,
         )
-        button_input_cancel.grid(row=7, column=2)
+        button_form_cancel.grid(row=7, column=2)
 
         self.form_header = form_header
-        self.input1 = input1
-        self.input2 = input2
+        self.imput_var1 = imput_var1
+        self.imput_var2 = imput_var2
 
         # add information
         record_displayer = DisplayRecord(record, frame, True)
