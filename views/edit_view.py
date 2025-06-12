@@ -70,8 +70,8 @@ class EditView:
 
         # add input form
         form_header = tk.StringVar()
-        imput_var1 = tk.StringVar()
-        imput_var2 = tk.StringVar()
+        input_var1 = tk.StringVar()
+        input_var2 = tk.StringVar()
 
         frame.rowconfigure([5, 6, 7], pad=5)
         ttk.Label(frame, textvariable=form_header, justify=tk.CENTER).grid(
@@ -79,9 +79,9 @@ class EditView:
         )
         ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
         ttk.Label(frame, text="key" + ":", justify=tk.CENTER).grid(row=7, column=0)
-        entry1 = ttk.Entry(frame, textvariable=imput_var1, state=tk.DISABLED)
+        entry1 = ttk.Entry(frame, textvariable=input_var1, state=tk.DISABLED)
         entry1.grid(row=6, column=1, sticky=tk.EW)
-        entry2 = ttk.Entry(frame, textvariable=imput_var2, state=tk.DISABLED)
+        entry2 = ttk.Entry(frame, textvariable=input_var2, state=tk.DISABLED)
         entry2.grid(row=7, column=1, sticky=tk.EW)
         button_form_done = ttk.Button(
             frame,
@@ -99,8 +99,8 @@ class EditView:
         button_form_cancel.grid(row=7, column=2)
 
         self.form_header = form_header
-        self.imput_var1 = imput_var1
-        self.imput_var2 = imput_var2
+        self.input_var1 = input_var1
+        self.input_var2 = input_var2
         self.toggle_form_widgets = (
             entry1,
             entry2,
@@ -137,26 +137,26 @@ class EditView:
 
     def _treeview_add(self):
         self.form_header.set("adding...")
-        self.imput_var1.set("")
-        self.imput_var2.set("")
+        self.input_var1.set("")
+        self.input_var2.set("")
         self.edit_item = None
-        self._toggle_form(True)
+        self._form_toggle(True)
 
     def _treeview_edit(self):
         item = self.tree.selection()
         if item:
             self.form_header.set("editing...")
             value = self.tree.item(item, "values")
-            self.imput_var1.set(value[0])
-            self.imput_var2.set(value[1])
+            self.input_var1.set(value[0])
+            self.input_var2.set(value[1])
             self.edit_item = item
-            self._toggle_form(True)
+            self._form_toggle(True)
 
     def _treeview_delete(self):
         item = self.tree.selection()
         if item:
             self.form_header.set("deleted!")
-            self._toggle_form(False)
+            self._form_toggle(False)
             self.tree.delete(item)
             self.tree.selection_remove(self.tree.selection())
             for button in self.toggle_button:
@@ -172,12 +172,12 @@ class EditView:
                 swap = self.tree.prev(item)
             if swap:
                 self.form_header.set("moved!")
-                self._toggle_form(False)
+                self._form_toggle(False)
                 self.tree.move(item, "", index + direction)
                 self.tree.move(swap, "", index)
 
     def _form_done(self):
-        value = (self.imput_var1.get(), self.imput_var2.get())
+        value = (self.input_var1.get(), self.input_var2.get())
         pos = "end"
         if self.edit_item:
             pos = self.tree.index(self.edit_item)
@@ -187,12 +187,12 @@ class EditView:
         self._form_ending()
 
     def _form_ending(self):
-        self.imput_var1.set("")
-        self.imput_var2.set("")
+        self.input_var1.set("")
+        self.input_var2.set("")
         self.form_header.set("")
-        self._toggle_form(False)
+        self._form_toggle(False)
 
-    def _toggle_form(self, toggle: bool):
+    def _form_toggle(self, toggle: bool):
         if toggle:
             for widget in self.toggle_form_widgets:
                 widget.config(state=tk.NORMAL)
