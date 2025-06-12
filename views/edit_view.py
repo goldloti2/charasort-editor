@@ -101,6 +101,12 @@ class EditView:
         self.form_header = form_header
         self.imput_var1 = imput_var1
         self.imput_var2 = imput_var2
+        self.toggle_form_widgets = (
+            entry1,
+            entry2,
+            button_form_done,
+            button_form_cancel,
+        )
 
         # add information
         record_displayer = DisplayRecord(record, frame, True)
@@ -130,18 +136,21 @@ class EditView:
 
     def _treeview_add(self):
         self.form_header.set("adding...")
+        self._toggle_form(True)
         self.tree.insert("", "end", values=("aaa", "bbb"))
 
     def _treeview_edit(self):
-        self.form_header.set("editing...")
         item = self.tree.selection()
         if item:
+            self.form_header.set("editing...")
+            self._toggle_form(True)
             print(self.tree.item(item, "values"))
 
     def _treeview_delete(self):
-        self.form_header.set("deleted!")
         item = self.tree.selection()
         if item:
+            self.form_header.set("deleted!")
+            self._toggle_form(False)
             print("delete", self.tree.item(item, "values"))
             self.tree.delete(item)
             self.tree.selection_remove(self.tree.selection())
@@ -149,7 +158,6 @@ class EditView:
                 button.config(state=tk.DISABLED)
 
     def _treeview_move(self, direction: int):
-        self.form_header.set("moved!")
         item = self.tree.selection()
         if item:
             index = self.tree.index(item)
@@ -158,5 +166,15 @@ class EditView:
             else:
                 swap = self.tree.prev(item)
             if swap:
+                self.form_header.set("moved!")
+                self._toggle_form(False)
                 self.tree.move(item, "", index + direction)
                 self.tree.move(swap, "", index)
+
+    def _toggle_form(self, toggle: bool):
+        if toggle:
+            for widget in self.toggle_form_widgets:
+                widget.config(state=tk.NORMAL)
+        else:
+            for widget in self.toggle_form_widgets:
+                widget.config(state=tk.DISABLED)
