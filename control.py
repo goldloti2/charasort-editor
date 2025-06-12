@@ -34,6 +34,11 @@ class Controller:
         self.model.delete_record(index, tab)
         self._update_tab(tab)
 
+    def update_record(self, save: dict, index: int):
+        print("index", index)
+        for key in save:
+            print(key, save[key])
+
     def move_filter(self, index: int, direction: int):
         self.model.move_filter(index, direction)
         self._update_tab("filters")

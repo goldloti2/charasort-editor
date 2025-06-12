@@ -47,6 +47,7 @@ class View:
         self.detail_label_style = detail_label_style
         self.controller = controller
         self.edit_window = None
+        self.edit_index = 0
 
     def start(self):
         self.root.mainloop()
@@ -142,22 +143,24 @@ class View:
             self.edit_window.focus()
             return
 
-        record = self.controller.get_record(frame.grid_info()["row"], tab)
+        self.edit_index = frame.grid_info()["row"]
+        record = self.controller.get_record(self.edit_index, tab)
 
         self.edit_window = EditView(self.root, record, self._callback_edit_return)
         self.edit_window.focus()
 
     def _button_delete(self, frame: ttk.Frame, tab: str):
-        self.controller.delete_record(frame.grid_info()["row"], tab)
+        if not self.edit_window:
+            self.controller.delete_record(frame.grid_info()["row"], tab)
 
     def _button_move(self, frame: ttk.Frame, direction: int):
-        self.controller.move_filter(frame.grid_info()["row"], direction)
+        if not self.edit_window:
+            self.controller.move_filter(frame.grid_info()["row"], direction)
 
     def _callback_edit_return(self, save: dict):
         self.edit_window = None
         if save:
-            for key in save:
-                print(key, save[key])
+            self.controller.update_record(save, self.edit_index)
 
 
 if __name__ == "__main__":
