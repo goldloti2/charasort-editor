@@ -111,9 +111,8 @@ class EditView:
 
         # add information
         record_displayer = DisplayRecord(record, frame, True)
-        self.return_variables = record_displayer.return_variables
-        self.tree = record_displayer.tree
         record_displayer.add_toggle_button(self.toggle_button)
+        self.record_displayer = record_displayer
 
     def focus(self):
         self.window.focus()
@@ -122,13 +121,7 @@ class EditView:
         self._window_close()
 
     def _window_save(self):
-        save = {}
-        for key in self.return_variables:
-            save[key] = self.return_variables[key].get()
-        tree_values = []
-        for item in self.tree.get_children():
-            tree_values.append(self.tree.item(item, "values"))
-        save["tree"] = tree_values
+        save = self.record_displayer.get_values()
         self._window_close(save)
 
     def _window_close(self, save: dict = None):
@@ -143,46 +136,33 @@ class EditView:
         self._form_toggle(True)
 
     def _treeview_edit(self):
-        item = self.tree.selection()
+        item = self.record_displayer.tree_selected()
         if item:
+            self.edit_item = item[0]
+            values = item[1]
             self.form_header.set("editing...")
-            value = self.tree.item(item, "values")
-            self.input_var1.set(value[0])
-            self.input_var2.set(value[1])
-            self.edit_item = item
+            self.input_var1.set(values[0])
+            self.input_var2.set(values[1])
             self._form_toggle(True)
 
     def _treeview_delete(self):
-        item = self.tree.selection()
-        if item:
+        if self.record_displayer.tree_delete():
+            self._form_ending()
             self.form_header.set("deleted!")
-            self._form_toggle(False)
-            self.tree.delete(item)
-            self.tree.selection_remove(self.tree.selection())
             for button in self.toggle_button:
                 button.config(state=tk.DISABLED)
 
     def _treeview_move(self, direction: int):
-        item = self.tree.selection()
-        if item:
-            index = self.tree.index(item)
-            if direction > 0:
-                swap = self.tree.next(item)
-            else:
-                swap = self.tree.prev(item)
-            if swap:
-                self.form_header.set("moved!")
-                self._form_toggle(False)
-                self.tree.move(item, "", index + direction)
-                self.tree.move(swap, "", index)
+        if self.record_displayer.tree_move(direction):
+            self._form_ending()
+            self.form_header.set("moved!")
 
     def _form_done(self):
-        value = (self.input_var1.get(), self.input_var2.get())
-        pos = "end"
+        values = (self.input_var1.get(), self.input_var2.get())
         if self.edit_item:
-            pos = self.tree.index(self.edit_item)
-            self.tree.delete(self.edit_item)
-        self.tree.insert("", pos, values=value)
+            self.record_displayer.tree_edit(values, self.edit_item)
+        else:
+            self.record_displayer.tree_add(values)
         self.edit_item = None
         self._form_ending()
 

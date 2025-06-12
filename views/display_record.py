@@ -67,13 +67,51 @@ class DisplayRecord:
         self._return_variables = return_variables
         self.toggle_button = ()
 
-    @property
-    def return_variables(self):
-        return self._return_variables
+    def get_values(self):
+        values = {}
+        for key in self._return_variables:
+            values[key] = self._return_variables[key].get()
+        tree_values = []
+        for item in self._tree.get_children():
+            tree_values.append(self._tree.item(item, "values"))
+        values["tree"] = tree_values
+        return values
 
-    @property
-    def tree(self):
-        return self._tree
+    def tree_add(self, values: tuple):
+        self._tree.insert("", "end", values=values)
+
+    def tree_delete(self):
+        item = self._tree.selection()
+        if item:
+            self._tree.delete(item)
+            self._tree.selection_remove(self._tree.selection())
+            return True
+        return False
+
+    def tree_edit(self, values: tuple, item: str):
+        pos = self._tree.index(item)
+        self._tree.delete(item)
+        self._tree.insert("", pos, values=values)
+
+    def tree_move(self, direction: int):
+        item = self._tree.selection()
+        if item:
+            if direction > 0:
+                swap = self._tree.next(item)
+            else:
+                swap = self._tree.prev(item)
+            if swap:
+                index = self._tree.index(item)
+                self._tree.move(item, "", index + direction)
+                self._tree.move(swap, "", index)
+                return True
+        return False
+
+    def tree_selected(self):
+        item = self._tree.selection()
+        if item:
+            return item, self._tree.item(item, "values")
+        return None
 
     def add_toggle_button(self, button: tuple):
         self.toggle_button = button
