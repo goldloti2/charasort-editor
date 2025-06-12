@@ -86,14 +86,14 @@ class EditView:
         button_form_done = ttk.Button(
             frame,
             text="done",
-            command=None,
+            command=self._form_done,
             state=tk.DISABLED,
         )
         button_form_done.grid(row=6, column=2)
         button_form_cancel = ttk.Button(
             frame,
             text="cancel",
-            command=None,
+            command=self._form_ending,
             state=tk.DISABLED,
         )
         button_form_cancel.grid(row=7, column=2)
@@ -107,6 +107,7 @@ class EditView:
             button_form_done,
             button_form_cancel,
         )
+        self.edit_item = None
 
         # add information
         record_displayer = DisplayRecord(record, frame, True)
@@ -136,22 +137,26 @@ class EditView:
 
     def _treeview_add(self):
         self.form_header.set("adding...")
+        self.imput_var1.set("")
+        self.imput_var2.set("")
+        self.edit_item = None
         self._toggle_form(True)
-        self.tree.insert("", "end", values=("aaa", "bbb"))
 
     def _treeview_edit(self):
         item = self.tree.selection()
         if item:
             self.form_header.set("editing...")
+            value = self.tree.item(item, "values")
+            self.imput_var1.set(value[0])
+            self.imput_var2.set(value[1])
+            self.edit_item = item
             self._toggle_form(True)
-            print(self.tree.item(item, "values"))
 
     def _treeview_delete(self):
         item = self.tree.selection()
         if item:
             self.form_header.set("deleted!")
             self._toggle_form(False)
-            print("delete", self.tree.item(item, "values"))
             self.tree.delete(item)
             self.tree.selection_remove(self.tree.selection())
             for button in self.toggle_button:
@@ -170,6 +175,22 @@ class EditView:
                 self._toggle_form(False)
                 self.tree.move(item, "", index + direction)
                 self.tree.move(swap, "", index)
+
+    def _form_done(self):
+        value = (self.imput_var1.get(), self.imput_var2.get())
+        pos = "end"
+        if self.edit_item:
+            pos = self.tree.index(self.edit_item)
+            self.tree.delete(self.edit_item)
+        self.tree.insert("", pos, values=value)
+        self.edit_item = None
+        self._form_ending()
+
+    def _form_ending(self):
+        self.imput_var1.set("")
+        self.imput_var2.set("")
+        self.form_header.set("")
+        self._toggle_form(False)
 
     def _toggle_form(self, toggle: bool):
         if toggle:
