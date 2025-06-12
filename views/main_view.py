@@ -142,7 +142,7 @@ class View:
             self.edit_window.focus()
             return
 
-        record = self.controller.get(frame.grid_info()["row"], tab)
+        record = self.controller.get_record(frame.grid_info()["row"], tab)
 
         self.edit_window = EditView(self.root, record, self._callback_edit_return)
         self.edit_window.focus()

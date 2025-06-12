@@ -24,7 +24,7 @@ class Controller:
             self.path = path
             self.model.save_file(path)
 
-    def get(self, index: int, tab: str):
+    def get_record(self, index: int, tab: str):
         if tab == "filters":
             return self.flt_list[index]
         elif tab == "characters":
