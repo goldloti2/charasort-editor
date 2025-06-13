@@ -57,6 +57,6 @@ class Model:
                     prop.left.value: parse_node(prop.right) for prop in node.children()
                 }
             else:
-                return node.value
+                return node.value.strip('"')
 
         return [parse_node(child) for child in tree.children()]
