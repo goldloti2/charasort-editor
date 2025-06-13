@@ -142,6 +142,10 @@ class View:
             self.edit_window.focus()
             return
 
+        # temporary restrict edit button to filter only
+        if tab != "filters":
+            return
+
         index = frame.grid_info()["row"]
         record = self.controller.get_record(index, tab)
 

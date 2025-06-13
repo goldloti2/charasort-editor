@@ -35,9 +35,11 @@ class Controller:
         self._update_tab(tab)
 
     def update_record(self, record: dict, index: int, tab: str):
-        print("index", index)
-        if self.model.update_filter(record, index):
-            self._update_tab(tab)
+        if tab == "filters":
+            if self.model.update_filter(record, index):
+                self._update_tab(tab)
+        elif tab == "characters":
+            pass
 
     def move_filter(self, index: int, direction: int):
         self.model.move_filter(index, direction)
