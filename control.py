@@ -7,11 +7,11 @@ class Controller:
         window = View(self)
         self.window = window
 
-    def start(self):
-        self.open_file()
+    def start(self, path: str):
+        self.open_file(path)
         self.window.start()
 
-    def open_file(self, path="test.js"):
+    def open_file(self, path):
         self.path = path
         self.model = Model(path)
         self._update_tab("filters")
@@ -86,4 +86,4 @@ class Controller:
 
 if __name__ == "__main__":
     app = Controller()
-    app.start()
+    app.start("test.js")
