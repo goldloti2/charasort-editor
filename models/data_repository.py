@@ -31,3 +31,7 @@ class DataRepository:
     def save_file(self, path: str):
         with open(path, "w") as file:
             print(self.tree, file=file)
+
+
+if __name__ == "__main__":
+    repo = DataRepository("test.js")
