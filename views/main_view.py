@@ -4,6 +4,7 @@ from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
 from .display_record import DisplayRecord
+from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
@@ -45,6 +46,7 @@ class View:
         self.chr_tab = chr_tab_base.interior
         self.detail_label_style = detail_label_style
         self.controller = controller
+        self.edit_window = None
 
     def start(self):
         self.root.mainloop()
@@ -83,12 +85,14 @@ class View:
         frame.grid(column=0, sticky=tk.EW)
 
         # add information
-        DisplayRecord(record, frame)
+        DisplayRecord(record, frame, False)
 
         # add buttons
         button_frame = ttk.Frame(frame)
         button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
-        button_edit = ttk.Button(button_frame, text="edit", command=None)
+        button_edit = ttk.Button(
+            button_frame, text="edit", command=lambda: self._button_edit(frame, tab)
+        )
         button_edit.pack(fill=tk.X)
         button_delete = ttk.Button(
             button_frame,
@@ -133,11 +137,35 @@ class View:
         if path:
             self.controller.save_file(path)
 
+    def _button_edit(self, frame: ttk.Frame, tab: str):
+        if self.edit_window:
+            self.edit_window.focus()
+            return
+
+        # temporary restrict edit button to filter only
+        if tab != "filters":
+            return
+
+        index = frame.grid_info()["row"]
+        record = self.controller.get_record(index, tab)
+
+        self.edit_window = EditView(
+            self.root, record, lambda save: self._callback_edit_return(save, index, tab)
+        )
+        self.edit_window.focus()
+
     def _button_delete(self, frame: ttk.Frame, tab: str):
-        self.controller.delete_record(frame.grid_info()["row"], tab)
+        if not self.edit_window:
+            self.controller.delete_record(frame.grid_info()["row"], tab)
 
     def _button_move(self, frame: ttk.Frame, direction: int):
-        self.controller.move_filter(frame.grid_info()["row"], direction)
+        if not self.edit_window:
+            self.controller.move_filter(frame.grid_info()["row"], direction)
+
+    def _callback_edit_return(self, save: dict, index: int, tab: str):
+        self.edit_window = None
+        if save:
+            self.controller.update_record(save, index, tab)
 
 
 if __name__ == "__main__":
