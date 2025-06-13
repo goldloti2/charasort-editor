@@ -48,6 +48,11 @@ class Model:
             self.characters.children().pop(index)
             self.chr_list = self._tree_to_list(self.characters)
 
+    def update_filter(self, record: dict, index: int):
+        print(record, "\n")
+        print(self.flt_list[index], "\n")
+        print(self.filters.children()[index])
+
     def _tree_to_list(self, tree: asttypes.Array) -> list:
         def parse_node(node):
             if isinstance(node, asttypes.Array):
