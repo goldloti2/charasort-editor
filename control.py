@@ -36,7 +36,8 @@ class Controller:
 
     def update_record(self, record: dict, index: int, tab: str):
         print("index", index)
-        self.model.update_filter(record, index)
+        if self.model.update_filter(record, index):
+            self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):
         self.model.move_filter(index, direction)
