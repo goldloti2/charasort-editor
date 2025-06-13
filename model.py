@@ -49,10 +49,6 @@ class Model:
             self.chr_list = self._tree_to_list(self.characters)
 
     def update_filter(self, record: dict, index: int):
-        print(record, "\n")
-        print(self.flt_list[index], "\n")
-        print(self.filters.children()[index])
-
         if ("name" not in record) or ("key" not in record):
             print('filter object require "name" and "key" attribute')
             return False
@@ -83,8 +79,8 @@ class Model:
         js_string = f"data = {{ {js_string} }}"
         tree = es5(js_string)
         node = next(self.walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
-        print(js_string)
-        print(node)
+        self.filters.children()[index] = node
+        self.flt_list = self._tree_to_list(self.filters)
         return True
 
     def _tree_to_list(self, tree: asttypes.Array) -> list:
