@@ -146,7 +146,7 @@ class View:
         record = self.controller.get_record(index, tab)
 
         self.edit_window = EditView(
-            self.root, record, lambda save: self._callback_edit_return(save, index)
+            self.root, record, lambda save: self._callback_edit_return(save, index, tab)
         )
         self.edit_window.focus()
 
@@ -158,10 +158,10 @@ class View:
         if not self.edit_window:
             self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _callback_edit_return(self, save: dict, index: int):
+    def _callback_edit_return(self, save: dict, index: int, tab: str):
         self.edit_window = None
         if save:
-            self.controller.update_record(save, index)
+            self.controller.update_record(save, index, tab)
 
 
 if __name__ == "__main__":

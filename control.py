@@ -34,7 +34,7 @@ class Controller:
         self.model.delete_record(index, tab)
         self._update_tab(tab)
 
-    def update_record(self, save: dict, index: int):
+    def update_record(self, save: dict, index: int, tab: str):
         print("index", index)
         for key in save:
             print(key, save[key])
