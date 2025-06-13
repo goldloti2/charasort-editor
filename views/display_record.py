@@ -70,11 +70,14 @@ class DisplayRecord:
     def get_values(self):
         values = {}
         for key in self._return_variables:
-            values[key] = self._return_variables[key].get()
+            var = self._return_variables[key].get()
+            if var:
+                values[key] = var
         tree_values = []
         for item in self._tree.get_children():
             tree_values.append(self._tree.item(item, "values"))
-        values["tree"] = tree_values
+        if tree_values:
+            values["tree"] = tree_values
         return values
 
     def tree_add(self, values: tuple):
