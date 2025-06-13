@@ -1,4 +1,4 @@
-from model import Model
+from models import DataRepository
 from views import View
 
 
@@ -6,6 +6,8 @@ class Controller:
     def __init__(self):
         window = View(self)
         self.window = window
+        self.repo = None
+        self.path = ""
 
     def start(self, path: str):
         self.open_file(path)
@@ -13,7 +15,7 @@ class Controller:
 
     def open_file(self, path):
         self.path = path
-        self.model = Model(path)
+        self.repo = DataRepository(path)
         self._update_tab("filters")
         self._update_tab("characters")
 

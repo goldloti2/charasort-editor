@@ -2,7 +2,7 @@ from calmjs.parse import asttypes, es5, io
 from calmjs.parse.walkers import Walker
 
 
-class Model:
+class BaseModel:
     def __init__(self, path: str):
         with open(path, "r", encoding="UTF-8") as file:
             tree = io.read(es5, file)
