@@ -1,5 +1,4 @@
 from calmjs.parse import asttypes, es5, io
-from calmjs.parse.unparsers.es5 import pretty_print
 from calmjs.parse.walkers import Walker
 
 
@@ -30,7 +29,7 @@ class Model:
 
     def save_file(self, path: str):
         with open(path, "w") as file:
-            print(pretty_print(self.tree, indent_str="    "), file=file)
+            print(self.tree, file=file)
 
     def move_filter(self, index: int, direction: int):
         swap_idx = index + direction
