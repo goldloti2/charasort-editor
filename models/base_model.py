@@ -7,7 +7,7 @@ from calmjs.parse.walkers import Walker
 class BaseModel(ABC):
     @staticmethod
     def after_db_update(func):
-        def wrapper(self: BaseModel, *args, **kwargs):
+        def wrapper(self: "BaseModel", *args, **kwargs):
             result = func(self, *args, **kwargs)
             self.refresh_tree_list()
             return result
