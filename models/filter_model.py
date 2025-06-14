@@ -1,9 +1,10 @@
 from calmjs.parse import asttypes
 
 from .base_model import BaseModel
+from .sort_mixin import SortMixin
 
 
-class FilterModel(BaseModel):
+class FilterModel(BaseModel, SortMixin):
     def __init__(self, tree: asttypes.Array):
         super().__init__(tree)
 
