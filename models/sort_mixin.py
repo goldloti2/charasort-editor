@@ -1,8 +1,8 @@
-from .base_model import BaseModel
+from .base_model import after_db_update
 
 
 class SortMixin:
-    @BaseModel.after_db_update
+    @after_db_update
     def swap(self, index: int, direction: int):
         swap_idx = index + direction
         swap_list = self.tree.children()

@@ -4,21 +4,21 @@ from calmjs.parse import asttypes, es5
 from calmjs.parse.walkers import Walker
 
 
+def after_db_update(func):
+    def wrapper(self: "BaseModel", *args, **kwargs):
+        result = func(self, *args, **kwargs)
+        self.refresh_tree_list()
+        return result
+
+    return wrapper
+
+
 class BaseModel(ABC):
-    @staticmethod
-    def after_db_update(func):
-        def wrapper(self: "BaseModel", *args, **kwargs):
-            result = func(self, *args, **kwargs)
-            self.refresh_tree_list()
-            return result
-
-        return wrapper
-
-    @after_db_update
     def __init__(self, tree: asttypes.Array):
         self.tree = tree
         self.walker = Walker()
         self.tree_list = []
+        self.refresh_tree_list()
 
     @after_db_update
     def add(self, record: dict):
