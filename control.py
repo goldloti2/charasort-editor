@@ -4,8 +4,7 @@ from views import View
 
 class Controller:
     def __init__(self):
-        window = View(self)
-        self.window = window
+        self.window = View(self)
         self.repo = None
         self.path = ""
         self.filter_list = []
@@ -22,11 +21,9 @@ class Controller:
         self._update_tab("characters")
 
     def save_file(self, path=""):
-        if not path:
-            self.repo.save_file(self.path)
-        else:
+        if path:
             self.path = path
-            self.repo.save_file(path)
+        self.repo.save_file(self.path)
 
     def get_record(self, index: int, tab: str):
         if tab == "filters":
