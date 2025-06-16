@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from utils import ButtonLabel, TabType
 
-from .display import DisplayFrame
+from .display import DisplayRecordFrame
 from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
 
@@ -94,7 +94,7 @@ class View:
         is_first: bool,
         is_last: bool,
     ):
-        frame = DisplayFrame(parent, record, index, callbacks)
+        frame = DisplayRecordFrame(parent, record, index, callbacks)
         frame.disable_move(is_first, is_last)
         return frame
 
@@ -134,7 +134,7 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def _button_edit(self, frame: DisplayFrame, tab: TabType):
+    def _button_edit(self, frame: DisplayRecordFrame, tab: TabType):
         if self.edit_window:
             self.edit_window.focus()
             return
@@ -151,11 +151,11 @@ class View:
         )
         self.edit_window.focus()
 
-    def _button_delete(self, frame: DisplayFrame, tab: TabType):
+    def _button_delete(self, frame: DisplayRecordFrame, tab: TabType):
         if not self.edit_window:
             self.controller.delete_record(frame.index, tab)
 
-    def _button_move(self, frame: DisplayFrame, direction: int):
+    def _button_move(self, frame: DisplayRecordFrame, direction: int):
         if not self.edit_window:
             self.controller.move_filter(frame.index, direction)
 

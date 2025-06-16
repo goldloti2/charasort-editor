@@ -143,7 +143,7 @@ class DisplayRecord:
             button.config(state=tk.DISABLED)
 
 
-class DisplayFrame(ttk.Frame):
+class DisplayRecordFrame(ttk.Frame):
     def __init__(self, parent: ttk.Frame, record: dict, index: int, callbacks: dict):
         # create base frame
         super().__init__(parent, relief=tk.GROOVE, border=10)
