@@ -62,7 +62,7 @@ class EditView:
             state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)
-        self.toggle_button = (
+        self.toggle_buttons = (
             button_option_edit,
             button_option_delete,
             button_option_up,
@@ -112,7 +112,9 @@ class EditView:
 
         # add information
         record_displayer = DisplayRecord(record, frame, True)
-        record_displayer.add_toggle_button(self.toggle_button)
+        record_displayer.add_treeview_callbacks(
+            partial(self._treeview_toggle, True), partial(self._treeview_toggle, False)
+        )
         self.record_displayer = record_displayer
 
     def focus(self):
@@ -150,13 +152,20 @@ class EditView:
         if self.record_displayer.tree_delete():
             self._form_ending()
             self.status_text.set("deleted!")
-            for button in self.toggle_button:
-                button.config(state=tk.DISABLED)
+            self._treeview_toggle(False)
 
     def _treeview_move(self, direction: int):
         if self.record_displayer.tree_move(direction):
             self._form_ending()
             self.status_text.set("moved!")
+
+    def _treeview_toggle(self, enable: bool):
+        if enable:
+            for button in self.toggle_buttons:
+                button.config(state=tk.NORMAL)
+        else:
+            for button in self.toggle_buttons:
+                button.config(state=tk.DISABLED)
 
     def _form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
@@ -173,8 +182,8 @@ class EditView:
         self.status_text.set("")
         self._form_toggle(False)
 
-    def _form_toggle(self, toggle: bool):
-        if toggle:
+    def _form_toggle(self, enable: bool):
+        if enable:
             for widget in self.toggle_form_widgets:
                 widget.config(state=tk.NORMAL)
         else:
