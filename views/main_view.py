@@ -24,12 +24,12 @@ class View:
         menu = self._build_menu(root)
         root.config(menu=menu)
 
-        tabcontrol = ttk.Notebook()
-        filters_tab_base = VerticalScrolledFrame(tabcontrol)
-        characters_tab_base = VerticalScrolledFrame(tabcontrol)
-        tabcontrol.add(filters_tab_base, text="Filters")
-        tabcontrol.add(characters_tab_base, text="Characters")
-        tabcontrol.pack(expand=1, fill=tk.BOTH)
+        tab_control = ttk.Notebook()
+        filters_tab_base = VerticalScrolledFrame(tab_control)
+        characters_tab_base = VerticalScrolledFrame(tab_control)
+        tab_control.add(filters_tab_base, text="Filters")
+        tab_control.add(characters_tab_base, text="Characters")
+        tab_control.pack(expand=1, fill=tk.BOTH)
 
         detail_label_style = ttk.Style()
         detail_label_style.configure(
@@ -95,7 +95,6 @@ class View:
     ):
         frame = DisplayRecordFrame(parent, record, index, callbacks)
         frame.disable_move(is_first, is_last)
-        return frame
 
     def _create_button_callbacks(self, tab: TabType):
         callbacks = {
