@@ -147,7 +147,7 @@ class View:
         record = self.controller.get_record(index, tab)
 
         self.edit_window = EditView(
-            self.root, record, lambda save: self._on_edit_return(save, index, tab)
+            self.root, record, partial(self._on_edit_return, index=index, tab=tab)
         )
         self.edit_window.focus()
 

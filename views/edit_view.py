@@ -1,4 +1,5 @@
 import tkinter as tk
+from functools import partial
 from tkinter import ttk
 from typing import Callable
 
@@ -50,14 +51,14 @@ class EditView:
         button_option_up = ttk.Button(
             frame_edit,
             text="↑",
-            command=lambda: self._treeview_move(-1),
+            command=partial(self._treeview_move, -1),
             state=tk.DISABLED,
         )
         button_option_up.pack(fill=tk.X)
         button_option_down = ttk.Button(
             frame_edit,
             text="↓",
-            command=lambda: self._treeview_move(1),
+            command=partial(self._treeview_move, 1),
             state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)

@@ -56,11 +56,11 @@ class DisplayRecord:
                 detail_label = ttk.Label(frame, style="detail_label.TLabel")
                 tree.bind(
                     "<ButtonRelease-1>",
-                    lambda event: self._treeview_select(event, detail_label),
+                    partial(self._treeview_select, label=detail_label),
                 )
                 tree.bind(
                     "<Escape>",
-                    lambda event: self._treeview_deselect(event, detail_label),
+                    partial(self._treeview_deselect, label=detail_label),
                 )
                 tree.pack(expand=1, fill=tk.BOTH)
                 self._tree = tree
