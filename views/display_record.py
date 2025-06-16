@@ -1,5 +1,8 @@
 import tkinter as tk
+from functools import partial
 from tkinter import ttk
+
+from utils import ButtonLabel
 
 
 class DisplayRecord:
@@ -138,3 +141,36 @@ class DisplayRecord:
         label.place_forget()
         for button in self.toggle_button:
             button.config(state=tk.DISABLED)
+
+
+class DisplayFrame(ttk.Frame):
+    def __init__(self, parent: ttk.Frame, record: dict, index: int, callbacks: dict):
+        # create base frame
+        super().__init__(parent, relief=tk.GROOVE, border=10)
+        self.columnconfigure(1, weight=1)
+        self.grid(column=0, sticky=tk.EW)
+        self.index = index
+
+        # add information
+        DisplayRecord(record, self, False)
+
+        # add buttons
+        self.button_up = None
+        self.button_down = None
+        button_frame = ttk.Frame(self)
+        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
+        for label, callback in callbacks.items():
+            button = ttk.Button(
+                button_frame, text=label.value, command=partial(callback, frame=self)
+            )
+            button.pack(fill=tk.X)
+            if label == ButtonLabel.MOVEUP:
+                self.button_up = button
+            elif label == ButtonLabel.MOVEDOWN:
+                self.button_down = button
+
+    def disable_move(self, is_first: bool, is_last: bool):
+        if self.button_up and is_first:
+            self.button_up.config(state=tk.DISABLED)
+        if self.button_down and is_last:
+            self.button_down.config(state=tk.DISABLED)

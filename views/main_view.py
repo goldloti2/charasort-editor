@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from utils import ButtonLabel, TabType
 
-from .display_record import DisplayRecord
+from .display_record import DisplayFrame
 from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
 
@@ -64,7 +64,7 @@ class View:
         for idx, node in enumerate(node_list):
             is_first = (idx == 0) and is_filter_tab
             is_last = (idx == last_index) and is_filter_tab
-            self._build_display_frame(parent, node, is_first, is_last, callbacks)
+            self._build_display_frame(parent, node, idx, callbacks, is_first, is_last)
 
     def destroy_tabs(self, tab: TabType):
         destroy = self.tabs[tab].winfo_children()
@@ -89,11 +89,12 @@ class View:
         self,
         parent: ttk.Frame,
         record: dict,
+        index: int,
+        callbacks: dict,
         is_first: bool,
         is_last: bool,
-        callbacks: dict,
     ):
-        frame = DisplayFrame(parent, record, callbacks)
+        frame = DisplayFrame(parent, record, index, callbacks)
         frame.disable_move(is_first, is_last)
         return frame
 
@@ -133,7 +134,7 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def _button_edit(self, frame: ttk.Frame, tab: TabType):
+    def _button_edit(self, frame: DisplayFrame, tab: TabType):
         if self.edit_window:
             self.edit_window.focus()
             return
@@ -142,7 +143,7 @@ class View:
         if tab != TabType.FILTERS:
             return
 
-        index = frame.grid_info()["row"]
+        index = frame.index
         record = self.controller.get_record(index, tab)
 
         self.edit_window = EditView(
@@ -150,50 +151,18 @@ class View:
         )
         self.edit_window.focus()
 
-    def _button_delete(self, frame: ttk.Frame, tab: TabType):
+    def _button_delete(self, frame: DisplayFrame, tab: TabType):
         if not self.edit_window:
-            self.controller.delete_record(frame.grid_info()["row"], tab)
+            self.controller.delete_record(frame.index, tab)
 
-    def _button_move(self, frame: ttk.Frame, direction: int):
+    def _button_move(self, frame: DisplayFrame, direction: int):
         if not self.edit_window:
-            self.controller.move_filter(frame.grid_info()["row"], direction)
+            self.controller.move_filter(frame.index, direction)
 
     def _on_edit_return(self, save: dict, index: int, tab: TabType):
         self.edit_window = None
         if save:
             self.controller.update_record(save, index, tab)
-
-
-class DisplayFrame(ttk.Frame):
-    def __init__(self, parent: ttk.Frame, record: dict, callbacks: dict):
-        # create base frame
-        super().__init__(parent, relief=tk.GROOVE, border=10)
-        self.columnconfigure(1, weight=1)
-        self.grid(column=0, sticky=tk.EW)
-
-        # add information
-        DisplayRecord(record, self, False)
-
-        # add buttons
-        self.button_up = None
-        self.button_down = None
-        button_frame = ttk.Frame(self)
-        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
-        for label, callback in callbacks.items():
-            button = ttk.Button(
-                button_frame, text=label.value, command=partial(callback, frame=self)
-            )
-            button.pack(fill=tk.X)
-            if label == ButtonLabel.MOVEUP:
-                self.button_up = button
-            elif label == ButtonLabel.MOVEDOWN:
-                self.button_down = button
-
-    def disable_move(self, is_first: bool, is_last: bool):
-        if self.button_up and is_first:
-            self.button_up.config(state=tk.DISABLED)
-        if self.button_down and is_last:
-            self.button_down.config(state=tk.DISABLED)
 
 
 if __name__ == "__main__":
