@@ -3,6 +3,8 @@ from datetime import datetime
 from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
+from utils import TabType
+
 from .display_record import DisplayRecord
 from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
@@ -51,22 +53,22 @@ class View:
     def start(self):
         self.root.mainloop()
 
-    def refresh_tabs(self, node_list: list, tab: str):
+    def refresh_tabs(self, node_list: list, tab: TabType):
         self.destroy_tabs(tab)
         frame = self._display_frame(node_list[0], tab)
-        if tab == "filters":
+        if tab == TabType.FILTERS:
             frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
         for node in node_list[1:-1]:
             self._display_frame(node, tab)
         if len(node_list) > 1:
             frame = self._display_frame(node_list[-1], tab)
-        if tab == "filters":
+        if tab == TabType.FILTERS:
             frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
-    def destroy_tabs(self, tab: str):
-        if tab == "filters":
+    def destroy_tabs(self, tab: TabType):
+        if tab == TabType.FILTERS:
             destroy = self.flt_tab.winfo_children()
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             destroy = self.chr_tab.winfo_children()
         else:
             raise ValueError(f"tab '{tab}' not found in view.destroy_tabs")
@@ -75,11 +77,11 @@ class View:
         for frame in destroy:
             frame.destroy()
 
-    def _display_frame(self, record: dict, tab: str) -> ttk.Frame:
+    def _display_frame(self, record: dict, tab: TabType) -> ttk.Frame:
         # create base frame
-        if tab == "filters":
+        if tab == TabType.FILTERS:
             frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             frame = ttk.Frame(self.chr_tab, relief=tk.GROOVE, border=10)
         frame.columnconfigure(1, weight=1)
         frame.grid(column=0, sticky=tk.EW)
@@ -100,7 +102,7 @@ class View:
             command=lambda: self._button_delete(frame, tab),
         )
         button_delete.pack(fill=tk.X)
-        if tab == "filters":
+        if tab == TabType.FILTERS:
             button_up = ttk.Button(
                 button_frame, text="↑", command=lambda: self._button_move(frame, -1)
             )
@@ -116,8 +118,8 @@ class View:
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
         if path:
-            self.destroy_tabs("filters")
-            self.destroy_tabs("characters")
+            self.destroy_tabs(TabType.FILTERS)
+            self.destroy_tabs(TabType.CHARACTERS)
             self.controller.open_file(path)
 
     def _menu_save(self):
@@ -137,13 +139,13 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def _button_edit(self, frame: ttk.Frame, tab: str):
+    def _button_edit(self, frame: ttk.Frame, tab: TabType):
         if self.edit_window:
             self.edit_window.focus()
             return
 
         # temporary restrict edit button to filter only
-        if tab != "filters":
+        if tab != TabType.FILTERS:
             return
 
         index = frame.grid_info()["row"]
@@ -154,7 +156,7 @@ class View:
         )
         self.edit_window.focus()
 
-    def _button_delete(self, frame: ttk.Frame, tab: str):
+    def _button_delete(self, frame: ttk.Frame, tab: TabType):
         if not self.edit_window:
             self.controller.delete_record(frame.grid_info()["row"], tab)
 
@@ -162,7 +164,7 @@ class View:
         if not self.edit_window:
             self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _callback_edit_return(self, save: dict, index: int, tab: str):
+    def _callback_edit_return(self, save: dict, index: int, tab: TabType):
         self.edit_window = None
         if save:
             self.controller.update_record(save, index, tab)

@@ -1,4 +1,5 @@
 from models import DataRepository
+from utils import TabType
 from views import View
 
 
@@ -17,46 +18,46 @@ class Controller:
     def open_file(self, path):
         self.path = path
         self.repo = DataRepository(path)
-        self._update_tab("filters")
-        self._update_tab("characters")
+        self._update_tab(TabType.FILTERS)
+        self._update_tab(TabType.CHARACTERS)
 
     def save_file(self, path=""):
         if path:
             self.path = path
         self.repo.save_file(self.path)
 
-    def get_record(self, index: int, tab: str):
-        if tab == "filters":
+    def get_record(self, index: int, tab: TabType):
+        if tab == TabType.FILTERS:
             return self.filter_list[index]
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             return self.character_list[index]
 
-    def delete_record(self, index: int, tab: str):
-        if tab == "filters":
+    def delete_record(self, index: int, tab: TabType):
+        if tab == TabType.FILTERS:
             self.repo.filters.delete(index)
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             self.repo.characters.delete(index)
         self._update_tab(tab)
 
-    def update_record(self, record: dict, index: int, tab: str):
-        if tab == "filters":
+    def update_record(self, record: dict, index: int, tab: TabType):
+        if tab == TabType.FILTERS:
             if self.repo.filters.update(record, index):
                 self._update_tab(tab)
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             if self.repo.characters.update(record, index):
                 self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):
         self.repo.filters.swap(index, direction)
-        self._update_tab("filters")
+        self._update_tab(TabType.FILTERS)
 
-    def _update_tab(self, tab: str):
-        if tab == "filters":
+    def _update_tab(self, tab: TabType):
+        if tab == TabType.FILTERS:
             new_list = [
                 self._gen_node_filter(node) for node in self.repo.filters.tree_list
             ]
             self.filter_list = new_list
-        elif tab == "characters":
+        elif tab == TabType.CHARACTERS:
             new_list = [
                 self._gen_node_character(node)
                 for node in self.repo.characters.tree_list
