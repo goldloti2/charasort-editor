@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Callable
 
-from .display_record import DisplayRecord
+from .display import DisplayRecord
 
 
 class EditView:

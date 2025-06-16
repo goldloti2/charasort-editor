@@ -6,7 +6,7 @@ from typing import TYPE_CHECKING
 
 from utils import ButtonLabel, TabType
 
-from .display_record import DisplayFrame
+from .display import DisplayFrame
 from .edit_view import EditView
 from .widgets import VerticalScrolledFrame
 
