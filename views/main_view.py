@@ -24,10 +24,10 @@ class View:
         root.config(menu=menu)
 
         tabcontrol = ttk.Notebook()
-        flt_tab_base = VerticalScrolledFrame(tabcontrol)
-        chr_tab_base = VerticalScrolledFrame(tabcontrol)
-        tabcontrol.add(flt_tab_base, text="Filters")
-        tabcontrol.add(chr_tab_base, text="Characters")
+        filters_tab_base = VerticalScrolledFrame(tabcontrol)
+        characters_tab_base = VerticalScrolledFrame(tabcontrol)
+        tabcontrol.add(filters_tab_base, text="Filters")
+        tabcontrol.add(characters_tab_base, text="Characters")
         tabcontrol.pack(expand=1, fill=tk.BOTH)
 
         detail_label_style = ttk.Style()
@@ -40,13 +40,13 @@ class View:
             wraplength=150,
         )
 
+        self.controller = controller
         self.root = root
         self.tabs = {
-            TabType.FILTERS: flt_tab_base.interior,
-            TabType.CHARACTERS: chr_tab_base.interior,
+            TabType.FILTERS: filters_tab_base.interior,
+            TabType.CHARACTERS: characters_tab_base.interior,
         }
         self.detail_label_style = detail_label_style
-        self.controller = controller
         self.edit_window = None
 
     def start(self):
@@ -155,7 +155,7 @@ class View:
         record = self.controller.get_record(index, tab)
 
         self.edit_window = EditView(
-            self.root, record, lambda save: self._callback_edit_return(save, index, tab)
+            self.root, record, lambda save: self._on_edit_return(save, index, tab)
         )
         self.edit_window.focus()
 
@@ -167,7 +167,7 @@ class View:
         if not self.edit_window:
             self.controller.move_filter(frame.grid_info()["row"], direction)
 
-    def _callback_edit_return(self, save: dict, index: int, tab: TabType):
+    def _on_edit_return(self, save: dict, index: int, tab: TabType):
         self.edit_window = None
         if save:
             self.controller.update_record(save, index, tab)
