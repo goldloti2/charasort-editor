@@ -1,5 +1,6 @@
 import tkinter as tk
 from datetime import datetime
+from functools import partial
 from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING
 
@@ -54,15 +55,27 @@ class View:
 
     def refresh_tabs(self, node_list: list, tab: TabType):
         self.destroy_tabs(tab)
-        frame = self._display_frame(node_list[0], tab)
+        parent = self.tabs[tab]
+        callbacks = [
+            ("edit", partial(self._button_edit, tab=tab)),
+            ("delete", partial(self._button_delete, tab=tab)),
+        ]
         if tab == TabType.FILTERS:
-            frame.children["!frame"].children["!button3"].config(state=tk.DISABLED)
+            callbacks.extend(
+                [
+                    ("↑", partial(self._button_move, direction=-1)),
+                    ("↓", partial(self._button_move, direction=1)),
+                ]
+            )
+        frame = DisplayFrame(parent, node_list[0], callbacks)
+        if tab == TabType.FILTERS:
+            frame.disable_up()
         for node in node_list[1:-1]:
-            self._display_frame(node, tab)
+            DisplayFrame(parent, node, callbacks)
         if len(node_list) > 1:
-            frame = self._display_frame(node_list[-1], tab)
+            frame = DisplayFrame(parent, node_list[-1], callbacks)
         if tab == TabType.FILTERS:
-            frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
+            frame.disable_down()
 
     def destroy_tabs(self, tab: TabType):
         destroy = self.tabs[tab].winfo_children()
@@ -82,39 +95,6 @@ class View:
             menu.add_command(label=label, command=command)
 
         return menu
-
-    def _display_frame(self, record: dict, tab: TabType) -> ttk.Frame:
-        # create base frame
-        frame = ttk.Frame(self.tabs[tab], relief=tk.GROOVE, border=10)
-        frame.columnconfigure(1, weight=1)
-        frame.grid(column=0, sticky=tk.EW)
-
-        # add information
-        DisplayRecord(record, frame, False)
-
-        # add buttons
-        button_frame = ttk.Frame(frame)
-        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
-        button_edit = ttk.Button(
-            button_frame, text="edit", command=lambda: self._button_edit(frame, tab)
-        )
-        button_edit.pack(fill=tk.X)
-        button_delete = ttk.Button(
-            button_frame,
-            text="delete",
-            command=lambda: self._button_delete(frame, tab),
-        )
-        button_delete.pack(fill=tk.X)
-        if tab == TabType.FILTERS:
-            button_up = ttk.Button(
-                button_frame, text="↑", command=lambda: self._button_move(frame, -1)
-            )
-            button_up.pack(fill=tk.X)
-            button_down = ttk.Button(
-                button_frame, text="↓", command=lambda: self._button_move(frame, 1)
-            )
-            button_down.pack(fill=tk.X)
-        return frame
 
     def _menu_open(self):
         path = filedialog.askopenfilename(
@@ -171,6 +151,42 @@ class View:
         self.edit_window = None
         if save:
             self.controller.update_record(save, index, tab)
+
+
+class DisplayFrame:
+    def __init__(self, parent: ttk.Frame, record: dict, callbacks: list):
+        # create base frame
+        frame = ttk.Frame(parent, relief=tk.GROOVE, border=10)
+        frame.columnconfigure(1, weight=1)
+        frame.grid(column=0, sticky=tk.EW)
+
+        # add information
+        DisplayRecord(record, frame, False)
+
+        # add buttons
+        self.button_up = None
+        self.button_down = None
+        button_frame = ttk.Frame(frame)
+        button_frame.grid(row=0, column=2, rowspan=4, sticky=tk.NW)
+        for label, callback in callbacks:
+            button = ttk.Button(
+                button_frame, text=label, command=partial(callback, frame=frame)
+            )
+            button.pack(fill=tk.X)
+            if label == "↑":
+                self.button_up = button
+            elif label == "↓":
+                self.button_down = button
+
+        self.frame = frame
+
+    def disable_up(self):
+        if self.button_up:
+            self.button_up.config(state=tk.DISABLED)
+
+    def disable_down(self):
+        if self.button_down:
+            self.button_down.config(state=tk.DISABLED)
 
 
 if __name__ == "__main__":
