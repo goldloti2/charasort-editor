@@ -8,8 +8,7 @@ class Controller:
         self.window = View(self)
         self.repo = None
         self.path = ""
-        self.filter_list = []
-        self.character_list = []
+        self.tabs_list = {TabType.FILTERS: [], TabType.CHARACTERS: []}
 
     def start(self, path: str):
         self.open_file(path)
@@ -27,10 +26,7 @@ class Controller:
         self.repo.save_file(self.path)
 
     def get_record(self, index: int, tab: TabType):
-        if tab == TabType.FILTERS:
-            return self.filter_list[index]
-        elif tab == TabType.CHARACTERS:
-            return self.character_list[index]
+        return self.tabs_list[tab][index]
 
     def delete_record(self, index: int, tab: TabType):
         if tab == TabType.FILTERS:
@@ -56,15 +52,14 @@ class Controller:
             new_list = [
                 self._gen_node_filter(node) for node in self.repo.filters.tree_list
             ]
-            self.filter_list = new_list
         elif tab == TabType.CHARACTERS:
             new_list = [
                 self._gen_node_character(node)
                 for node in self.repo.characters.tree_list
             ]
-            self.character_list = new_list
         else:
             raise ValueError(f"tab '{tab}' not found in controller._update_tab")
+        self.tabs_list[tab] = new_list
         if new_list:
             self.window.refresh_tabs(new_list, tab)
         else:

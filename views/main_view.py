@@ -44,8 +44,10 @@ class View:
         )
 
         self.root = root
-        self.flt_tab = flt_tab_base.interior
-        self.chr_tab = chr_tab_base.interior
+        self.tabs = {
+            TabType.FILTERS: flt_tab_base.interior,
+            TabType.CHARACTERS: chr_tab_base.interior,
+        }
         self.detail_label_style = detail_label_style
         self.controller = controller
         self.edit_window = None
@@ -66,12 +68,7 @@ class View:
             frame.children["!frame"].children["!button4"].config(state=tk.DISABLED)
 
     def destroy_tabs(self, tab: TabType):
-        if tab == TabType.FILTERS:
-            destroy = self.flt_tab.winfo_children()
-        elif tab == TabType.CHARACTERS:
-            destroy = self.chr_tab.winfo_children()
-        else:
-            raise ValueError(f"tab '{tab}' not found in view.destroy_tabs")
+        destroy = self.tabs[tab].winfo_children()
         if not destroy:
             return
         for frame in destroy:
@@ -79,10 +76,7 @@ class View:
 
     def _display_frame(self, record: dict, tab: TabType) -> ttk.Frame:
         # create base frame
-        if tab == TabType.FILTERS:
-            frame = ttk.Frame(self.flt_tab, relief=tk.GROOVE, border=10)
-        elif tab == TabType.CHARACTERS:
-            frame = ttk.Frame(self.chr_tab, relief=tk.GROOVE, border=10)
+        frame = ttk.Frame(self.tabs[tab], relief=tk.GROOVE, border=10)
         frame.columnconfigure(1, weight=1)
         frame.grid(column=0, sticky=tk.EW)
 
