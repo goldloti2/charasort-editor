@@ -70,12 +70,12 @@ class EditView:
         )
 
         # add input form
-        form_header = tk.StringVar()
+        status_text = tk.StringVar()
         input_var1 = tk.StringVar()
         input_var2 = tk.StringVar()
 
         frame.rowconfigure([5, 6, 7], pad=5)
-        ttk.Label(frame, textvariable=form_header, justify=tk.CENTER).grid(
+        ttk.Label(frame, textvariable=status_text, justify=tk.CENTER).grid(
             row=5, column=0, columnspan=2, sticky=tk.EW
         )
         ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
@@ -99,7 +99,7 @@ class EditView:
         )
         button_form_cancel.grid(row=7, column=2)
 
-        self.form_header = form_header
+        self.status_text = status_text
         self.input_var1 = input_var1
         self.input_var2 = input_var2
         self.toggle_form_widgets = (
@@ -130,7 +130,7 @@ class EditView:
         self.return_callback(save)
 
     def _treeview_add(self):
-        self.form_header.set("adding...")
+        self.status_text.set("adding...")
         self.input_var1.set("")
         self.input_var2.set("")
         self.edit_item = None
@@ -141,7 +141,7 @@ class EditView:
         if item:
             self.edit_item = item[0]
             values = item[1]
-            self.form_header.set("editing...")
+            self.status_text.set("editing...")
             self.input_var1.set(values[0])
             self.input_var2.set(values[1])
             self._form_toggle(True)
@@ -149,14 +149,14 @@ class EditView:
     def _treeview_delete(self):
         if self.record_displayer.tree_delete():
             self._form_ending()
-            self.form_header.set("deleted!")
+            self.status_text.set("deleted!")
             for button in self.toggle_button:
                 button.config(state=tk.DISABLED)
 
     def _treeview_move(self, direction: int):
         if self.record_displayer.tree_move(direction):
             self._form_ending()
-            self.form_header.set("moved!")
+            self.status_text.set("moved!")
 
     def _form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
@@ -170,7 +170,7 @@ class EditView:
     def _form_ending(self):
         self.input_var1.set("")
         self.input_var2.set("")
-        self.form_header.set("")
+        self.status_text.set("")
         self._form_toggle(False)
 
     def _form_toggle(self, toggle: bool):
