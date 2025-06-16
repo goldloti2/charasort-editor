@@ -20,15 +20,8 @@ class View:
         root.geometry("600x800")
         root.resizable(False, False)
 
-        menubar = tk.Menu(root)
-        menu_specs = [
-            ("Open", self._menu_open),
-            ("Save", self._menu_save),
-            ("Save To", self._menu_save_to),
-        ]
-        for label, command in menu_specs:
-            menubar.add_command(label=label, command=command)
-        root.config(menu=menubar)
+        menu = self._build_menu(root)
+        root.config(menu=menu)
 
         tabcontrol = ttk.Notebook()
         flt_tab_base = VerticalScrolledFrame(tabcontrol)
@@ -77,6 +70,18 @@ class View:
             return
         for frame in destroy:
             frame.destroy()
+
+    def _build_menu(self, root: tk.Tk):
+        menu = tk.Menu(root)
+        menu_specs = [
+            ("Open", self._menu_open),
+            ("Save", self._menu_save),
+            ("Save To", self._menu_save_to),
+        ]
+        for label, command in menu_specs:
+            menu.add_command(label=label, command=command)
+
+        return menu
 
     def _display_frame(self, record: dict, tab: TabType) -> ttk.Frame:
         # create base frame
