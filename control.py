@@ -39,7 +39,7 @@ class Controller:
         self._update_tab(TabType.FILTERS)
 
     def _update_tab(self, tab: TabType):
-        new_list = self.repo.models[tab].gen_view_node()
+        new_list = self.repo.models[tab].view_list
         self.window.refresh_tabs(new_list, tab)
 
 

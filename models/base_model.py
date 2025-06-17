@@ -8,6 +8,7 @@ def after_db_update(func):
     def wrapper(self: "BaseModel", *args, **kwargs):
         result = func(self, *args, **kwargs)
         self.refresh_tree_list()
+        self.refresh_view_list()
         return result
 
     return wrapper
@@ -18,7 +19,9 @@ class BaseModel(ABC):
         self.tree = tree
         self.walker = Walker()
         self.tree_list = []
+        self.view_list = []
         self.refresh_tree_list()
+        self.refresh_view_list()
 
     # TODO
     @after_db_update
@@ -49,9 +52,9 @@ class BaseModel(ABC):
         raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
 
     @abstractmethod
-    def gen_view_node(self):
+    def refresh_view_list(self) -> None:
         raise NotImplementedError(
-            f"{self.__class__.__name__} not implement 'gen_view_node'"
+            f"{self.__class__.__name__} not implement 'refresh_view_list'"
         )
 
     def refresh_tree_list(self):

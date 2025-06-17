@@ -14,8 +14,8 @@ class CharacterModel(BaseModel):
     def parse_input(cls, record: dict) -> str:
         raise NotImplementedError(f"TODO: {cls.__name__} parse_input")
 
-    def gen_view_node(self):
-        node_list = []
+    def refresh_view_list(self):
+        view_list = []
         for item in self.tree_list:
             node = []
             node.append((WidgetType.LABEL, "name", item["name"]))
@@ -25,5 +25,5 @@ class CharacterModel(BaseModel):
             for opt in item_opts:
                 opts.append((opt, item_opts[opt]))
             node.append((WidgetType.SUB_FRAME, "filter options", opts))
-            node_list.append(node)
-        return node_list
+            view_list.append(node)
+        self.view_list = view_list

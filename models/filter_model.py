@@ -41,8 +41,8 @@ class FilterModel(BaseModel, SortMixin):
 
         return js_string
 
-    def gen_view_node(self):
-        node_list = []
+    def refresh_view_list(self):
+        view_list = []
         for item in self.tree_list:
             node = []
             node.append((WidgetType.LABEL, "name", item["name"]))
@@ -60,5 +60,5 @@ class FilterModel(BaseModel, SortMixin):
                 for sub in item["sub"]:
                     subs.append((sub["name"], sub["key"]))
             node.append((WidgetType.SUB_FRAME, "sub", subs))
-            node_list.append(node)
-        return node_list
+            view_list.append(node)
+        self.view_list = view_list
