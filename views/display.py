@@ -12,7 +12,7 @@ class DisplayRecord:
         for attr in record:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
-            if c_type == WidgetType.LABEL:
+            if c_type is WidgetType.LABEL:
                 k_label = ttk.Label(frame, text=label + ":")
                 if is_edit:
                     var = tk.StringVar(value=content)
@@ -22,7 +22,7 @@ class DisplayRecord:
                     c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.EW)
-            elif c_type == WidgetType.CHECK:
+            elif c_type is WidgetType.CHECK:
                 k_label = ttk.Label(frame, text=label + ":")
                 var = tk.BooleanVar(value=content)
                 state = tk.NORMAL if is_edit else tk.DISABLED
@@ -31,7 +31,7 @@ class DisplayRecord:
                 return_variables[label] = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
-            elif c_type == WidgetType.SUB_FRAME:
+            elif c_type is WidgetType.SUB_FRAME:
                 sub_frame = ttk.Labelframe(
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
@@ -165,9 +165,9 @@ class DisplayRecordFrame(ttk.Frame):
                 button_frame, text=label.value, command=partial(callback, frame=self)
             )
             button.pack(fill=tk.X)
-            if label == ButtonLabel.MOVEUP:
+            if label is ButtonLabel.MOVEUP:
                 self.button_up = button
-            elif label == ButtonLabel.MOVEDOWN:
+            elif label is ButtonLabel.MOVEDOWN:
                 self.button_down = button
 
     def disable_move(self, is_first: bool, is_last: bool):

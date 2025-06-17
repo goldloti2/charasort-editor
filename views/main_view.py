@@ -58,7 +58,7 @@ class View:
 
         parent = self.tabs[tab]
         callbacks = self._create_button_callbacks(tab)
-        is_filter_tab = tab == TabType.FILTERS
+        is_filter_tab = tab is TabType.FILTERS
         last_index = len(node_list) - 1
 
         for idx, node in enumerate(node_list):
@@ -102,7 +102,7 @@ class View:
             ButtonLabel.EDIT: partial(self._button_edit, tab=tab),
             ButtonLabel.DELETE: partial(self._button_delete, tab=tab),
         }
-        if tab == TabType.FILTERS:
+        if tab is TabType.FILTERS:
             callbacks[ButtonLabel.MOVEUP] = partial(self._button_move, direction=-1)
             callbacks[ButtonLabel.MOVEDOWN] = partial(self._button_move, direction=1)
         return callbacks
