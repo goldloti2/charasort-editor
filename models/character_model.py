@@ -1,5 +1,7 @@
 from calmjs.parse import asttypes
 
+from utils import WidgetType
+
 from .base_model import BaseModel
 
 
@@ -16,12 +18,12 @@ class CharacterModel(BaseModel):
         node_list = []
         for item in self.tree_list:
             node = []
-            node.append(("label", "name", item["name"]))
-            node.append(("label", "img", item["img"]))
+            node.append((WidgetType.LABEL, "name", item["name"]))
+            node.append((WidgetType.LABEL, "img", item["img"]))
             opts = [("key", "option")]
             item_opts = item["opts"]
             for opt in item_opts:
                 opts.append((opt, item_opts[opt]))
-            node.append(("sub_frame", "filter options", opts))
+            node.append((WidgetType.SUB_FRAME, "filter options", opts))
             node_list.append(node)
         return node_list

@@ -11,3 +11,20 @@ class ButtonLabel(Enum):
     DELETE = "delete"
     MOVEUP = "↑"
     MOVEDOWN = "↓"
+
+
+class Field(Enum):
+    NAME = "name"
+    KEY = "key"
+    IMG = "img"
+    TOOLTIP = "tooltip"
+    CHECKED = "checked"
+    SUB = "sub"
+    OPTS = "opts"
+    TREE = "tree"
+
+
+class WidgetType(Enum):
+    LABEL = "label"
+    CHECK = "check"
+    SUB_FRAME = "sub_frame"

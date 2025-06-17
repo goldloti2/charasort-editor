@@ -2,7 +2,7 @@ import tkinter as tk
 from functools import partial
 from tkinter import ttk
 
-from utils import ButtonLabel
+from utils import ButtonLabel, WidgetType
 
 
 class DisplayRecord:
@@ -12,7 +12,7 @@ class DisplayRecord:
         for attr in record:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
-            if c_type == "label":
+            if c_type == WidgetType.LABEL:
                 k_label = ttk.Label(frame, text=label + ":")
                 if is_edit:
                     var = tk.StringVar(value=content)
@@ -22,7 +22,7 @@ class DisplayRecord:
                     c_label = ttk.Label(frame, text=content, justify=tk.LEFT)
                 k_label.grid(row=row, column=0)
                 c_label.grid(row=row, column=1, sticky=tk.EW)
-            elif c_type == "check":
+            elif c_type == WidgetType.CHECK:
                 k_label = ttk.Label(frame, text=label + ":")
                 var = tk.BooleanVar(value=content)
                 state = tk.NORMAL if is_edit else tk.DISABLED
@@ -31,7 +31,7 @@ class DisplayRecord:
                 return_variables[label] = var
                 k_label.grid(row=row, column=0)
                 c_check.grid(row=row, column=1, sticky=tk.W)
-            elif c_type == "sub_frame":
+            elif c_type == WidgetType.SUB_FRAME:
                 sub_frame = ttk.Labelframe(
                     frame, text=label, relief=tk.GROOVE, border=10
                 )
