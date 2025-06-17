@@ -49,44 +49,13 @@ class Controller:
 
     def _update_tab(self, tab: TabType):
         if tab == TabType.FILTERS:
-            new_list = [
-                self._gen_node_filter(node) for node in self.repo.filters.tree_list
-            ]
+            new_list = self.repo.filters.gen_view_node()
         elif tab == TabType.CHARACTERS:
-            new_list = [
-                self._gen_node_character(node)
-                for node in self.repo.characters.tree_list
-            ]
+            new_list = self.repo.characters.gen_view_node()
         else:
             raise ValueError(f"tab '{tab}' not found in controller._update_tab")
         self.tabs_list[tab] = new_list
         self.window.refresh_tabs(new_list, tab)
-
-    @classmethod
-    def _gen_node_filter(cls, flt: dict):
-        node = []
-        node.append(("label", "name", flt["name"]))
-        node.append(("label", "key", flt["key"]))
-        node.append(("label", "tooltip", flt.get("tooltip", "")))
-        node.append(("check", "checked", flt.get("checked", None) == "true"))
-        subs = [("name", "key")]
-        if "sub" in flt:
-            for sub in flt["sub"]:
-                subs.append((sub["name"], sub["key"]))
-        node.append(("sub_frame", "sub", subs))
-        return node
-
-    @classmethod
-    def _gen_node_character(cls, chr: dict):
-        node = []
-        node.append(("label", "name", chr["name"]))
-        node.append(("label", "img", chr["img"]))
-        opts = [("key", "option")]
-        chr_opts = chr["opts"]
-        for opt in chr_opts:
-            opts.append((opt, chr_opts[opt]))
-        node.append(("sub_frame", "filter options", opts))
-        return node
 
 
 if __name__ == "__main__":

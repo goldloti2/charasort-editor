@@ -38,3 +38,19 @@ class FilterModel(BaseModel, SortMixin):
             js_string = f"{js_string}, sub: [{sub_string[2:]}]"
 
         return js_string
+
+    def gen_view_node(self):
+        node_list = []
+        for item in self.tree_list:
+            node = []
+            node.append(("label", "name", item["name"]))
+            node.append(("label", "key", item["key"]))
+            node.append(("label", "tooltip", item.get("tooltip", "")))
+            node.append(("check", "checked", item.get("checked", None) == "true"))
+            subs = [("name", "key")]
+            if "sub" in item:
+                for sub in item["sub"]:
+                    subs.append((sub["name"], sub["key"]))
+            node.append(("sub_frame", "sub", subs))
+            node_list.append(node)
+        return node_list
