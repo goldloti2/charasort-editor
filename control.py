@@ -8,7 +8,6 @@ class Controller:
         self.window = View(self)
         self.repo = None
         self.path = ""
-        self.tabs_list = {TabType.FILTERS: [], TabType.CHARACTERS: []}
 
     def start(self, path: str):
         self.open_file(path)
@@ -24,9 +23,6 @@ class Controller:
         if path:
             self.path = path
         self.repo.save_file(self.path)
-
-    def get_record(self, index: int, tab: TabType):
-        return self.tabs_list[tab][index]
 
     def delete_record(self, index: int, tab: TabType):
         self.repo.models[tab].delete(index)
@@ -44,7 +40,6 @@ class Controller:
 
     def _update_tab(self, tab: TabType):
         new_list = self.repo.models[tab].gen_view_node()
-        self.tabs_list[tab] = new_list
         self.window.refresh_tabs(new_list, tab)
 
 

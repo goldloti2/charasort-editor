@@ -142,11 +142,10 @@ class View:
         if tab != TabType.FILTERS:
             return
 
-        index = frame.index
-        record = self.controller.get_record(index, tab)
-
         self.edit_window = EditView(
-            self.root, record, partial(self._on_edit_return, index=index, tab=tab)
+            self.root,
+            frame.record,
+            partial(self._on_edit_return, index=frame.index, tab=tab),
         )
         self.edit_window.focus()
 

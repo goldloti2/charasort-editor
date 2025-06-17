@@ -149,6 +149,7 @@ class DisplayRecordFrame(ttk.Frame):
         super().__init__(parent, relief=tk.GROOVE, border=10)
         self.columnconfigure(1, weight=1)
         self.grid(column=0, sticky=tk.EW)
+        self.record = record
         self.index = index
 
         # add information
