@@ -60,10 +60,7 @@ class Controller:
         else:
             raise ValueError(f"tab '{tab}' not found in controller._update_tab")
         self.tabs_list[tab] = new_list
-        if new_list:
-            self.window.refresh_tabs(new_list, tab)
-        else:
-            self.window.destroy_tabs(tab)
+        self.window.refresh_tabs(new_list, tab)
 
     @classmethod
     def _gen_node_filter(cls, flt: dict):
