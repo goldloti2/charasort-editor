@@ -12,7 +12,7 @@ class FilterModel(BaseModel, SortMixin):
     def parse_input(cls, record: dict) -> str:
         if ("name" not in record) or ("key" not in record):
             print('filter object require "name" and "key" attribute')
-            return False
+            return ""  # TODO
 
         name = record["name"].strip('"')
         key = record["key"].strip('"')
@@ -23,7 +23,7 @@ class FilterModel(BaseModel, SortMixin):
             js_string = f'{js_string}, tooltip: "{tooltip}"'
 
         if "checked" in record:
-            checked = "true" if record["checked"] else "false"
+            checked = str(record["checked"]).lower()
             js_string = f'{js_string}, checked: "{checked}"'
 
         if "tree" in record:
@@ -33,7 +33,7 @@ class FilterModel(BaseModel, SortMixin):
                     print(
                         'object in "sub" list in filter require "name" and "key" attribute'
                     )
-                    return False
+                    return ""  # TODO
                 sub_string = f'{sub_string}, {{name: "{item[0]}", key: "{item[1]}"}}'
             js_string = f"{js_string}, sub: [{sub_string[2:]}]"
 
@@ -46,7 +46,9 @@ class FilterModel(BaseModel, SortMixin):
             node.append(("label", "name", item["name"]))
             node.append(("label", "key", item["key"]))
             node.append(("label", "tooltip", item.get("tooltip", "")))
-            node.append(("check", "checked", item.get("checked", None) == "true"))
+            node.append(
+                ("check", "checked", str(item.get("checked", "")).lower() == "true")
+            )
             subs = [("name", "key")]
             if "sub" in item:
                 for sub in item["sub"]:

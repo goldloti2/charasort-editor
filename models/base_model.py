@@ -20,6 +20,7 @@ class BaseModel(ABC):
         self.tree_list = []
         self.refresh_tree_list()
 
+    # TODO
     @after_db_update
     def add(self, record: dict):
         raise NotImplementedError("BaseModel not implement 'add'")
@@ -32,7 +33,7 @@ class BaseModel(ABC):
     def update(self, record: dict, index: int):
         js_string = self.parse_input(record)
         if not js_string:
-            return False
+            return False  # TODO
         js_string = f"data = {{ {js_string} }}"
         tree = es5(js_string)
         node = next(self.walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))

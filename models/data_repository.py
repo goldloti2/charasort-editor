@@ -12,6 +12,8 @@ class DataRepository:
         with open(path, "r", encoding="UTF-8") as file:
             tree = io.read(es5, file)
 
+        filters = None
+        characters = None
         walker = Walker()
         for node in walker.filter(
             tree,
@@ -24,6 +26,8 @@ class DataRepository:
                 filters = node.right
             elif node.left.identifier.value == "characterData":
                 characters = node.right
+        if not (filters and characters):
+            raise ValueError("Input file not complete")  # TODO
 
         self.tree = tree
         self.walker = walker

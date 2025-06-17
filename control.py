@@ -35,6 +35,8 @@ class Controller:
     def update_record(self, record: dict, index: int, tab: TabType):
         if self.repo.models[tab].update(record, index):
             self._update_tab(tab)
+        else:
+            print(f"[Update Failed] Invalid data at index {index} in {tab}")  # TODO
 
     def move_filter(self, index: int, direction: int):
         self.repo.models[TabType.FILTERS].swap(index, direction)

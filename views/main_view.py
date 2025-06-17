@@ -82,7 +82,6 @@ class View:
         ]
         for label, command in menu_specs:
             menu.add_command(label=label, command=command)
-
         return menu
 
     def _build_display_frame(
@@ -139,7 +138,7 @@ class View:
             self.edit_window.focus()
             return
 
-        # temporary restrict edit button to filter only
+        # TODO: temporary restrict edit button to filter only
         if tab != TabType.FILTERS:
             return
 
