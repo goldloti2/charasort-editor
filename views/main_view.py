@@ -144,6 +144,7 @@ class View:
         self.edit_window = EditView(
             self.root,
             frame.record,
+            tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
         )
         self.edit_window.focus()
