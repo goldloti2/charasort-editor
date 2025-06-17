@@ -1,6 +1,8 @@
 from calmjs.parse import asttypes, es5, io
 from calmjs.parse.walkers import Walker
 
+from utils import TabType
+
 from .character_model import CharacterModel
 from .filter_model import FilterModel
 
@@ -25,8 +27,10 @@ class DataRepository:
 
         self.tree = tree
         self.walker = walker
-        self.filters = FilterModel(filters)
-        self.characters = CharacterModel(characters)
+        self.models = {
+            TabType.FILTERS: FilterModel(filters),
+            TabType.CHARACTERS: CharacterModel(characters),
+        }
 
     def save_file(self, path: str):
         with open(path, "w") as file:
