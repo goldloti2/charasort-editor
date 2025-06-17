@@ -11,7 +11,7 @@ class CharacterModel(BaseModel):
 
     # TODO
     @classmethod
-    def parse_input(cls, record: dict) -> str:
+    def parse_input(cls, record: dict):
         raise NotImplementedError(f"TODO: {cls.__name__} parse_input")
 
     def refresh_view_list(self):

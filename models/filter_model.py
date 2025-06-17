@@ -11,7 +11,7 @@ class FilterModel(BaseModel, SortMixin):
         super().__init__(tree)
 
     @classmethod
-    def parse_input(cls, record: dict) -> str:
+    def parse_input(cls, record: dict):
         if (Field.NAME.value not in record) or (Field.KEY.value not in record):
             print('filter object require "name" and "key" attribute')
             return ""  # TODO

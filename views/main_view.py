@@ -2,7 +2,7 @@ import tkinter as tk
 from datetime import datetime
 from functools import partial
 from tkinter import filedialog, messagebox, ttk
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Callable, Dict
 
 from utils import ButtonLabel, TabType
 
@@ -87,9 +87,9 @@ class View:
     def _build_display_frame(
         self,
         parent: ttk.Frame,
-        record: dict,
+        record: list,
         index: int,
-        callbacks: dict,
+        callbacks: Dict[ButtonLabel, Callable],
         is_first: bool,
         is_last: bool,
     ):

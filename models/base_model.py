@@ -48,17 +48,17 @@ class BaseModel(ABC):
 
     @classmethod
     @abstractmethod
-    def parse_input(cls, record: dict) -> str:
+    def parse_input(cls, record: dict):
         raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
 
     @abstractmethod
-    def refresh_view_list(self) -> None:
+    def refresh_view_list(self):
         raise NotImplementedError(
             f"{self.__class__.__name__} not implement 'refresh_view_list'"
         )
 
     def refresh_tree_list(self):
-        def parse(node):
+        def parse(node: asttypes.Node):
             if isinstance(node, asttypes.Array):
                 return [parse(child) for child in node.children()]
             elif isinstance(node, asttypes.Object):

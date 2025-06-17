@@ -1,12 +1,13 @@
 import tkinter as tk
 from functools import partial
 from tkinter import ttk
+from typing import Callable, Dict
 
 from utils import ButtonLabel, WidgetType
 
 
 class DisplayRecord:
-    def __init__(self, record: dict, frame: ttk.Frame, is_edit: bool):
+    def __init__(self, record: list, frame: ttk.Frame, is_edit: bool):
         return_variables = {}
         row = 0
         for attr in record:
@@ -120,7 +121,9 @@ class DisplayRecord:
             return item, self._tree.item(item, "values")
         return None
 
-    def add_treeview_callbacks(self, select_callback, deselect_callback):
+    def add_treeview_callbacks(
+        self, select_callback: Callable, deselect_callback: Callable
+    ):
         if select_callback:
             self.treeview_select_callback.append(select_callback)
         if deselect_callback:
@@ -148,7 +151,13 @@ class DisplayRecord:
 
 
 class DisplayRecordFrame(ttk.Frame):
-    def __init__(self, parent: ttk.Frame, record: dict, index: int, callbacks: dict):
+    def __init__(
+        self,
+        parent: ttk.Frame,
+        record: list,
+        index: int,
+        callbacks: Dict[ButtonLabel, Callable],
+    ):
         # create base frame
         super().__init__(parent, relief=tk.GROOVE, border=10)
         self.columnconfigure(1, weight=1)
