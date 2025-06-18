@@ -13,13 +13,13 @@ class Controller:
         self.open_file(path)
         self.window.start()
 
-    def open_file(self, path):
+    def open_file(self, path: str):
         self.path = path
         self.repo = DataRepository(path)
         self._update_tab(TabType.FILTERS)
         self._update_tab(TabType.CHARACTERS)
 
-    def save_file(self, path=""):
+    def save_file(self, path: str = ""):
         if path:
             self.path = path
         self.repo.save_file(self.path)

@@ -7,8 +7,8 @@ from calmjs.parse.walkers import Walker
 def after_db_update(func):
     def wrapper(self: "BaseModel", *args, **kwargs):
         result = func(self, *args, **kwargs)
-        self.refresh_tree_list()
-        self.refresh_view_list()
+        self._refresh_tree_list()
+        self._refresh_view_list()
         return result
 
     return wrapper
@@ -20,8 +20,8 @@ class BaseModel(ABC):
         self.walker = Walker()
         self.tree_list = []
         self.view_list = []
-        self.refresh_tree_list()
-        self.refresh_view_list()
+        self._refresh_tree_list()
+        self._refresh_view_list()
 
     # TODO
     @after_db_update
@@ -51,13 +51,7 @@ class BaseModel(ABC):
     def parse_input(cls, record: dict):
         raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
 
-    @abstractmethod
-    def refresh_view_list(self):
-        raise NotImplementedError(
-            f"{self.__class__.__name__} not implement 'refresh_view_list'"
-        )
-
-    def refresh_tree_list(self):
+    def _refresh_tree_list(self):
         def parse(node: asttypes.Node):
             if isinstance(node, asttypes.Array):
                 return [parse(child) for child in node.children()]
@@ -67,3 +61,9 @@ class BaseModel(ABC):
                 return node.value.strip('"')
 
         self.tree_list = [parse(child) for child in self.tree.children()]
+
+    @abstractmethod
+    def _refresh_view_list(self):
+        raise NotImplementedError(
+            f"{self.__class__.__name__} not implement '_refresh_view_list'"
+        )

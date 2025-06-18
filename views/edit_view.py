@@ -18,7 +18,7 @@ class EditView:
         window.title(f"'{record[0][2]}' editing...")
         window.geometry("600x500")
         window.resizable(False, True)
-        window.protocol("WM_DELETE_WINDOW", self._window_close)
+        window.protocol("WM_DELETE_WINDOW", self._on_window_close)
 
         frame = ttk.Frame(window, relief=tk.GROOVE, border=10)
         frame.columnconfigure(0, pad=10)
@@ -27,9 +27,9 @@ class EditView:
         frame.pack(expand=1, fill=tk.BOTH, padx=10, pady=10)
 
         # add buttons
-        button_save = ttk.Button(frame, text="save", command=self._window_save)
+        button_save = ttk.Button(frame, text="save", command=self._on_window_save)
         button_save.grid(row=0, column=2)
-        button_cancel = ttk.Button(frame, text="cancel", command=self._window_close)
+        button_cancel = ttk.Button(frame, text="cancel", command=self._on_window_close)
         button_cancel.grid(row=1, column=2)
 
         tree_row = 4
@@ -48,7 +48,8 @@ class EditView:
         # add information
         record_displayer = DisplayRecord(record, frame, True)
         record_displayer.add_treeview_callbacks(
-            partial(self._treeview_toggle, True), partial(self._treeview_toggle, False)
+            partial(self._treeview_toggle, True),
+            partial(self._treeview_toggle, False),
         )
         self.record_displayer = record_displayer
 
@@ -56,25 +57,25 @@ class EditView:
         self.window.focus()
 
     def destroy(self):
-        self._window_close()
+        self._on_window_close()
 
-    def _window_save(self):
+    def _on_window_save(self):
         save = self.record_displayer.get_values()
-        self._window_close(save)
+        self._on_window_close(save)
 
-    def _window_close(self, save: dict = None):
+    def _on_window_close(self, save: dict = None):
         self.window.destroy()
         self.return_callback(save)
 
-    def _treeview_add(self):
+    def _on_treeview_add(self):
         self.status_text.set("adding...")
         self.input_var1.set("")
         self.input_var2.set("")
-        self.edit_item = None
+        self.edit_item = ()
         self._form_toggle(True)
 
-    def _treeview_edit(self):
-        item = self.record_displayer.tree_selected()
+    def _on_treeview_edit(self):
+        item = self.record_displayer.treeview_selected()
         if item:
             self.edit_item = item[0]
             values = item[1]
@@ -83,15 +84,15 @@ class EditView:
             self.input_var2.set(values[1])
             self._form_toggle(True)
 
-    def _treeview_delete(self):
-        if self.record_displayer.tree_delete():
-            self._form_ending()
+    def _on_treeview_delete(self):
+        if self.record_displayer.treeview_delete():
+            self._on_form_ending()
             self.status_text.set("deleted!")
             self._treeview_toggle(False)
 
-    def _treeview_move(self, direction: int):
-        if self.record_displayer.tree_move(direction):
-            self._form_ending()
+    def _on_treeview_move(self, direction: int):
+        if self.record_displayer.treeview_move(direction):
+            self._on_form_ending()
             self.status_text.set("moved!")
 
     def _treeview_toggle(self, enable: bool):
@@ -119,14 +120,14 @@ class EditView:
         button_form_done = ttk.Button(
             frame,
             text="done",
-            command=self._form_done,
+            command=self._on_form_done,
             state=tk.DISABLED,
         )
         button_form_done.grid(row=6, column=2)
         button_form_cancel = ttk.Button(
             frame,
             text="cancel",
-            command=self._form_ending,
+            command=self._on_form_ending,
             state=tk.DISABLED,
         )
         button_form_cancel.grid(row=7, column=2)
@@ -141,16 +142,16 @@ class EditView:
             button_form_cancel,
         )
 
-    def _form_done(self):
+    def _on_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
         if self.edit_item:
-            self.record_displayer.tree_edit(values, self.edit_item)
+            self.record_displayer.treeview_edit(self.edit_item, values)
         else:
-            self.record_displayer.tree_add(values)
+            self.record_displayer.treeview_add(values)
         self.edit_item = ()
-        self._form_ending()
+        self._on_form_ending()
 
-    def _form_ending(self):
+    def _on_form_ending(self):
         self.input_var1.set("")
         self.input_var2.set("")
         self.status_text.set("")
@@ -168,34 +169,34 @@ class EditView:
         frame_edit = ttk.Frame(frame)
         frame_edit.grid(row=start_row, column=2, sticky=tk.N)
         button_option_add = ttk.Button(
-            frame_edit, text="add option", command=self._treeview_add
+            frame_edit, text="add option", command=self._on_treeview_add
         )
         button_option_add.pack(fill=tk.X)
         button_option_edit = ttk.Button(
             frame_edit,
             text="edit option",
-            command=self._treeview_edit,
+            command=self._on_treeview_edit,
             state=tk.DISABLED,
         )
         button_option_edit.pack(fill=tk.X)
         button_option_delete = ttk.Button(
             frame_edit,
             text="delete option",
-            command=self._treeview_delete,
+            command=self._on_treeview_delete,
             state=tk.DISABLED,
         )
         button_option_delete.pack(fill=tk.X)
         button_option_up = ttk.Button(
             frame_edit,
             text="↑",
-            command=partial(self._treeview_move, -1),
+            command=partial(self._on_treeview_move, -1),
             state=tk.DISABLED,
         )
         button_option_up.pack(fill=tk.X)
         button_option_down = ttk.Button(
             frame_edit,
             text="↓",
-            command=partial(self._treeview_move, 1),
+            command=partial(self._on_treeview_move, 1),
             state=tk.DISABLED,
         )
         button_option_down.pack(fill=tk.X)

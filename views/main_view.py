@@ -16,12 +16,13 @@ if TYPE_CHECKING:
 
 class View:
     def __init__(self, controller: "Controller"):
-        root = tk.Tk()
+        self.controller = controller
+        self.root = root = tk.Tk()
         root.title("charasort editor")
         root.geometry("600x800")
         root.resizable(False, False)
 
-        menu = self._build_menu(root)
+        menu = self._build_menu()
         root.config(menu=menu)
 
         tab_control = ttk.Notebook()
@@ -41,8 +42,6 @@ class View:
             wraplength=150,
         )
 
-        self.controller = controller
-        self.root = root
         self.tabs = {
             TabType.FILTERS: filters_tab_base.interior,
             TabType.CHARACTERS: characters_tab_base.interior,
@@ -73,12 +72,12 @@ class View:
         for frame in destroy:
             frame.destroy()
 
-    def _build_menu(self, root: tk.Tk):
-        menu = tk.Menu(root)
+    def _build_menu(self):
+        menu = tk.Menu(self.root)
         menu_specs = [
-            ("Open", self._menu_open),
-            ("Save", self._menu_save),
-            ("Save To", self._menu_save_to),
+            ("Open", self._on_menu_open),
+            ("Save", self._on_menu_save),
+            ("Save To", self._on_menu_save_to),
         ]
         for label, command in menu_specs:
             menu.add_command(label=label, command=command)
@@ -98,15 +97,15 @@ class View:
 
     def _create_button_callbacks(self, tab: TabType):
         callbacks = {
-            ButtonLabel.EDIT: partial(self._button_edit, tab=tab),
-            ButtonLabel.DELETE: partial(self._button_delete, tab=tab),
+            ButtonLabel.EDIT: partial(self._on_button_edit, tab=tab),
+            ButtonLabel.DELETE: partial(self._on_button_delete, tab=tab),
         }
         if tab is TabType.FILTERS:
-            callbacks[ButtonLabel.MOVEUP] = partial(self._button_move, direction=-1)
-            callbacks[ButtonLabel.MOVEDOWN] = partial(self._button_move, direction=1)
+            callbacks[ButtonLabel.MOVEUP] = partial(self._on_button_move, direction=-1)
+            callbacks[ButtonLabel.MOVEDOWN] = partial(self._on_button_move, direction=1)
         return callbacks
 
-    def _menu_open(self):
+    def _on_menu_open(self):
         path = filedialog.askopenfilename(
             initialdir=".", filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")]
         )
@@ -115,14 +114,14 @@ class View:
             self.destroy_tabs(TabType.CHARACTERS)
             self.controller.open_file(path)
 
-    def _menu_save(self):
+    def _on_menu_save(self):
         result = messagebox.askyesno(
             "Overwrite", "Do you want to overwrite the old file?"
         )
         if result:
             self.controller.save_file()
 
-    def _menu_save_to(self):
+    def _on_menu_save_to(self):
         path = filedialog.asksaveasfilename(
             initialdir=".",
             initialfile=f"{datetime.now().strftime('%Y-%m-%d')}.js",
@@ -132,7 +131,7 @@ class View:
         if path:
             self.controller.save_file(path)
 
-    def _button_edit(self, frame: DisplayRecordFrame, tab: TabType):
+    def _on_button_edit(self, frame: DisplayRecordFrame, tab: TabType):
         if self.edit_window:
             self.edit_window.focus()
             return
@@ -149,11 +148,11 @@ class View:
         )
         self.edit_window.focus()
 
-    def _button_delete(self, frame: DisplayRecordFrame, tab: TabType):
+    def _on_button_delete(self, frame: DisplayRecordFrame, tab: TabType):
         if not self.edit_window:
             self.controller.delete_record(frame.index, tab)
 
-    def _button_move(self, frame: DisplayRecordFrame, direction: int):
+    def _on_button_move(self, frame: DisplayRecordFrame, direction: int):
         if not self.edit_window:
             self.controller.move_filter(frame.index, direction)
 

@@ -41,7 +41,7 @@ class FilterModel(BaseModel, SortMixin):
 
         return js_string
 
-    def refresh_view_list(self):
+    def _refresh_view_list(self):
         view_list = []
         for item in self.tree_list:
             node = []

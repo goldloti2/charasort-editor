@@ -57,68 +57,68 @@ class DisplayRecord:
                 detail_label = ttk.Label(frame, style="detail_label.TLabel")
                 tree.bind(
                     "<ButtonRelease-1>",
-                    partial(self._treeview_select, label=detail_label),
+                    partial(self._on_treeview_select, label=detail_label),
                 )
                 tree.bind(
                     "<Escape>",
-                    partial(self._treeview_deselect, label=detail_label),
+                    partial(self._on_treeview_deselect, label=detail_label),
                 )
                 tree.pack(expand=1, fill=tk.BOTH)
-                self._tree = tree
+                self.tree = tree
             else:
                 raise ValueError(f"c_type '{c_type}' not found in view._display_frame")
             row += 1
-        self._return_variables = return_variables
+        self.return_variables = return_variables
         self.treeview_select_callback = []
         self.treeview_deselect_callback = []
 
     def get_values(self):
         values = {}
-        for key in self._return_variables:
-            var = self._return_variables[key].get()
+        for key in self.return_variables:
+            var = self.return_variables[key].get()
             if var:
                 values[key] = var
         tree_values = []
-        for item in self._tree.get_children():
-            tree_values.append(self._tree.item(item, "values"))
+        for item in self.tree.get_children():
+            tree_values.append(self.tree.item(item, "values"))
         if tree_values:
             values["tree"] = tree_values
         return values
 
-    def tree_add(self, values: tuple):
-        self._tree.insert("", "end", values=values)
+    def treeview_add(self, values: tuple):
+        self.tree.insert("", "end", values=values)
 
-    def tree_delete(self):
-        item = self._tree.selection()
+    def treeview_delete(self):
+        item = self.tree.selection()
         if item:
-            self._tree.delete(item)
-            self._tree.selection_remove(self._tree.selection())
+            self.tree.delete(item)
+            self.tree.selection_remove(self.tree.selection())
             return True
         return False
 
-    def tree_edit(self, values: tuple, item: str):
-        pos = self._tree.index(item)
-        self._tree.delete(item)
-        self._tree.insert("", pos, values=values)
+    def treeview_edit(self, item: tuple, values: tuple):
+        pos = self.tree.index(item)
+        self.tree.delete(item)
+        self.tree.insert("", pos, values=values)
 
-    def tree_move(self, direction: int):
-        item = self._tree.selection()
+    def treeview_move(self, direction: int):
+        item = self.tree.selection()
         if item:
             if direction > 0:
-                swap = self._tree.next(item)
+                swap = self.tree.next(item)
             else:
-                swap = self._tree.prev(item)
+                swap = self.tree.prev(item)
             if swap:
-                index = self._tree.index(item)
-                self._tree.move(item, "", index + direction)
-                self._tree.move(swap, "", index)
+                index = self.tree.index(item)
+                self.tree.move(item, "", index + direction)
+                self.tree.move(swap, "", index)
                 return True
         return False
 
-    def tree_selected(self):
-        item = self._tree.selection()
+    def treeview_selected(self):
+        item = self.tree.selection()
         if item:
-            return item, self._tree.item(item, "values")
+            return item, self.tree.item(item, "values")
         return None
 
     def add_treeview_callbacks(
@@ -129,22 +129,22 @@ class DisplayRecord:
         if deselect_callback:
             self.treeview_deselect_callback.append(deselect_callback)
 
-    def _treeview_select(self, event: tk.Event, label: ttk.Label):
-        select = self._tree.selection()
+    def _on_treeview_select(self, event: tk.Event, label: ttk.Label):
+        select = self.tree.selection()
         if select:
-            item = self._tree.item(select, "values")
+            item = self.tree.item(select, "values")
             label.config(text=item[1])
             label.place(
                 anchor=tk.NW,
-                x=event.x + self._tree.master.winfo_x(),
-                y=event.y + self._tree.master.winfo_y(),
+                x=event.x + self.tree.master.winfo_x(),
+                y=event.y + self.tree.master.winfo_y(),
                 width=155,
             )
             for callback in self.treeview_select_callback:
                 callback()
 
-    def _treeview_deselect(self, event: tk.Event, label: ttk.Label):
-        self._tree.selection_remove(self._tree.selection())
+    def _on_treeview_deselect(self, event: tk.Event, label: ttk.Label):
+        self.tree.selection_remove(self.tree.selection())
         label.place_forget()
         for callback in self.treeview_deselect_callback:
             callback()
