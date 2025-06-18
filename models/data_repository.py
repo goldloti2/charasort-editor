@@ -43,6 +43,21 @@ class DataRepository:
         with open(path, "w") as file:
             print(self.tree, file=file)
 
+    def add(self, record: dict, tab: TabType):
+        self.models[tab].add()
+
+    def delete(self, index: int, tab: TabType):
+        self.models[tab].delete(index)
+
+    def update(self, record: dict, index: int, tab: TabType):
+        return self.models[tab].update(record, index)
+
+    def move_filter(self, index: int, direction: int):
+        self.models[TabType.FILTERS].swap(index, direction)
+
+    def read(self, tab: TabType):
+        return self.models[tab].read()
+
 
 if __name__ == "__main__":
     repo = DataRepository("test.js")

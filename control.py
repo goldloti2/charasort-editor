@@ -24,22 +24,25 @@ class Controller:
             self.path = path
         self.repo.save_file(self.path)
 
+    def add_record(self, record: dict, tab: TabType):
+        self.repo.add(record, tab)
+
     def delete_record(self, index: int, tab: TabType):
-        self.repo.models[tab].delete(index)
+        self.repo.delete(index, tab)
         self._update_tab(tab)
 
     def update_record(self, record: dict, index: int, tab: TabType):
-        if self.repo.models[tab].update(record, index):
+        if self.repo.update(record, index, tab):
             self._update_tab(tab)
         else:
             print(f"[Update Failed] Invalid data at index {index} in {tab}")  # TODO
 
     def move_filter(self, index: int, direction: int):
-        self.repo.models[TabType.FILTERS].swap(index, direction)
+        self.repo.move_filter(index, direction)
         self._update_tab(TabType.FILTERS)
 
     def _update_tab(self, tab: TabType):
-        view_list = self.repo.models[tab].read()
+        view_list = self.repo.read(tab)
         self.window.refresh_tabs(view_list, tab)
 
 
