@@ -25,7 +25,7 @@ class BaseModel(ABC):
 
     # TODO
     @after_db_update
-    def add(self, record: dict):
+    def add(self, input_data: dict):
         raise NotImplementedError("BaseModel not implement 'add'")
 
     @after_db_update
@@ -33,8 +33,8 @@ class BaseModel(ABC):
         self.tree.children().pop(index)
 
     @after_db_update
-    def update(self, record: dict, index: int):
-        js_string = self.parse_input(record)
+    def update(self, input_data: dict, index: int):
+        js_string = self.parse_input(input_data)
         if not js_string:
             return False  # TODO
         js_string = f"data = {{ {js_string} }}"
@@ -48,7 +48,7 @@ class BaseModel(ABC):
 
     @classmethod
     @abstractmethod
-    def parse_input(cls, record: dict):
+    def parse_input(cls, input_data: dict):
         raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
 
     def _refresh_tree_list(self):

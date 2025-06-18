@@ -11,26 +11,26 @@ class FilterModel(BaseModel, SortMixin):
         super().__init__(tree)
 
     @classmethod
-    def parse_input(cls, record: dict):
-        if (Field.NAME.value not in record) or (Field.KEY.value not in record):
+    def parse_input(cls, input_data: dict):
+        if (Field.NAME.value not in input_data) or (Field.KEY.value not in input_data):
             print('filter object require "name" and "key" attribute')
             return ""  # TODO
 
-        name = record[Field.NAME.value].strip('"')
-        key = record[Field.KEY.value].strip('"')
+        name = input_data[Field.NAME.value].strip('"')
+        key = input_data[Field.KEY.value].strip('"')
         js_string = f'name: "{name}", key: "{key}"'
 
-        if Field.TOOLTIP.value in record:
-            tooltip = record[Field.TOOLTIP.value].strip('"')
+        if Field.TOOLTIP.value in input_data:
+            tooltip = input_data[Field.TOOLTIP.value].strip('"')
             js_string = f'{js_string}, tooltip: "{tooltip}"'
 
-        if Field.CHECKED.value in record:
-            checked = str(record[Field.CHECKED.value]).lower()
+        if Field.CHECKED.value in input_data:
+            checked = str(input_data[Field.CHECKED.value]).lower()
             js_string = f'{js_string}, checked: "{checked}"'
 
-        if "tree" in record:
+        if "tree" in input_data:
             sub_string = ""
-            for item in record["tree"]:
+            for item in input_data["tree"]:
                 if not item[0] or not item[1]:
                     print(
                         'object in "sub" list in filter require "name" and "key" attribute'

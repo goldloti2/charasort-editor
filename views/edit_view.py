@@ -60,8 +60,8 @@ class EditView:
         self._on_window_close()
 
     def _on_window_save(self):
-        save = self.record_body.get_values()
-        self._on_window_close(save)
+        input_data = self.record_body.get_input_data()
+        self._on_window_close(input_data)
 
     def _on_window_close(self, save: dict = None):
         self.window.destroy()

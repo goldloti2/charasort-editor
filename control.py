@@ -24,15 +24,15 @@ class Controller:
             self.path = path
         self.repo.save_file(self.path)
 
-    def add_record(self, record: dict, tab: TabType):
-        self.repo.add(record, tab)
+    def add_record(self, input_data: dict, tab: TabType):
+        self.repo.add(input_data, tab)
 
     def delete_record(self, index: int, tab: TabType):
         self.repo.delete(index, tab)
         self._update_tab(tab)
 
-    def update_record(self, record: dict, index: int, tab: TabType):
-        if self.repo.update(record, index, tab):
+    def update_record(self, input_data: dict, index: int, tab: TabType):
+        if self.repo.update(input_data, index, tab):
             self._update_tab(tab)
         else:
             print(f"[Update Failed] Invalid data at index {index} in {tab}")  # TODO

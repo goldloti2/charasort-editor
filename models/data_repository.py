@@ -43,14 +43,14 @@ class DataRepository:
         with open(path, "w") as file:
             print(self.tree, file=file)
 
-    def add(self, record: dict, tab: TabType):
-        self.models[tab].add()
+    def add(self, input_data: dict, tab: TabType):
+        self.models[tab].add(input_data)
 
     def delete(self, index: int, tab: TabType):
         self.models[tab].delete(index)
 
-    def update(self, record: dict, index: int, tab: TabType):
-        return self.models[tab].update(record, index)
+    def update(self, input_data: dict, index: int, tab: TabType):
+        return self.models[tab].update(input_data, index)
 
     def move_filter(self, index: int, direction: int):
         self.models[TabType.FILTERS].swap(index, direction)

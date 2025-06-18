@@ -72,18 +72,18 @@ class RecordBody:
         self.treeview_select_callback = []
         self.treeview_deselect_callback = []
 
-    def get_values(self):
-        values = {}
+    def get_input_data(self):
+        input_data = {}
         for key in self.return_variables:
             var = self.return_variables[key].get()
             if var:
-                values[key] = var
+                input_data[key] = var
         tree_values = []
         for item in self.tree.get_children():
             tree_values.append(self.tree.item(item, "values"))
         if tree_values:
-            values["tree"] = tree_values
-        return values
+            input_data["tree"] = tree_values
+        return input_data
 
     def treeview_add(self, values: tuple):
         self.tree.insert("", "end", values=values)
