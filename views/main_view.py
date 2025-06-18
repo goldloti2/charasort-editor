@@ -52,18 +52,20 @@ class View:
     def start(self):
         self.root.mainloop()
 
-    def refresh_tabs(self, node_list: list, tab: TabType):
+    def refresh_tabs(self, view_list: list, tab: TabType):
         self.destroy_tabs(tab)
 
         parent = self.tabs[tab]
         callbacks = self._create_button_callbacks(tab)
         is_filter_tab = tab is TabType.FILTERS
-        last_index = len(node_list) - 1
+        last_index = len(view_list) - 1
 
-        for idx, node in enumerate(node_list):
+        for idx, view_data in enumerate(view_list):
             is_first = (idx == 0) and is_filter_tab
             is_last = (idx == last_index) and is_filter_tab
-            self._build_display_frame(parent, node, idx, callbacks, is_first, is_last)
+            self._build_display_frame(
+                parent, view_data, idx, callbacks, is_first, is_last
+            )
 
     def destroy_tabs(self, tab: TabType):
         destroy = self.tabs[tab].winfo_children()
@@ -86,13 +88,13 @@ class View:
     def _build_display_frame(
         self,
         parent: ttk.Frame,
-        record: list,
+        view_data: list,
         index: int,
         callbacks: Dict[ButtonLabel, Callable],
         is_first: bool,
         is_last: bool,
     ):
-        frame = RecordFrame(parent, record, index, callbacks)
+        frame = RecordFrame(parent, view_data, index, callbacks)
         frame.disable_move(is_first, is_last)
 
     def _create_button_callbacks(self, tab: TabType):
@@ -142,7 +144,7 @@ class View:
 
         self.edit_window = EditView(
             self.root,
-            frame.record,
+            frame.view_data,
             tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
         )

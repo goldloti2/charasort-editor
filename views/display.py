@@ -7,10 +7,10 @@ from utils import ButtonLabel, WidgetType
 
 
 class RecordBody:
-    def __init__(self, record: list, frame: ttk.Frame, is_edit: bool):
+    def __init__(self, view_data: list, frame: ttk.Frame, is_edit: bool):
         return_variables = {}
         row = 0
-        for attr in record:
+        for attr in view_data:
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type is WidgetType.LABEL:
@@ -154,7 +154,7 @@ class RecordFrame(ttk.Frame):
     def __init__(
         self,
         parent: ttk.Frame,
-        record: list,
+        view_data: list,
         index: int,
         callbacks: Dict[ButtonLabel, Callable],
     ):
@@ -162,11 +162,11 @@ class RecordFrame(ttk.Frame):
         super().__init__(parent, relief=tk.GROOVE, border=10)
         self.columnconfigure(1, weight=1)
         self.grid(column=0, sticky=tk.EW)
-        self.record = record
+        self.view_data = view_data
         self.index = index
 
         # add information
-        RecordBody(record, self, False)
+        RecordBody(view_data, self, False)
 
         # add buttons
         self.button_up = None

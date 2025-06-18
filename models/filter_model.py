@@ -42,25 +42,25 @@ class FilterModel(BaseModel, SortMixin):
         return js_string
 
     def _refresh_view_list(self):
-        view_list = []
-        for item in self.tree_list:
-            node = []
-            node.append((WidgetType.LABEL, "name", item[Field.NAME.value]))
-            node.append((WidgetType.LABEL, "key", item[Field.KEY.value]))
-            node.append(
-                (WidgetType.LABEL, "tooltip", item.get(Field.TOOLTIP.value, ""))
+        view_data_list = []
+        for node in self.tree_list:
+            view_data = []
+            view_data.append((WidgetType.LABEL, "name", node[Field.NAME.value]))
+            view_data.append((WidgetType.LABEL, "key", node[Field.KEY.value]))
+            view_data.append(
+                (WidgetType.LABEL, "tooltip", node.get(Field.TOOLTIP.value, ""))
             )
-            node.append(
+            view_data.append(
                 (
                     WidgetType.CHECK,
                     "checked",
-                    str(item.get(Field.CHECKED.value, "")).lower() == "true",
+                    str(node.get(Field.CHECKED.value, "")).lower() == "true",
                 )
             )
             subs = [("name", "key")]
-            if Field.SUB.value in item:
-                for sub in item[Field.SUB.value]:
+            if Field.SUB.value in node:
+                for sub in node[Field.SUB.value]:
                     subs.append((sub[Field.NAME.value], sub[Field.KEY.value]))
-            node.append((WidgetType.SUB_FRAME, "sub", subs))
-            view_list.append(node)
-        self.view_list = view_list
+            view_data.append((WidgetType.SUB_FRAME, "sub", subs))
+            view_data_list.append(view_data)
+        self.view_list = view_data_list

@@ -15,15 +15,15 @@ class CharacterModel(BaseModel):
         raise NotImplementedError(f"TODO: {cls.__name__} parse_input")
 
     def _refresh_view_list(self):
-        view_list = []
-        for item in self.tree_list:
-            node = []
-            node.append((WidgetType.LABEL, "name", item[Field.NAME.value]))
-            node.append((WidgetType.LABEL, "img", item[Field.IMG.value]))
+        view_data_list = []
+        for node in self.tree_list:
+            view_data = []
+            view_data.append((WidgetType.LABEL, "name", node[Field.NAME.value]))
+            view_data.append((WidgetType.LABEL, "img", node[Field.IMG.value]))
             opts = [("key", "option")]
-            item_opts = item[Field.OPTS.value]
-            for opt in item_opts:
-                opts.append((opt, item_opts[opt]))
-            node.append((WidgetType.SUB_FRAME, "filter options", opts))
-            view_list.append(node)
-        self.view_list = view_list
+            node_opts = node[Field.OPTS.value]
+            for opt in node_opts:
+                opts.append((opt, node_opts[opt]))
+            view_data.append((WidgetType.SUB_FRAME, "filter options", opts))
+            view_data_list.append(view_data)
+        self.view_list = view_data_list

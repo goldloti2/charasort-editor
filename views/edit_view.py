@@ -10,12 +10,12 @@ from .display import RecordBody
 
 class EditView:
     def __init__(
-        self, root: tk.Tk, record: list, tab: TabType, return_callback: Callable
+        self, root: tk.Tk, view_data: list, tab: TabType, return_callback: Callable
     ):
         self.return_callback = return_callback
 
         self.window = window = tk.Toplevel(root)
-        window.title(f"'{record[0][2]}' editing...")
+        window.title(f"'{view_data[0][2]}' editing...")
         window.geometry("600x500")
         window.resizable(False, True)
         window.protocol("WM_DELETE_WINDOW", self._on_window_close)
@@ -46,7 +46,7 @@ class EditView:
         self._build_filter_form(frame)
 
         # add information
-        record_body = RecordBody(record, frame, True)
+        record_body = RecordBody(view_data, frame, True)
         record_body.add_treeview_callbacks(
             partial(self._treeview_toggle, True),
             partial(self._treeview_toggle, False),
