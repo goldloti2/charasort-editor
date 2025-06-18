@@ -44,7 +44,7 @@ class BaseModel(ABC):
         return True
 
     def read(self):
-        return self.tree_list
+        return self.view_list
 
     @classmethod
     @abstractmethod
