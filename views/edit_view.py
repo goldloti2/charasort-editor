@@ -5,7 +5,7 @@ from typing import Callable
 
 from utils import TabType
 
-from .display import DisplayRecord
+from .display import RecordBody
 
 
 class EditView:
@@ -46,12 +46,12 @@ class EditView:
         self._build_filter_form(frame)
 
         # add information
-        record_displayer = DisplayRecord(record, frame, True)
-        record_displayer.add_treeview_callbacks(
+        record_body = RecordBody(record, frame, True)
+        record_body.add_treeview_callbacks(
             partial(self._treeview_toggle, True),
             partial(self._treeview_toggle, False),
         )
-        self.record_displayer = record_displayer
+        self.record_body = record_body
 
     def focus(self):
         self.window.focus()
@@ -60,7 +60,7 @@ class EditView:
         self._on_window_close()
 
     def _on_window_save(self):
-        save = self.record_displayer.get_values()
+        save = self.record_body.get_values()
         self._on_window_close(save)
 
     def _on_window_close(self, save: dict = None):
@@ -75,7 +75,7 @@ class EditView:
         self._form_toggle(True)
 
     def _on_treeview_edit(self):
-        item = self.record_displayer.treeview_selected()
+        item = self.record_body.treeview_selected()
         if item:
             self.edit_item = item[0]
             values = item[1]
@@ -85,13 +85,13 @@ class EditView:
             self._form_toggle(True)
 
     def _on_treeview_delete(self):
-        if self.record_displayer.treeview_delete():
+        if self.record_body.treeview_delete():
             self._on_form_ending()
             self.status_text.set("deleted!")
             self._treeview_toggle(False)
 
     def _on_treeview_move(self, direction: int):
-        if self.record_displayer.treeview_move(direction):
+        if self.record_body.treeview_move(direction):
             self._on_form_ending()
             self.status_text.set("moved!")
 
@@ -145,9 +145,9 @@ class EditView:
     def _on_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
         if self.edit_item:
-            self.record_displayer.treeview_edit(self.edit_item, values)
+            self.record_body.treeview_edit(self.edit_item, values)
         else:
-            self.record_displayer.treeview_add(values)
+            self.record_body.treeview_add(values)
         self.edit_item = ()
         self._on_form_ending()
 

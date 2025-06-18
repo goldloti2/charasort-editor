@@ -6,7 +6,7 @@ from typing import Callable, Dict
 from utils import ButtonLabel, WidgetType
 
 
-class DisplayRecord:
+class RecordBody:
     def __init__(self, record: list, frame: ttk.Frame, is_edit: bool):
         return_variables = {}
         row = 0
@@ -150,7 +150,7 @@ class DisplayRecord:
             callback()
 
 
-class DisplayRecordFrame(ttk.Frame):
+class RecordFrame(ttk.Frame):
     def __init__(
         self,
         parent: ttk.Frame,
@@ -166,7 +166,7 @@ class DisplayRecordFrame(ttk.Frame):
         self.index = index
 
         # add information
-        DisplayRecord(record, self, False)
+        RecordBody(record, self, False)
 
         # add buttons
         self.button_up = None
