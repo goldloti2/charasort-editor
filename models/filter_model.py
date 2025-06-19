@@ -44,24 +44,20 @@ class FilterModel(BaseModel, SortMixin):
     def _refresh_view_list(self):
         view_data_list = []
         for node in self.tree_list:
-            view_data = ViewData()
-            view_data["name"] = (WidgetType.LABEL, "name", node["name"])
-            view_data["key"] = (WidgetType.LABEL, "key", node["key"])
-            view_data["tooltip"] = (
-                WidgetType.LABEL,
-                "tooltip",
-                node.get("tooltip", ""),
-            )
-            view_data["checked"] = (
-                WidgetType.CHECK,
-                "checked",
-                str(node.get("checked", "")).lower() == "true",
-            )
-
             subs = [("name", "key")]
             if "sub" in node:
                 for sub in node["sub"]:
                     subs.append((sub["name"], sub["key"]))
-            view_data["sub"] = (WidgetType.SUB_FRAME, "sub", subs)
+            view_data = ViewData(
+                name=(WidgetType.LABEL, "name", node["name"]),
+                key=(WidgetType.LABEL, "key", node["key"]),
+                tooltip=(WidgetType.LABEL, "tooltip", node.get("tooltip", "")),
+                checked=(
+                    WidgetType.CHECK,
+                    "checked",
+                    str(node.get("checked", "")).lower() == "true",
+                ),
+                sub=(WidgetType.SUB_FRAME, "sub", subs),
+            )
             view_data_list.append(view_data)
         self.view_list = view_data_list

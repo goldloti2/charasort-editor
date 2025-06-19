@@ -15,7 +15,7 @@ class EditView:
         self.return_callback = return_callback
 
         self.window = window = tk.Toplevel(root)
-        window.title(f"'{view_data['name'][2]}' editing...")
+        window.title(f"'{view_data.name[2]}' editing...")
         window.geometry("600x500")
         window.resizable(False, True)
         window.protocol("WM_DELETE_WINDOW", self._on_window_close)
