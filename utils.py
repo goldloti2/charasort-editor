@@ -42,8 +42,8 @@ class FilterSub(BaseModel):
 
 
 class FilterInput(BaseModel):
-    name: str
-    key: str
+    name: str = Field(min_length=1)
+    key: str = Field(min_length=1)
     tooltip: Optional[str] = None
     checked: bool = False
     sub: Optional[list[FilterSub]] = Field(default=None, alias="tree")
@@ -52,30 +52,17 @@ class FilterInput(BaseModel):
     @model_validator(mode="before")
     @classmethod
     def convert_input(cls, data):
-        if isinstance(data, dict):
-            for name in ["sub", "tree"]:
-                if name in data:
-                    convert = data[name]
-                    if isinstance(convert, (list, tuple)) and all(
-                        isinstance(t, (tuple, list)) and len(t) == 2 for t in convert
-                    ):
-                        data[name] = [{"name": t[0], "key": t[1]} for t in convert]
-                        break
+        if not isinstance(data, dict):
+            return data
+        for name in ["sub", "tree"]:
+            if name in data:
+                convert = data.get(name)
+                if not isinstance(convert, (list, tuple)):
+                    continue
+                if all(isinstance(t, (tuple, list)) and len(t) == 2 for t in convert):
+                    data[name] = [{"name": t[0], "key": t[1]} for t in convert]
+                    break
         return data
-
-    @field_validator("name", mode="after")
-    @classmethod
-    def name_check_empty(cls, val):
-        if not val:
-            raise ValueError('"name" should contain at least 1 character')
-        return val
-
-    @field_validator("key", mode="after")
-    @classmethod
-    def key_check_empty(cls, val):
-        if not val:
-            raise ValueError('"key" should contain at least 1 character')
-        return val
 
     @field_validator("tooltip", mode="after")
     @classmethod
