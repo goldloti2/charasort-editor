@@ -3,6 +3,8 @@ from abc import ABC, abstractmethod
 from calmjs.parse import asttypes, es5
 from calmjs.parse.walkers import Walker
 
+from utils import InputData, TreeData, ViewData
+
 
 def after_db_update(func):
     def wrapper(self: "BaseModel", *args, **kwargs):
@@ -18,14 +20,14 @@ class BaseModel(ABC):
     def __init__(self, tree: asttypes.Array):
         self.tree = tree
         self.walker = Walker()
-        self.tree_list = []
-        self.view_list = []
+        self.tree_list: list[TreeData] = []
+        self.view_list: list[ViewData] = []
         self._refresh_tree_list()
         self._refresh_view_list()
 
     # TODO
     @after_db_update
-    def add(self, input_data: dict):
+    def add(self, input_data: InputData):
         raise NotImplementedError("BaseModel not implement 'add'")
 
     @after_db_update
@@ -33,7 +35,7 @@ class BaseModel(ABC):
         self.tree.children().pop(index)
 
     @after_db_update
-    def update(self, input_data: dict, index: int):
+    def update(self, input_data: InputData, index: int):
         js_string = self.parse_input(input_data)
         if not js_string:
             return False  # TODO
@@ -48,7 +50,7 @@ class BaseModel(ABC):
 
     @classmethod
     @abstractmethod
-    def parse_input(cls, input_data: dict):
+    def parse_input(cls, input_data: InputData):
         raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
 
     def _refresh_tree_list(self):

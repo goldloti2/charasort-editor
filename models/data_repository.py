@@ -3,7 +3,7 @@ from typing import Dict
 from calmjs.parse import asttypes, es5, io
 from calmjs.parse.walkers import Walker
 
-from utils import TabType
+from utils import InputData, TabType
 
 from .base_model import BaseModel
 from .character_model import CharacterModel
@@ -43,13 +43,13 @@ class DataRepository:
         with open(path, "w") as file:
             print(self.tree, file=file)
 
-    def add(self, input_data: dict, tab: TabType):
+    def add(self, input_data: InputData, tab: TabType):
         self.models[tab].add(input_data)
 
     def delete(self, index: int, tab: TabType):
         self.models[tab].delete(index)
 
-    def update(self, input_data: dict, index: int, tab: TabType):
+    def update(self, input_data: InputData, index: int, tab: TabType):
         return self.models[tab].update(input_data, index)
 
     def move_filter(self, index: int, direction: int):

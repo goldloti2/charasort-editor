@@ -1,5 +1,5 @@
 from models import DataRepository
-from utils import TabType
+from utils import InputData, TabType
 from views import View
 
 
@@ -24,14 +24,14 @@ class Controller:
             self.path = path
         self.repo.save_file(self.path)
 
-    def add_record(self, input_data: dict, tab: TabType):
+    def add_record(self, input_data: InputData, tab: TabType):
         self.repo.add(input_data, tab)
 
     def delete_record(self, index: int, tab: TabType):
         self.repo.delete(index, tab)
         self._update_tab(tab)
 
-    def update_record(self, input_data: dict, index: int, tab: TabType):
+    def update_record(self, input_data: InputData, index: int, tab: TabType):
         if self.repo.update(input_data, index, tab):
             self._update_tab(tab)
         else:

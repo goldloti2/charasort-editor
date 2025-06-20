@@ -4,7 +4,7 @@ from functools import partial
 from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING, Callable, Dict
 
-from utils import ButtonLabel, TabType
+from utils import ButtonLabel, InputData, TabType, ViewData
 
 from .display import RecordFrame
 from .edit_view import EditView
@@ -52,7 +52,7 @@ class View:
     def start(self):
         self.root.mainloop()
 
-    def refresh_tabs(self, view_list: list, tab: TabType):
+    def refresh_tabs(self, view_list: list[ViewData], tab: TabType):
         self.destroy_tabs(tab)
 
         parent = self.tabs[tab]
@@ -88,7 +88,7 @@ class View:
     def _build_display_frame(
         self,
         parent: ttk.Frame,
-        view_data: list,
+        view_data: ViewData,
         index: int,
         callbacks: Dict[ButtonLabel, Callable],
         is_first: bool,
@@ -158,7 +158,7 @@ class View:
         if not self.edit_window:
             self.controller.move_filter(frame.index, direction)
 
-    def _on_edit_return(self, save: dict, index: int, tab: TabType):
+    def _on_edit_return(self, save: InputData, index: int, tab: TabType):
         self.edit_window = None
         if save:
             self.controller.update_record(save, index, tab)

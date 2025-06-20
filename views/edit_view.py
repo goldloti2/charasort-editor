@@ -3,19 +3,19 @@ from functools import partial
 from tkinter import ttk
 from typing import Callable
 
-from utils import TabType
+from utils import InputData, TabType, ViewData
 
 from .display import RecordBody
 
 
 class EditView:
     def __init__(
-        self, root: tk.Tk, view_data: list, tab: TabType, return_callback: Callable
+        self, root: tk.Tk, view_data: ViewData, tab: TabType, return_callback: Callable
     ):
         self.return_callback = return_callback
 
         self.window = window = tk.Toplevel(root)
-        window.title(f"'{view_data[0][2]}' editing...")
+        window.title(f"'{view_data['name'][2]}' editing...")
         window.geometry("600x500")
         window.resizable(False, True)
         window.protocol("WM_DELETE_WINDOW", self._on_window_close)
@@ -63,7 +63,7 @@ class EditView:
         input_data = self.record_body.get_input_data()
         self._on_window_close(input_data)
 
-    def _on_window_close(self, save: dict = None):
+    def _on_window_close(self, save: InputData = None):
         self.window.destroy()
         self.return_callback(save)
 

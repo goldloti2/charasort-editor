@@ -1,6 +1,6 @@
 from calmjs.parse import asttypes
 
-from utils import Field, WidgetType
+from utils import InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 from .sort_mixin import SortMixin
@@ -11,21 +11,21 @@ class FilterModel(BaseModel, SortMixin):
         super().__init__(tree)
 
     @classmethod
-    def parse_input(cls, input_data: dict):
-        if (Field.NAME.value not in input_data) or (Field.KEY.value not in input_data):
+    def parse_input(cls, input_data: InputData):
+        if ("name" not in input_data) or ("key" not in input_data):
             print('filter object require "name" and "key" attribute')
             return ""  # TODO
 
-        name = input_data[Field.NAME.value].strip('"')
-        key = input_data[Field.KEY.value].strip('"')
+        name = input_data["name"].strip('"')
+        key = input_data["key"].strip('"')
         js_string = f'name: "{name}", key: "{key}"'
 
-        if Field.TOOLTIP.value in input_data:
-            tooltip = input_data[Field.TOOLTIP.value].strip('"')
+        if "tooltip" in input_data:
+            tooltip = input_data["tooltip"].strip('"')
             js_string = f'{js_string}, tooltip: "{tooltip}"'
 
-        if Field.CHECKED.value in input_data:
-            checked = str(input_data[Field.CHECKED.value]).lower()
+        if "checked" in input_data:
+            checked = str(input_data["checked"]).lower()
             js_string = f'{js_string}, checked: "{checked}"'
 
         if "tree" in input_data:
@@ -44,23 +44,24 @@ class FilterModel(BaseModel, SortMixin):
     def _refresh_view_list(self):
         view_data_list = []
         for node in self.tree_list:
-            view_data = []
-            view_data.append((WidgetType.LABEL, "name", node[Field.NAME.value]))
-            view_data.append((WidgetType.LABEL, "key", node[Field.KEY.value]))
-            view_data.append(
-                (WidgetType.LABEL, "tooltip", node.get(Field.TOOLTIP.value, ""))
+            view_data = ViewData()
+            view_data["name"] = (WidgetType.LABEL, "name", node["name"])
+            view_data["key"] = (WidgetType.LABEL, "key", node["key"])
+            view_data["tooltip"] = (
+                WidgetType.LABEL,
+                "tooltip",
+                node.get("tooltip", ""),
             )
-            view_data.append(
-                (
-                    WidgetType.CHECK,
-                    "checked",
-                    str(node.get(Field.CHECKED.value, "")).lower() == "true",
-                )
+            view_data["checked"] = (
+                WidgetType.CHECK,
+                "checked",
+                str(node.get("checked", "")).lower() == "true",
             )
+
             subs = [("name", "key")]
-            if Field.SUB.value in node:
-                for sub in node[Field.SUB.value]:
-                    subs.append((sub[Field.NAME.value], sub[Field.KEY.value]))
-            view_data.append((WidgetType.SUB_FRAME, "sub", subs))
+            if "sub" in node:
+                for sub in node["sub"]:
+                    subs.append((sub["name"], sub["key"]))
+            view_data["sub"] = (WidgetType.SUB_FRAME, "sub", subs)
             view_data_list.append(view_data)
         self.view_list = view_data_list

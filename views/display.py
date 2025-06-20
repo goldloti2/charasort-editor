@@ -3,14 +3,14 @@ from functools import partial
 from tkinter import ttk
 from typing import Callable, Dict
 
-from utils import ButtonLabel, WidgetType
+from utils import ButtonLabel, InputData, ViewData, WidgetType
 
 
 class RecordBody:
-    def __init__(self, view_data: list, frame: ttk.Frame, is_edit: bool):
+    def __init__(self, view_data: ViewData, frame: ttk.Frame, is_edit: bool):
         return_variables = {}
         row = 0
-        for attr in view_data:
+        for _, attr in view_data.items():
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type is WidgetType.LABEL:
@@ -73,7 +73,7 @@ class RecordBody:
         self.treeview_deselect_callback = []
 
     def get_input_data(self):
-        input_data = {}
+        input_data = InputData()
         for key in self.return_variables:
             var = self.return_variables[key].get()
             if var:
@@ -154,7 +154,7 @@ class RecordFrame(ttk.Frame):
     def __init__(
         self,
         parent: ttk.Frame,
-        view_data: list,
+        view_data: ViewData,
         index: int,
         callbacks: Dict[ButtonLabel, Callable],
     ):
