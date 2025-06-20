@@ -159,9 +159,14 @@ class View:
             self.controller.move_filter(frame.index, direction)
 
     def _on_edit_return(self, save: InputData, index: int, tab: TabType):
+        if save is not None:
+            try:
+                self.controller.update_record(save, index, tab)
+            except Exception as e:
+                print(e)
+                return
+        self.edit_window.destroy()
         self.edit_window = None
-        if save:
-            self.controller.update_record(save, index, tab)
 
 
 if __name__ == "__main__":

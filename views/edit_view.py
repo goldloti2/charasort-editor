@@ -57,14 +57,13 @@ class EditView:
         self.window.focus()
 
     def destroy(self):
-        self._on_window_close()
+        self.window.destroy()
 
     def _on_window_save(self):
         input_data = self.record_body.get_input_data()
         self._on_window_close(input_data)
 
     def _on_window_close(self, save: InputData = None):
-        self.window.destroy()
         self.return_callback(save)
 
     def _on_treeview_add(self):

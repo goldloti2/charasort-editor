@@ -32,8 +32,13 @@ class Controller:
         self._update_tab(tab)
 
     def update_record(self, input_data: InputData, index: int, tab: TabType):
-        self.repo.update(input_data, index, tab)
-        self._update_tab(tab)
+        try:
+            self.repo.update(input_data, index, tab)
+        except Exception as error:
+            print("In controller")
+            raise error
+        else:
+            self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):
         self.repo.move_filter(index, direction)
