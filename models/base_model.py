@@ -35,23 +35,19 @@ class BaseModel(ABC):
         self.tree.children().pop(index)
 
     @after_db_update
-    def update(self, input_data: InputData, index: int):
-        validate = self.validate_input(input_data)
-        if not validate:
-            return False  # TODO
-        js_string = "data = " + obj_to_js(validate)
+    def update(self, valid_dict: dict, index: int):
+        js_string = "data = " + obj_to_js(valid_dict)
         tree = es5(js_string)
         node = next(self.walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
         self.tree.children()[index] = node
-        return True
 
     def read(self):
         return self.view_list
 
     @classmethod
     @abstractmethod
-    def validate_input(cls, input_data: InputData) -> dict:
-        raise NotImplementedError(f"{cls.__name__} not implement 'validate_input'")
+    def validate(cls, input_data: InputData) -> dict:
+        raise NotImplementedError(f"{cls.__name__} not implement 'validate'")
 
     def _refresh_tree_list(self):
         def parse(node: asttypes.Node):
