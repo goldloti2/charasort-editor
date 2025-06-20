@@ -11,7 +11,7 @@ class FilterModel(BaseModel, SortMixin):
         super().__init__(tree)
 
     @classmethod
-    def validate_input(cls, input_data: InputData):
+    def validate(cls, input_data: InputData):
         return FilterInput(**input_data).model_dump(exclude_defaults=True)
 
     def _refresh_view_list(self):
