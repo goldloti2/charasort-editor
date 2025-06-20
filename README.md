@@ -4,7 +4,7 @@ A simple tool for editing [charasort](https://github.com/execfera/charasort) dat
 
 ## Requirements
 
-- Python 3.8 or higher  
+- Python 3.10 or higher  
 - Python package:
   - `calmjs.parse`
 
