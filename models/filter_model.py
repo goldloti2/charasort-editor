@@ -1,6 +1,6 @@
 from calmjs.parse import asttypes
 
-from utils import InputData, ViewData, WidgetType
+from utils import FilterInput, InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 from .sort_mixin import SortMixin
@@ -11,35 +11,8 @@ class FilterModel(BaseModel, SortMixin):
         super().__init__(tree)
 
     @classmethod
-    def parse_input(cls, input_data: InputData):
-        if ("name" not in input_data) or ("key" not in input_data):
-            print('filter object require "name" and "key" attribute')
-            return ""  # TODO
-
-        name = input_data["name"].strip('"')
-        key = input_data["key"].strip('"')
-        js_string = f'name: "{name}", key: "{key}"'
-
-        if "tooltip" in input_data:
-            tooltip = input_data["tooltip"].strip('"')
-            js_string = f'{js_string}, tooltip: "{tooltip}"'
-
-        if "checked" in input_data:
-            checked = str(input_data["checked"]).lower()
-            js_string = f'{js_string}, checked: "{checked}"'
-
-        if "tree" in input_data:
-            sub_string = ""
-            for item in input_data["tree"]:
-                if not item[0] or not item[1]:
-                    print(
-                        'object in "sub" list in filter require "name" and "key" attribute'
-                    )
-                    return ""  # TODO
-                sub_string = f'{sub_string}, {{name: "{item[0]}", key: "{item[1]}"}}'
-            js_string = f"{js_string}, sub: [{sub_string[2:]}]"
-
-        return js_string
+    def validate_input(cls, input_data: InputData):
+        return FilterInput(**input_data).model_dump(exclude_defaults=True)
 
     def _refresh_view_list(self):
         view_data_list = []
