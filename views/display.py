@@ -10,7 +10,9 @@ class RecordBody:
     def __init__(self, view_data: ViewData, frame: ttk.Frame, is_edit: bool):
         return_variables = {}
         row = 0
-        for _, attr in view_data.items():
+        for _, attr in view_data.model_dump().items():
+            if attr is None:
+                continue
             frame.rowconfigure(row, pad=5)
             c_type, label, content = attr
             if c_type is WidgetType.LABEL:

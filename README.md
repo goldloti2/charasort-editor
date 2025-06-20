@@ -7,6 +7,7 @@ A simple tool for editing [charasort](https://github.com/execfera/charasort) dat
 - Python 3.10 or higher  
 - Python package:
   - `calmjs.parse`
+  - `pydantic`
 
 ## Overview
 

@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from calmjs.parse import asttypes, es5
 from calmjs.parse.walkers import Walker
 
-from utils import InputData, TreeData, ViewData
+from utils import InputData, TreeData, ViewData, obj_to_js
 
 
 def after_db_update(func):
@@ -35,23 +35,19 @@ class BaseModel(ABC):
         self.tree.children().pop(index)
 
     @after_db_update
-    def update(self, input_data: InputData, index: int):
-        js_string = self.parse_input(input_data)
-        if not js_string:
-            return False  # TODO
-        js_string = f"data = {{ {js_string} }}"
+    def update(self, valid_dict: dict, index: int):
+        js_string = "data = " + obj_to_js(valid_dict)
         tree = es5(js_string)
         node = next(self.walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
         self.tree.children()[index] = node
-        return True
 
     def read(self):
         return self.view_list
 
     @classmethod
     @abstractmethod
-    def parse_input(cls, input_data: InputData):
-        raise NotImplementedError(f"{cls.__name__} not implement 'parse_input'")
+    def validate(cls, input_data: InputData) -> dict:
+        raise NotImplementedError(f"{cls.__name__} not implement 'validate'")
 
     def _refresh_tree_list(self):
         def parse(node: asttypes.Node):
