@@ -174,8 +174,9 @@ class View:
         if save is not None:
             try:
                 self.controller.update_record(save, index, tab)
-            except Exception as e:
-                print(e)
+            except ValueError as e:
+                err_msg = "\n".join([i["msg"] for i in e.errors()])
+                self.edit_window.validation_failed(err_msg)
                 return
         self.edit_window.destroy()
         self.edit_window = None

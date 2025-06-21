@@ -1,7 +1,7 @@
 import logging
 import tkinter as tk
 from functools import partial
-from tkinter import ttk
+from tkinter import messagebox, ttk
 from typing import Callable
 
 from utils import InputData, TabType, ViewData
@@ -62,6 +62,10 @@ class EditView:
 
     def destroy(self):
         self.window.destroy()
+
+    def validation_failed(self, err_msg: str):
+        messagebox.showwarning("validation failed", err_msg)
+        self.focus()
 
     def _on_window_save(self):
         input_data = self.record_body.get_input_data()
@@ -147,6 +151,10 @@ class EditView:
 
     def _on_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
+        if not (values[0] and values[1]):
+            messagebox.showwarning("warning", "fields cannot be empty")
+            self.focus()
+            return
         if self.editing_item:
             self.record_body.treeview_edit(self.editing_item, values)
         else:

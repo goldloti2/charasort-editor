@@ -44,9 +44,8 @@ class Controller:
         try:
             self.repo.update(input_data, index, tab)
         except ValueError as e:
-            logger.warning(
-                f"editing {tab.value} #{index} validation failed", exc_info=e
-            )
+            logger.warning(f"editing {tab.value} #{index} validation failed")
+            logger.debug("", exc_info=e)
             raise e
         except Exception as e:
             logger.error(f"editing {tab.value} #{index} error", exc_info=e)
