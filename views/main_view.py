@@ -52,9 +52,11 @@ class View:
         }
         self.detail_label_style = detail_label_style
         self.edit_window = None
+        self.is_running = False
         logger.info("initialized")
 
     def start(self):
+        self.is_running = True
         self.root.mainloop()
 
     def refresh_tabs(self, view_list: list[ViewData], tab: TabType):
@@ -68,7 +70,7 @@ class View:
         for idx, view_data in enumerate(view_list):
             is_first = (idx == 0) and is_filter_tab
             is_last = (idx == last_index) and is_filter_tab
-            # TODO
+            # TODO: try
             self._build_display_frame(
                 parent, view_data, idx, callbacks, is_first, is_last
             )
@@ -121,7 +123,7 @@ class View:
         if path:
             self.destroy_tabs(TabType.FILTERS)
             self.destroy_tabs(TabType.CHARACTERS)
-            # TODO
+            # TODO: try
             self.controller.open_file(path)
 
     def _on_menu_save(self):
@@ -129,7 +131,7 @@ class View:
             "Overwrite", "Do you want to overwrite the old file?"
         )
         if result:
-            # TODO
+            # TODO: try
             self.controller.save_file()
 
     def _on_menu_save_to(self):
@@ -140,7 +142,7 @@ class View:
             filetypes=[("JavaScript (*.js)", "*.js"), ("all (*)", "*")],
         )
         if path:
-            # TODO
+            # TODO: try
             self.controller.save_file(path)
 
     def _on_button_edit(self, frame: RecordFrame, tab: TabType):
@@ -162,12 +164,12 @@ class View:
 
     def _on_button_delete(self, frame: RecordFrame, tab: TabType):
         if not self.edit_window:
-            # TODO
+            # TODO: try
             self.controller.delete_record(frame.index, tab)
 
     def _on_button_move(self, frame: RecordFrame, direction: int):
         if not self.edit_window:
-            # TODO
+            # TODO: try
             self.controller.move_filter(frame.index, direction)
 
     def _on_edit_return(self, save: InputData, index: int, tab: TabType):

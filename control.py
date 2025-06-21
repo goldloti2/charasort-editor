@@ -13,10 +13,10 @@ class Controller:
         self.repo = None
         self.path = ""
 
-    def start(self, path: str):
+    def start(self, path: str = "test.js"):
         self.open_file(path)
-        self.window.start()
         logger.info("app start")
+        self.window.start()
 
     def open_file(self, path: str):
         self.path = path
@@ -32,7 +32,7 @@ class Controller:
         self.repo.save_file(self.path)
 
     def add_record(self, input_data: InputData, tab: TabType):
-        # TODO
+        # TODO: implement add, and catch error
         self.repo.add(input_data, tab)
 
     def delete_record(self, index: int, tab: TabType):
