@@ -42,7 +42,7 @@ class EditView:
         self.input_var1 = None
         self.input_var2 = None
         self.toggle_form_widgets = ()
-        self.edit_item = ()
+        self.editing_item = ()
         self._build_filter_form(frame)
 
         # add information
@@ -71,13 +71,13 @@ class EditView:
         self.status_text.set("adding...")
         self.input_var1.set("")
         self.input_var2.set("")
-        self.edit_item = ()
+        self.editing_item = ()
         self._form_toggle(True)
 
     def _on_treeview_edit(self):
         item = self.record_body.treeview_selected()
         if item:
-            self.edit_item = item[0]
+            self.editing_item = item[0]
             values = item[1]
             self.status_text.set("editing...")
             self.input_var1.set(values[0])
@@ -144,11 +144,11 @@ class EditView:
 
     def _on_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
-        if self.edit_item:
-            self.record_body.treeview_edit(self.edit_item, values)
+        if self.editing_item:
+            self.record_body.treeview_edit(self.editing_item, values)
         else:
             self.record_body.treeview_add(values)
-        self.edit_item = ()
+        self.editing_item = ()
         self._on_form_ending()
 
     def _on_form_ending(self):
