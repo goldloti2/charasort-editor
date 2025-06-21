@@ -34,7 +34,7 @@ class DataRepository:
             elif node.left.identifier.value == "characterData":
                 characters = node.right
         if not (filters and characters):
-            raise ValueError("Input file not complete")  # TODO
+            raise ValueError("Input file not complete")
 
         self.tree = tree
         self.walker = walker
