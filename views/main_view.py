@@ -71,6 +71,7 @@ class View:
             self._build_display_frame(
                 parent, view_data, idx, callbacks, is_first, is_last
             )
+            logger.debug(f"new record frame, {tab.value} #{idx}, {view_data.name[2]}")
 
     def destroy_tabs(self, tab: TabType):
         destroy = self.tabs[tab].winfo_children()

@@ -39,10 +39,16 @@ class Controller:
     def update_record(self, input_data: InputData, index: int, tab: TabType):
         try:
             self.repo.update(input_data, index, tab)
-        except Exception as error:
-            print("In controller")
-            raise error
+        except ValueError as e:
+            logger.warning(
+                f"editing {tab.value} #{index} validation failed", exc_info=e
+            )
+            raise e
+        except Exception as e:
+            logger.error(f"editing {tab.value} #{index} error", exc_info=e)
+            raise e
         else:
+            logger.info(f"editing {tab.value} #{index} success")
             self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):
