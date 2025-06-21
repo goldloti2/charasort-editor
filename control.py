@@ -1,6 +1,10 @@
+import logging
+
 from models import DataRepository
 from utils import InputData, TabType
 from views import View
+
+logger = logging.getLogger(__name__)
 
 
 class Controller:
@@ -12,6 +16,7 @@ class Controller:
     def start(self, path: str):
         self.open_file(path)
         self.window.start()
+        logger.info("app start")
 
     def open_file(self, path: str):
         self.path = path

@@ -1,13 +1,18 @@
+import logging
+
 from calmjs.parse import asttypes
 
 from utils import InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 
+logger = logging.getLogger(__name__)
+
 
 class CharacterModel(BaseModel):
     def __init__(self, tree: asttypes.Array):
         super().__init__(tree)
+        logger.info(f"initialized, get {len(self.tree_list)} data")
 
     # TODO
     @classmethod

@@ -1,3 +1,4 @@
+import logging
 from typing import Dict
 
 from calmjs.parse import asttypes, es5, io
@@ -9,11 +10,14 @@ from .base_model import BaseModel
 from .character_model import CharacterModel
 from .filter_model import FilterModel
 
+logger = logging.getLogger(__name__)
+
 
 class DataRepository:
     def __init__(self, path: str):
         with open(path, "r", encoding="UTF-8") as file:
             tree = io.read(es5, file)
+        logger.info(f"open file: {path}")
 
         filters = None
         characters = None
@@ -38,6 +42,7 @@ class DataRepository:
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),
         }
+        logger.info("initialized")
 
     def save_file(self, path: str):
         with open(path, "w") as file:

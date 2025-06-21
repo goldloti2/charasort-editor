@@ -1,3 +1,4 @@
+import logging
 import tkinter as tk
 from functools import partial
 from tkinter import ttk
@@ -6,6 +7,8 @@ from typing import Callable
 from utils import InputData, TabType, ViewData
 
 from .display import RecordBody
+
+logger = logging.getLogger(__name__)
 
 
 class EditView:
@@ -52,6 +55,7 @@ class EditView:
             partial(self._treeview_toggle, False),
         )
         self.record_body = record_body
+        logger.info(f"open edit window, '{view_data.name[2]}'")
 
     def focus(self):
         self.window.focus()

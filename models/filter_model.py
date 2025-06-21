@@ -1,3 +1,5 @@
+import logging
+
 from calmjs.parse import asttypes
 
 from utils import FilterInput, InputData, ViewData, WidgetType
@@ -5,10 +7,13 @@ from utils import FilterInput, InputData, ViewData, WidgetType
 from .base_model import BaseModel
 from .sort_mixin import SortMixin
 
+logger = logging.getLogger(__name__)
+
 
 class FilterModel(BaseModel, SortMixin):
     def __init__(self, tree: asttypes.Array):
         super().__init__(tree)
+        logger.info(f"initialized, get {len(self.tree_list)} data")
 
     @classmethod
     def validate(cls, input_data: InputData):

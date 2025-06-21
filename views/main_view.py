@@ -1,3 +1,4 @@
+import logging
 import tkinter as tk
 from datetime import datetime
 from functools import partial
@@ -12,6 +13,9 @@ from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
     from control import Controller
+
+
+logger = logging.getLogger(__name__)
 
 
 class View:
@@ -48,6 +52,7 @@ class View:
         }
         self.detail_label_style = detail_label_style
         self.edit_window = None
+        logger.info("initialized")
 
     def start(self):
         self.root.mainloop()
