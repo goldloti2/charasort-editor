@@ -1,3 +1,4 @@
+import logging
 from typing import Dict
 
 from calmjs.parse import asttypes, es5, io
@@ -8,6 +9,8 @@ from utils import InputData, TabType
 from .base_model import BaseModel
 from .character_model import CharacterModel
 from .filter_model import FilterModel
+
+logger = logging.getLogger(__name__)
 
 
 class DataRepository:
@@ -30,7 +33,7 @@ class DataRepository:
             elif node.left.identifier.value == "characterData":
                 characters = node.right
         if not (filters and characters):
-            raise ValueError("Input file not complete")  # TODO
+            raise ValueError("Input file not complete")
 
         self.tree = tree
         self.walker = walker
@@ -38,6 +41,7 @@ class DataRepository:
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),
         }
+        logger.info("initialized")
 
     def save_file(self, path: str):
         with open(path, "w") as file:

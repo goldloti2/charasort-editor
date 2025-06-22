@@ -1,18 +1,23 @@
+import logging
+
 from calmjs.parse import asttypes
 
 from utils import InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 
+logger = logging.getLogger(__name__)
+
 
 class CharacterModel(BaseModel):
     def __init__(self, tree: asttypes.Array):
         super().__init__(tree)
+        logger.info(f"initialized, get {len(self.tree_list)} data")
 
-    # TODO
+    # TODO: character validate
     @classmethod
     def validate(cls, input_data: InputData):
-        raise NotImplementedError(f"TODO: {cls.__name__} validate")
+        raise NotImplementedError(f"{cls.__name__} validate")
 
     def _refresh_view_list(self):
         view_data_list = []

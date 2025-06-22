@@ -25,7 +25,7 @@ class BaseModel(ABC):
         self._refresh_tree_list()
         self._refresh_view_list()
 
-    # TODO
+    # TODO: add record
     @after_db_update
     def add(self, input_data: InputData):
         raise NotImplementedError("BaseModel not implement 'add'")

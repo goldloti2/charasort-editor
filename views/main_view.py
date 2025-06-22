@@ -1,3 +1,4 @@
+import logging
 import tkinter as tk
 from datetime import datetime
 from functools import partial
@@ -12,6 +13,9 @@ from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
     from control import Controller
+
+
+logger = logging.getLogger(__name__)
 
 
 class View:
@@ -48,8 +52,11 @@ class View:
         }
         self.detail_label_style = detail_label_style
         self.edit_window = None
+        self.is_running = False
+        logger.info("initialized")
 
     def start(self):
+        self.is_running = True
         self.root.mainloop()
 
     def refresh_tabs(self, view_list: list[ViewData], tab: TabType):
@@ -63,9 +70,18 @@ class View:
         for idx, view_data in enumerate(view_list):
             is_first = (idx == 0) and is_filter_tab
             is_last = (idx == last_index) and is_filter_tab
-            self._build_display_frame(
-                parent, view_data, idx, callbacks, is_first, is_last
-            )
+            try:
+                self._build_display_frame(
+                    parent, view_data, idx, callbacks, is_first, is_last
+                )
+            except (TypeError, IndexError, KeyError, ValueError, AttributeError) as e:
+                logger.error(e)
+                logger.debug("", exc_info=e)
+                self.show_error(f"Error occured when trying to show {tab.value} #{idx}")
+            else:
+                logger.debug(
+                    f"new record frame, {tab.value} #{idx}, {view_data.name[2]}"
+                )
 
     def destroy_tabs(self, tab: TabType):
         destroy = self.tabs[tab].winfo_children()
@@ -73,6 +89,9 @@ class View:
             return
         for frame in destroy:
             frame.destroy()
+
+    def show_error(self, message: str):
+        messagebox.showerror("Error", message)
 
     def _build_menu(self):
         menu = tk.Menu(self.root)
@@ -138,7 +157,7 @@ class View:
             self.edit_window.focus()
             return
 
-        # TODO: temporary restrict edit button to filter only
+        # TODO: edit character
         if tab != TabType.FILTERS:
             return
 
@@ -159,9 +178,15 @@ class View:
             self.controller.move_filter(frame.index, direction)
 
     def _on_edit_return(self, save: InputData, index: int, tab: TabType):
+        if save is not None:
+            try:
+                self.controller.update_record(save, index, tab)
+            except ValueError as e:
+                err_msg = "\n".join([i["msg"] for i in e.errors()])
+                self.edit_window.validation_failed(err_msg)
+                return
+        self.edit_window.destroy()
         self.edit_window = None
-        if save:
-            self.controller.update_record(save, index, tab)
 
 
 if __name__ == "__main__":

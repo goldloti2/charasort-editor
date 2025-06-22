@@ -1,11 +1,14 @@
+import logging
 import tkinter as tk
 from functools import partial
-from tkinter import ttk
+from tkinter import messagebox, ttk
 from typing import Callable
 
 from utils import InputData, TabType, ViewData
 
 from .display import RecordBody
+
+logger = logging.getLogger(__name__)
 
 
 class EditView:
@@ -52,19 +55,23 @@ class EditView:
             partial(self._treeview_toggle, False),
         )
         self.record_body = record_body
+        logger.info(f"open edit window, '{view_data.name[2]}'")
 
     def focus(self):
         self.window.focus()
 
     def destroy(self):
-        self._on_window_close()
+        self.window.destroy()
+
+    def validation_failed(self, err_msg: str):
+        messagebox.showwarning("validation failed", err_msg)
+        self.focus()
 
     def _on_window_save(self):
         input_data = self.record_body.get_input_data()
         self._on_window_close(input_data)
 
     def _on_window_close(self, save: InputData = None):
-        self.window.destroy()
         self.return_callback(save)
 
     def _on_treeview_add(self):
@@ -144,6 +151,10 @@ class EditView:
 
     def _on_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
+        if not (values[0] and values[1]):
+            messagebox.showwarning("warning", "fields cannot be empty")
+            self.focus()
+            return
         if self.editing_item:
             self.record_body.treeview_edit(self.editing_item, values)
         else:
