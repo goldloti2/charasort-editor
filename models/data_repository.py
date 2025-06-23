@@ -1,5 +1,4 @@
 import logging
-from typing import Dict
 
 from calmjs.parse import asttypes, es5, io
 from calmjs.parse.walkers import Walker
@@ -37,7 +36,7 @@ class DataRepository:
 
         self.tree = tree
         self.walker = walker
-        self.models: Dict[TabType, BaseModel] = {
+        self.models: dict[TabType, BaseModel] = {
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),
         }
