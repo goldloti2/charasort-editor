@@ -60,17 +60,6 @@ class Controller:
             logger.info(f"add success: {tab.value}")
             self._update_tab(tab)
 
-    def delete_record(self, index: int, tab: TabType):
-        try:
-            self.repo.delete(index, tab)
-        except IndexError as e:
-            logger.error(f"{e}, index: #{index}")
-            logger.debug("", exc_info=e)
-            self.window.show_error(f"Index #{index} in {tab.value} is out of range.")
-        else:
-            logger.info(f"delete success: {tab.value}, #{index}")
-            self._update_tab(tab)
-
     def update_record(self, input_data: InputData, index: int, tab: TabType):
         try:
             self.repo.update(input_data, index, tab)
@@ -80,6 +69,17 @@ class Controller:
             raise e
         else:
             logger.info(f"edit success: {tab.value}, #{index}")
+            self._update_tab(tab)
+
+    def delete_record(self, index: int, tab: TabType):
+        try:
+            self.repo.delete(index, tab)
+        except IndexError as e:
+            logger.error(f"{e}, index: #{index}")
+            logger.debug("", exc_info=e)
+            self.window.show_error(f"Index #{index} in {tab.value} is out of range.")
+        else:
+            logger.info(f"delete success: {tab.value}, #{index}")
             self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):

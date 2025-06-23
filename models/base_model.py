@@ -26,20 +26,19 @@ class BaseModel(ABC):
         self._refresh_tree_list()
         self._refresh_view_list()
 
-    # TODO: add record
     @after_db_update
     def add(self, valid_dict: dict):
         node = self._dict_to_tree(valid_dict)
         self.tree.children().append(node)
 
     @after_db_update
-    def delete(self, index: int):
-        self.tree.children().pop(index)
-
-    @after_db_update
     def update(self, valid_dict: dict, index: int):
         node = self._dict_to_tree(valid_dict)
         self.tree.children()[index] = node
+
+    @after_db_update
+    def delete(self, index: int):
+        self.tree.children().pop(index)
 
     def read(self):
         return self.view_list

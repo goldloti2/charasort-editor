@@ -50,12 +50,12 @@ class DataRepository:
         valid_dict = self.models[tab].validate(input_data)
         self.models[tab].add(valid_dict)
 
-    def delete(self, index: int, tab: TabType):
-        self.models[tab].delete(index)
-
     def update(self, input_data: InputData, index: int, tab: TabType):
         valid_dict = self.models[tab].validate(input_data)
         self.models[tab].update(valid_dict, index)
+
+    def delete(self, index: int, tab: TabType):
+        self.models[tab].delete(index)
 
     def move_filter(self, index: int, direction: int):
         self.models[TabType.FILTERS].swap(index, direction)
