@@ -26,7 +26,7 @@ class Controller:
             logger.error(e)
             logger.debug("", exc_info=e)
             self.window.show_error(f"{path} cannot open.\nPlease try another file.")
-        except (AttributeError, TypeError, ValueError, KeyError) as e:
+        except (AttributeError, ValueError, KeyError) as e:
             logger.error(e)
             logger.debug("", exc_info=e)
             self.window.show_error(
