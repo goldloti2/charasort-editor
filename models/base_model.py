@@ -37,9 +37,7 @@ class BaseModel(ABC):
 
     @after_db_update
     def update(self, valid_dict: dict, index: int):
-        js_string = "data = " + obj_to_js(valid_dict)
-        tree = es5(js_string)
-        node = next(walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
+        node = self._dict_to_tree(valid_dict)
         self.tree.children()[index] = node
 
     def read(self):
@@ -54,6 +52,12 @@ class BaseModel(ABC):
     @abstractmethod
     def build_view_data(cls, node: dict) -> ViewData:
         raise NotImplementedError(f"{cls.__name__} not implement 'build_view_data'")
+
+    @classmethod
+    def _dict_to_tree(cls, valid_dict: dict) -> asttypes.Object:
+        js_string = "data = " + obj_to_js(valid_dict)
+        tree = es5(js_string)
+        return next(walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
 
     def _refresh_tree_list(self):
         def parse(node: asttypes.Node):
