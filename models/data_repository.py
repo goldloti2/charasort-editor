@@ -11,6 +11,8 @@ from .filter_model import FilterModel
 
 logger = logging.getLogger(__name__)
 
+walker = Walker()
+
 
 class DataRepository:
     def __init__(self, path: str):
@@ -19,7 +21,6 @@ class DataRepository:
 
         filters = None
         characters = None
-        walker = Walker()
         for node in walker.filter(
             tree,
             lambda n: (
@@ -35,7 +36,6 @@ class DataRepository:
             raise ValueError("Input file not complete")
 
         self.tree = tree
-        self.walker = walker
         self.models: dict[TabType, BaseModel] = {
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),

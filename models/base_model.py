@@ -5,6 +5,8 @@ from calmjs.parse.walkers import Walker
 
 from utils import InputData, TreeData, ViewData, obj_to_js
 
+walker = Walker()
+
 
 def after_db_update(func):
     def wrapper(self: "BaseModel", *args, **kwargs):
@@ -19,7 +21,6 @@ def after_db_update(func):
 class BaseModel(ABC):
     def __init__(self, tree: asttypes.Array):
         self.tree = tree
-        self.walker = Walker()
         self.tree_list: list[TreeData] = []
         self.view_list: list[ViewData] = []
         self._refresh_tree_list()
@@ -38,7 +39,7 @@ class BaseModel(ABC):
     def update(self, valid_dict: dict, index: int):
         js_string = "data = " + obj_to_js(valid_dict)
         tree = es5(js_string)
-        node = next(self.walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
+        node = next(walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
         self.tree.children()[index] = node
 
     def read(self):
