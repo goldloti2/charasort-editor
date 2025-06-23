@@ -50,10 +50,15 @@ class Controller:
             logger.info(f"save file success: {self.path}")
 
     def add_record(self, input_data: InputData, tab: TabType):
-        # TODO: implement add, and catch error
-        self.repo.add(input_data, tab)
-        logger.info(f"add success: {tab.value}")
-        self._update_tab(tab)
+        try:
+            self.repo.add(input_data, tab)
+        except ValueError as e:
+            logger.warning(f"adding {tab.value} validation failed")
+            logger.debug("", exc_info=e)
+            raise e
+        else:
+            logger.info(f"add success: {tab.value}")
+            self._update_tab(tab)
 
     def delete_record(self, index: int, tab: TabType):
         try:

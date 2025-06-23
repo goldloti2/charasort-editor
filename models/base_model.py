@@ -28,8 +28,9 @@ class BaseModel(ABC):
 
     # TODO: add record
     @after_db_update
-    def add(self, input_data: InputData):
-        raise NotImplementedError("BaseModel not implement 'add'")
+    def add(self, valid_dict: dict):
+        node = self._dict_to_tree(valid_dict)
+        self.tree.children().append(node)
 
     @after_db_update
     def delete(self, index: int):

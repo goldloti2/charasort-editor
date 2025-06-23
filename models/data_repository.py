@@ -47,7 +47,8 @@ class DataRepository:
             print(self.tree, file=file)
 
     def add(self, input_data: InputData, tab: TabType):
-        self.models[tab].add(input_data)
+        valid_dict = self.models[tab].validate(input_data)
+        self.models[tab].add(valid_dict)
 
     def delete(self, index: int, tab: TabType):
         self.models[tab].delete(index)
