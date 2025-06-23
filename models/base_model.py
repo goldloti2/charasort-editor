@@ -49,6 +49,11 @@ class BaseModel(ABC):
     def validate(cls, input_data: InputData) -> dict:
         raise NotImplementedError(f"{cls.__name__} not implement 'validate'")
 
+    @classmethod
+    @abstractmethod
+    def build_view_data(cls, node: dict) -> ViewData:
+        raise NotImplementedError(f"{cls.__name__} not implement 'build_view_data'")
+
     def _refresh_tree_list(self):
         def parse(node: asttypes.Node):
             if isinstance(node, asttypes.Array):
@@ -60,8 +65,9 @@ class BaseModel(ABC):
 
         self.tree_list = [parse(child) for child in self.tree.children()]
 
-    @abstractmethod
     def _refresh_view_list(self):
-        raise NotImplementedError(
-            f"{self.__class__.__name__} not implement '_refresh_view_list'"
-        )
+        view_data_list = []
+        for node in self.tree_list:
+            view_data = self.build_view_data(node)
+            view_data_list.append(view_data)
+        self.view_list = view_data_list

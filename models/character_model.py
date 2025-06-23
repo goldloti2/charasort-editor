@@ -19,6 +19,19 @@ class CharacterModel(BaseModel):
     def validate(cls, input_data: InputData):
         raise NotImplementedError(f"{cls.__name__} validate")
 
+    @classmethod
+    def build_view_data(cls, node: dict):
+        opts = [("key", "option")]
+        node_opts = node["opts"]
+        for opt in node_opts:
+            opts.append((opt, node_opts[opt]))
+        view_data = ViewData(
+            name=(WidgetType.LABEL, "name", node["name"]),
+            img=(WidgetType.LABEL, "img", node["img"]),
+            opts=(WidgetType.SUB_FRAME, "filter options", opts),
+        )
+        return view_data
+
     def _refresh_view_list(self):
         view_data_list = []
         for node in self.tree_list:

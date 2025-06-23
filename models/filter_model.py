@@ -19,6 +19,25 @@ class FilterModel(BaseModel, SortMixin):
     def validate(cls, input_data: InputData):
         return FilterInput(**input_data).model_dump(exclude_defaults=True)
 
+    @classmethod
+    def build_view_data(cls, node: dict):
+        subs = [("name", "key")]
+        if "sub" in node:
+            for sub in node["sub"]:
+                subs.append((sub["name"], sub["key"]))
+        view_data = ViewData(
+            name=(WidgetType.LABEL, "name", node["name"]),
+            key=(WidgetType.LABEL, "key", node["key"]),
+            tooltip=(WidgetType.LABEL, "tooltip", node.get("tooltip", "")),
+            checked=(
+                WidgetType.CHECK,
+                "checked",
+                str(node.get("checked", "")).lower() == "true",
+            ),
+            sub=(WidgetType.SUB_FRAME, "sub", subs),
+        )
+        return view_data
+
     def _refresh_view_list(self):
         view_data_list = []
         for node in self.tree_list:
