@@ -30,10 +30,10 @@ class View:
         root.config(menu=menu)
 
         tab_control = ttk.Notebook()
-        filters_tab_base = VerticalScrolledFrame(tab_control)
-        characters_tab_base = VerticalScrolledFrame(tab_control)
-        tab_control.add(filters_tab_base, text="Filters")
-        tab_control.add(characters_tab_base, text="Characters")
+        filters_base, filters_inter = self._build_tab(tab_control)
+        characters_base, characters_inter = self._build_tab(tab_control)
+        tab_control.add(filters_base, text="Filters")
+        tab_control.add(characters_base, text="Characters")
         tab_control.pack(expand=1, fill=tk.BOTH)
 
         detail_label_style = ttk.Style()
@@ -47,8 +47,8 @@ class View:
         )
 
         self.tabs = {
-            TabType.FILTERS: filters_tab_base.interior,
-            TabType.CHARACTERS: characters_tab_base.interior,
+            TabType.FILTERS: filters_inter,
+            TabType.CHARACTERS: characters_inter,
         }
         self.detail_label_style = detail_label_style
         self.edit_window = None
@@ -103,6 +103,16 @@ class View:
         for label, command in menu_specs:
             menu.add_command(label=label, command=command)
         return menu
+
+    def _build_tab(self, parent: ttk.Notebook):
+        tab_base = ttk.Frame(parent)
+        scrolled_frame = VerticalScrolledFrame(tab_base)
+        scrolled_frame.pack(fill=tk.BOTH, expand=1)
+        button_frame = ttk.Frame(tab_base, relief=tk.RIDGE, border=5)
+        button_frame.pack(fill=tk.X)
+        new_button = ttk.Button(button_frame, text="Add New Data")
+        new_button.pack(fill=tk.X, padx=15, pady=5, ipady=5)
+        return tab_base, scrolled_frame.interior
 
     def _build_display_frame(
         self,
