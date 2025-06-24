@@ -11,6 +11,8 @@ from .filter_model import FilterModel
 
 logger = logging.getLogger(__name__)
 
+walker = Walker()
+
 
 class DataRepository:
     def __init__(self, path: str):
@@ -19,7 +21,6 @@ class DataRepository:
 
         filters = None
         characters = None
-        walker = Walker()
         for node in walker.filter(
             tree,
             lambda n: (
@@ -35,26 +36,29 @@ class DataRepository:
             raise ValueError("Input file not complete")
 
         self.tree = tree
-        self.walker = walker
         self.models: dict[TabType, BaseModel] = {
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),
         }
         logger.info("initialized")
 
+    def get_empty_record(self, tab: TabType):
+        return self.models[tab].build_view_data({})
+
     def save_file(self, path: str):
         with open(path, "w") as file:
             print(self.tree, file=file)
 
     def add(self, input_data: InputData, tab: TabType):
-        self.models[tab].add(input_data)
-
-    def delete(self, index: int, tab: TabType):
-        self.models[tab].delete(index)
+        valid_dict = self.models[tab].validate(input_data)
+        self.models[tab].add(valid_dict)
 
     def update(self, input_data: InputData, index: int, tab: TabType):
         valid_dict = self.models[tab].validate(input_data)
         self.models[tab].update(valid_dict, index)
+
+    def delete(self, index: int, tab: TabType):
+        self.models[tab].delete(index)
 
     def move_filter(self, index: int, direction: int):
         self.models[TabType.FILTERS].swap(index, direction)

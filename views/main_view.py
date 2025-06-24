@@ -30,10 +30,12 @@ class View:
         root.config(menu=menu)
 
         tab_control = ttk.Notebook()
-        filters_tab_base = VerticalScrolledFrame(tab_control)
-        characters_tab_base = VerticalScrolledFrame(tab_control)
-        tab_control.add(filters_tab_base, text="Filters")
-        tab_control.add(characters_tab_base, text="Characters")
+        filters_base, filters_inter = self._build_tab(tab_control, TabType.FILTERS)
+        characters_base, characters_inter = self._build_tab(
+            tab_control, TabType.CHARACTERS
+        )
+        tab_control.add(filters_base, text="Filters")
+        tab_control.add(characters_base, text="Characters")
         tab_control.pack(expand=1, fill=tk.BOTH)
 
         detail_label_style = ttk.Style()
@@ -47,8 +49,8 @@ class View:
         )
 
         self.tabs = {
-            TabType.FILTERS: filters_tab_base.interior,
-            TabType.CHARACTERS: characters_tab_base.interior,
+            TabType.FILTERS: filters_inter,
+            TabType.CHARACTERS: characters_inter,
         }
         self.detail_label_style = detail_label_style
         self.edit_window = None
@@ -104,6 +106,20 @@ class View:
             menu.add_command(label=label, command=command)
         return menu
 
+    def _build_tab(self, parent: ttk.Notebook, tab: TabType):
+        tab_base = ttk.Frame(parent)
+        scrolled_frame = VerticalScrolledFrame(tab_base)
+        scrolled_frame.pack(fill=tk.BOTH, expand=1)
+        button_frame = ttk.Frame(tab_base, relief=tk.RIDGE, border=5)
+        button_frame.pack(fill=tk.X)
+        new_button = ttk.Button(
+            button_frame,
+            text="Add New Data",
+            command=partial(self._on_button_add, tab=tab),
+        )
+        new_button.pack(fill=tk.X, padx=15, pady=5, ipady=5)
+        return tab_base, scrolled_frame.interior
+
     def _build_display_frame(
         self,
         parent: ttk.Frame,
@@ -152,6 +168,22 @@ class View:
         if path:
             self.controller.save_file(path)
 
+    def _on_button_add(self, tab: TabType):
+        if self.edit_window:
+            self.edit_window.focus()
+            return
+
+        # TODO: add character
+        if tab != TabType.FILTERS:
+            return
+
+        view_data = self.controller.get_empty_record(tab)
+
+        self.edit_window = EditView(
+            self.root, view_data, tab, partial(self._on_add_return, tab=tab), True
+        )
+        self.edit_window.focus()
+
     def _on_button_edit(self, frame: RecordFrame, tab: TabType):
         if self.edit_window:
             self.edit_window.focus()
@@ -166,6 +198,7 @@ class View:
             frame.view_data,
             tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
+            False,
         )
         self.edit_window.focus()
 
@@ -177,12 +210,23 @@ class View:
         if not self.edit_window:
             self.controller.move_filter(frame.index, direction)
 
+    def _on_add_return(self, save: InputData, tab: TabType):
+        if save is not None:
+            try:
+                self.controller.add_record(save, tab)
+            except ValueError as e:
+                err_msg = "\n".join([f"{i['loc']}: {i['msg']}" for i in e.errors()])
+                self.edit_window.validation_failed(err_msg)
+                return
+        self.edit_window.destroy()
+        self.edit_window = None
+
     def _on_edit_return(self, save: InputData, index: int, tab: TabType):
         if save is not None:
             try:
                 self.controller.update_record(save, index, tab)
             except ValueError as e:
-                err_msg = "\n".join([i["msg"] for i in e.errors()])
+                err_msg = "\n".join([f"{i['loc']}: {i['msg']}" for i in e.errors()])
                 self.edit_window.validation_failed(err_msg)
                 return
         self.edit_window.destroy()

@@ -49,21 +49,18 @@ class Controller:
         else:
             logger.info(f"save file success: {self.path}")
 
-    def add_record(self, input_data: InputData, tab: TabType):
-        # TODO: implement add, and catch error
-        self.repo.add(input_data, tab)
-        logger.info(f"add success: {tab.value}")
-        self._update_tab(tab)
+    def get_empty_record(self, tab: TabType):
+        return self.repo.get_empty_record(tab)
 
-    def delete_record(self, index: int, tab: TabType):
+    def add_record(self, input_data: InputData, tab: TabType):
         try:
-            self.repo.delete(index, tab)
-        except IndexError as e:
-            logger.error(f"{e}, index: #{index}")
+            self.repo.add(input_data, tab)
+        except ValueError as e:
+            logger.warning(f"adding {tab.value} validation failed")
             logger.debug("", exc_info=e)
-            self.window.show_error(f"Index #{index} in {tab.value} is out of range.")
+            raise e
         else:
-            logger.info(f"delete success: {tab.value}, #{index}")
+            logger.info(f"add success: {tab.value}")
             self._update_tab(tab)
 
     def update_record(self, input_data: InputData, index: int, tab: TabType):
@@ -75,6 +72,17 @@ class Controller:
             raise e
         else:
             logger.info(f"edit success: {tab.value}, #{index}")
+            self._update_tab(tab)
+
+    def delete_record(self, index: int, tab: TabType):
+        try:
+            self.repo.delete(index, tab)
+        except IndexError as e:
+            logger.error(f"{e}, index: #{index}")
+            logger.debug("", exc_info=e)
+            self.window.show_error(f"Index #{index} in {tab.value} is out of range.")
+        else:
+            logger.info(f"delete success: {tab.value}, #{index}")
             self._update_tab(tab)
 
     def move_filter(self, index: int, direction: int):
