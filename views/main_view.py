@@ -180,7 +180,7 @@ class View:
         view_data = self.controller.get_empty_record(tab)
 
         self.edit_window = EditView(
-            self.root, view_data, tab, partial(self._on_add_return, tab=tab)
+            self.root, view_data, tab, partial(self._on_add_return, tab=tab), True
         )
         self.edit_window.focus()
 
@@ -198,6 +198,7 @@ class View:
             frame.view_data,
             tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
+            False,
         )
         self.edit_window.focus()
 

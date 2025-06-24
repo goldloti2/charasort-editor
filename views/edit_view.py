@@ -13,12 +13,21 @@ logger = logging.getLogger(__name__)
 
 class EditView:
     def __init__(
-        self, root: tk.Tk, view_data: ViewData, tab: TabType, return_callback: Callable
+        self,
+        root: tk.Tk,
+        view_data: ViewData,
+        tab: TabType,
+        return_callback: Callable,
+        is_new: bool = False,
     ):
         self.return_callback = return_callback
 
         self.window = window = tk.Toplevel(root)
-        window.title(f"'{view_data.name[2]}' editing...")
+        if is_new:
+            title = "adding new data..."
+        else:
+            title = f"'{view_data.name[2]}' editing..."
+        window.title(title)
         window.geometry("600x500")
         window.resizable(False, True)
         window.protocol("WM_DELETE_WINDOW", self._on_window_close)
