@@ -56,7 +56,7 @@ class RecordBody:
                         insert = (sub_content[0], "✅" if sub_content[1] else "☐")
                     else:
                         insert = sub_content
-                    tree.insert("", "end", values=insert)
+                    tree.insert("", tk.END, values=insert)
                 scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
                 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
                 tree.configure(yscrollcommand=scrollbar.set)
@@ -92,7 +92,7 @@ class RecordBody:
         return input_data
 
     def treeview_add(self, values: tuple):
-        self.tree.insert("", "end", values=values)
+        self.tree.insert("", tk.END, values=values)
 
     def treeview_delete(self):
         item = self.tree.selection()
