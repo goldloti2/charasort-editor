@@ -215,7 +215,7 @@ class View:
             try:
                 self.controller.add_record(save, tab)
             except ValueError as e:
-                err_msg = "\n".join([i["msg"] for i in e.errors()])
+                err_msg = "\n".join([f"{i['loc']}: {i['msg']}" for i in e.errors()])
                 self.edit_window.validation_failed(err_msg)
                 return
         self.edit_window.destroy()
@@ -226,7 +226,7 @@ class View:
             try:
                 self.controller.update_record(save, index, tab)
             except ValueError as e:
-                err_msg = "\n".join([i["msg"] for i in e.errors()])
+                err_msg = "\n".join([f"{i['loc']}: {i['msg']}" for i in e.errors()])
                 self.edit_window.validation_failed(err_msg)
                 return
         self.edit_window.destroy()
