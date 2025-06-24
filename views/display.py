@@ -52,7 +52,11 @@ class RecordBody:
                 tree.heading("#2", text=content[0][1])
                 tree.column("#2", minwidth=20)
                 for sub_content in content[1:]:
-                    tree.insert("", "end", values=sub_content)
+                    if isinstance(sub_content[1], bool):
+                        insert = (sub_content[0], "✅" if sub_content[1] else "☐")
+                    else:
+                        insert = sub_content
+                    tree.insert("", "end", values=insert)
                 scrollbar = ttk.Scrollbar(sub_frame, command=tree.yview)
                 scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
                 tree.configure(yscrollcommand=scrollbar.set)

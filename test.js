@@ -33,6 +33,7 @@ dataSet[dataSetVersion].characterData = [
       rarity: ["s5"],
       version: ["10"],
       gender: ["female"],
+      rover: false
     }
   },
   {

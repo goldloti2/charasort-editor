@@ -65,6 +65,10 @@ class BaseModel(ABC):
                 return [parse(child) for child in node.children()]
             elif isinstance(node, asttypes.Object):
                 return {prop.left.value: parse(prop.right) for prop in node.children()}
+            elif node.value == "true":
+                return True
+            elif node.value == "false":
+                return False
             else:
                 return node.value.strip('"')
 

@@ -86,7 +86,9 @@ class ViewData(BaseModel):
     tooltip: Optional[tuple[WidgetType, str, str]] = None
     checked: Optional[tuple[WidgetType, str, bool]] = None
     sub: Optional[tuple[WidgetType, str, list[tuple[str, str]]]] = None
-    opts: Optional[tuple[WidgetType, str, list[tuple[str, str | list[str]]]]] = None
+    opts: Optional[tuple[WidgetType, str, list[tuple[str, str | bool | list[str]]]]] = (
+        None
+    )
 
     @model_validator(mode="after")
     def verify_filter_or_character(self):
