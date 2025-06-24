@@ -177,11 +177,10 @@ class View:
         if tab != TabType.FILTERS:
             return
 
+        view_data = self.controller.get_empty_record(tab)
+
         self.edit_window = EditView(
-            self.root,
-            view_data,  # TODO
-            tab,
-            partial(self._on_add_return, tab=tab),
+            self.root, view_data, tab, partial(self._on_add_return, tab=tab)
         )
         self.edit_window.focus()
 

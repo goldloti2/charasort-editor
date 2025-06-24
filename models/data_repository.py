@@ -42,6 +42,9 @@ class DataRepository:
         }
         logger.info("initialized")
 
+    def get_empty_record(self, tab: TabType):
+        return self.models[tab].build_view_data({})
+
     def save_file(self, path: str):
         with open(path, "w") as file:
             print(self.tree, file=file)

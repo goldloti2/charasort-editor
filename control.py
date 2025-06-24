@@ -49,6 +49,9 @@ class Controller:
         else:
             logger.info(f"save file success: {self.path}")
 
+    def get_empty_record(self, tab: TabType):
+        return self.repo.get_empty_record(tab)
+
     def add_record(self, input_data: InputData, tab: TabType):
         try:
             self.repo.add(input_data, tab)
