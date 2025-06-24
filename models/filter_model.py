@@ -26,8 +26,8 @@ class FilterModel(BaseModel, SortMixin):
             for sub in node["sub"]:
                 subs.append((sub["name"], sub["key"]))
         view_data = ViewData(
-            name=(WidgetType.LABEL, "name", node["name"]),
-            key=(WidgetType.LABEL, "key", node["key"]),
+            name=(WidgetType.LABEL, "name", node.get("name", "")),
+            key=(WidgetType.LABEL, "key", node.get("key", "")),
             tooltip=(WidgetType.LABEL, "tooltip", node.get("tooltip", "")),
             checked=(
                 WidgetType.CHECK,
@@ -37,24 +37,3 @@ class FilterModel(BaseModel, SortMixin):
             sub=(WidgetType.SUB_FRAME, "sub", subs),
         )
         return view_data
-
-    def _refresh_view_list(self):
-        view_data_list = []
-        for node in self.tree_list:
-            subs = [("name", "key")]
-            if "sub" in node:
-                for sub in node["sub"]:
-                    subs.append((sub["name"], sub["key"]))
-            view_data = ViewData(
-                name=(WidgetType.LABEL, "name", node["name"]),
-                key=(WidgetType.LABEL, "key", node["key"]),
-                tooltip=(WidgetType.LABEL, "tooltip", node.get("tooltip", "")),
-                checked=(
-                    WidgetType.CHECK,
-                    "checked",
-                    str(node.get("checked", "")).lower() == "true",
-                ),
-                sub=(WidgetType.SUB_FRAME, "sub", subs),
-            )
-            view_data_list.append(view_data)
-        self.view_list = view_data_list

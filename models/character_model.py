@@ -26,23 +26,8 @@ class CharacterModel(BaseModel):
         for opt in node_opts:
             opts.append((opt, node_opts[opt]))
         view_data = ViewData(
-            name=(WidgetType.LABEL, "name", node["name"]),
-            img=(WidgetType.LABEL, "img", node["img"]),
+            name=(WidgetType.LABEL, "name", node.get("name", "")),
+            img=(WidgetType.LABEL, "img", node.get("img", "")),
             opts=(WidgetType.SUB_FRAME, "filter options", opts),
         )
         return view_data
-
-    def _refresh_view_list(self):
-        view_data_list = []
-        for node in self.tree_list:
-            opts = [("key", "option")]
-            node_opts = node["opts"]
-            for opt in node_opts:
-                opts.append((opt, node_opts[opt]))
-            view_data = ViewData(
-                name=(WidgetType.LABEL, "name", node["name"]),
-                img=(WidgetType.LABEL, "img", node["img"]),
-                opts=(WidgetType.SUB_FRAME, "filter options", opts),
-            )
-            view_data_list.append(view_data)
-        self.view_list = view_data_list
