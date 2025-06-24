@@ -85,6 +85,9 @@ class Controller:
             logger.info(f"delete success: {tab.value}, #{index}")
             self._update_tab(tab)
 
+    def get_filter_keys(self):
+        return self.repo.get_filter_keys()
+
     def move_filter(self, index: int, direction: int):
         try:
             self.repo.move_filter(index, direction)

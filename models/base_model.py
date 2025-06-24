@@ -11,8 +11,7 @@ walker = Walker()
 def after_db_update(func):
     def wrapper(self: "BaseModel", *args, **kwargs):
         result = func(self, *args, **kwargs)
-        self._refresh_tree_list()
-        self._refresh_view_list()
+        self._refresh_lists()
         return result
 
     return wrapper
@@ -23,8 +22,7 @@ class BaseModel(ABC):
         self.tree = tree
         self.tree_list: list[TreeData] = []
         self.view_list: list[ViewData] = []
-        self._refresh_tree_list()
-        self._refresh_view_list()
+        self._refresh_lists()
 
     @after_db_update
     def add(self, valid_dict: dict):
@@ -58,6 +56,10 @@ class BaseModel(ABC):
         js_string = "data = " + obj_to_js(valid_dict)
         tree = es5(js_string)
         return next(walker.filter(tree, lambda n: isinstance(n, asttypes.Object)))
+
+    def _refresh_lists(self):
+        self._refresh_tree_list()
+        self._refresh_view_list()
 
     def _refresh_tree_list(self):
         def parse(node: asttypes.Node):

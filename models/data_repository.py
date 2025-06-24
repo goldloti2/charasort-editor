@@ -5,7 +5,6 @@ from calmjs.parse.walkers import Walker
 
 from utils import InputData, TabType
 
-from .base_model import BaseModel
 from .character_model import CharacterModel
 from .filter_model import FilterModel
 
@@ -36,7 +35,7 @@ class DataRepository:
             raise ValueError("Input file not complete")
 
         self.tree = tree
-        self.models: dict[TabType, BaseModel] = {
+        self.models: dict[TabType, FilterModel | CharacterModel] = {
             TabType.FILTERS: FilterModel(filters),
             TabType.CHARACTERS: CharacterModel(characters),
         }
@@ -59,6 +58,9 @@ class DataRepository:
 
     def delete(self, index: int, tab: TabType):
         self.models[tab].delete(index)
+
+    def get_filter_keys(self):
+        return self.models[TabType.FILTERS].get_filter_keys()
 
     def move_filter(self, index: int, direction: int):
         self.models[TabType.FILTERS].swap(index, direction)

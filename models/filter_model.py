@@ -37,3 +37,21 @@ class FilterModel(BaseModel, SortMixin):
             sub=(WidgetType.SUB_FRAME, "sub", subs),
         )
         return view_data
+
+    def get_filter_keys(self):
+        return self.key_list
+
+    def _refresh_lists(self):
+        super()._refresh_lists()
+        self._refresh_key_list()
+
+    def _refresh_key_list(self):
+        key_list = {}
+        for record in self.tree_list:
+            key = record["key"]
+            if "sub" in record:
+                value = [val["key"] for val in record["sub"]]
+            else:
+                value = "bool"
+            key_list[key] = value
+        self.key_list = key_list
