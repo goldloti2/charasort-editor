@@ -16,6 +16,7 @@ class EditView:
         self,
         root: tk.Tk,
         view_data: ViewData,
+        key_list: dict,
         tab: TabType,
         return_callback: Callable,
         is_new: bool = False,
