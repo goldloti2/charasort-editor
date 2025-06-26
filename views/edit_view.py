@@ -45,24 +45,22 @@ class EditView:
         button_cancel.grid(row=1, column=2)
 
         # add input form
+        form_row = sum(1 for v in view_data.model_dump().values() if v is not None) + 1
         self.status_text = tk.StringVar()
         self.input_var1 = None
         self.input_var2 = None
         self.toggle_form_widgets = ()
         self.editing_item = ()
-        if tab == TabType.FILTERS:
-            form_row = 6
-            self._build_filter_form(frame, view_data, form_row)
-        elif tab == TabType.CHARACTERS:
-            form_row = 4
-            self._build_character_form(frame, view_data, form_row)
-
+        self.toggle_buttons = ()
+        self._build_option_buttons(frame, form_row - 2)
         frame.rowconfigure([form_row - 1, form_row, form_row + 1], pad=5)
         ttk.Label(frame, textvariable=self.status_text, justify=tk.CENTER).grid(
             row=form_row - 1, column=0, columnspan=2, sticky=tk.EW
         )
-        self.toggle_buttons = ()
-        self._build_option_buttons(frame, form_row - 2)
+        if tab == TabType.FILTERS:
+            self._build_filter_form(frame, view_data, form_row)
+        elif tab == TabType.CHARACTERS:
+            self._build_character_form(frame, view_data, form_row)
 
         # add information
         record_body = RecordBody(view_data, frame, True)
@@ -131,9 +129,7 @@ class EditView:
         input_var2 = tk.StringVar()
 
         form_frame = ttk.Frame(frame)
-        form_frame.columnconfigure(0, pad=10)
-        form_frame.columnconfigure(1, pad=10)
-        form_frame.columnconfigure(2, pad=10)
+        form_frame.columnconfigure([0, 1, 2], pad=10)
         form_frame.columnconfigure(3, weight=1, pad=10)
         form_frame.grid(row=row, column=0, rowspan=2, columnspan=2, sticky=tk.NSEW)
         ttk.Label(
