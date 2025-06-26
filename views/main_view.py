@@ -189,10 +189,6 @@ class View:
             self.edit_window.focus()
             return
 
-        # TODO: edit character
-        if tab != TabType.FILTERS:
-            return
-
         self.edit_window = EditView(
             self.root,
             frame.view_data,

@@ -44,18 +44,25 @@ class EditView:
         button_cancel = ttk.Button(frame, text="cancel", command=self._on_window_close)
         button_cancel.grid(row=1, column=2)
 
-        tree_row = 4
-        self.toggle_buttons = ()
-        self._build_option_buttons(frame, tree_row)
-
         # add input form
-        frame.rowconfigure([i for i in range(tree_row + 1, tree_row + 3)], pad=5)
-        self.status_text = None
+        self.status_text = tk.StringVar()
         self.input_var1 = None
         self.input_var2 = None
         self.toggle_form_widgets = ()
         self.editing_item = ()
-        self._build_filter_form(frame)
+        if tab == TabType.FILTERS:
+            form_row = 6
+            self._build_filter_form(frame, view_data, form_row)
+        elif tab == TabType.CHARACTERS:
+            form_row = 4
+            self._build_character_form(frame, view_data, form_row)
+
+        frame.rowconfigure([form_row - 1, form_row, form_row + 1], pad=5)
+        ttk.Label(frame, textvariable=self.status_text, justify=tk.CENTER).grid(
+            row=form_row - 1, column=0, columnspan=2, sticky=tk.EW
+        )
+        self.toggle_buttons = ()
+        self._build_option_buttons(frame, form_row - 2)
 
         # add information
         record_body = RecordBody(view_data, frame, True)
@@ -119,36 +126,78 @@ class EditView:
             for button in self.toggle_buttons:
                 button.config(state=tk.DISABLED)
 
-    def _build_filter_form(self, frame: ttk.Frame):
-        status_text = tk.StringVar()
+    def _build_character_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
         input_var1 = tk.StringVar()
         input_var2 = tk.StringVar()
 
-        ttk.Label(frame, textvariable=status_text, justify=tk.CENTER).grid(
-            row=5, column=0, columnspan=2, sticky=tk.EW
+        form_frame = ttk.Frame(frame)
+        form_frame.columnconfigure(0, pad=10)
+        form_frame.columnconfigure(1, pad=10)
+        form_frame.columnconfigure(2, pad=10)
+        form_frame.columnconfigure(3, weight=1, pad=10)
+        form_frame.grid(row=row, column=0, rowspan=2, columnspan=2, sticky=tk.NSEW)
+        ttk.Label(
+            form_frame, text=view_data.opts[2][0][0] + ":", justify=tk.CENTER
+        ).grid(row=0, column=0, sticky=tk.NE)
+        ttk.Label(
+            form_frame, text=view_data.opts[2][0][1] + ":", justify=tk.CENTER
+        ).grid(row=0, column=2, sticky=tk.NE)
+        entry1 = ttk.Combobox(form_frame, state=tk.DISABLED)
+        entry1.grid(row=0, column=1, sticky=tk.NE)
+        entry2 = tk.Listbox(form_frame, state=tk.DISABLED)
+        entry2.grid(row=0, column=3, sticky=tk.NSEW)
+        button_form_done = ttk.Button(
+            frame,
+            text="done",
+            # command=self._on_form_done,
+            state=tk.DISABLED,
         )
-        ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
-        ttk.Label(frame, text="key" + ":", justify=tk.CENTER).grid(row=7, column=0)
+        button_form_done.grid(row=row, column=2, sticky=tk.NW)
+        button_form_cancel = ttk.Button(
+            frame,
+            text="cancel",
+            # command=self._on_form_ending,
+            state=tk.DISABLED,
+        )
+        button_form_cancel.grid(row=row + 1, column=2, sticky=tk.NW)
+
+        self.input_var1 = input_var1
+        self.input_var2 = input_var2
+        self.toggle_form_widgets = (
+            entry1,
+            entry2,
+            button_form_done,
+            button_form_cancel,
+        )
+
+    def _build_filter_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
+        input_var1 = tk.StringVar()
+        input_var2 = tk.StringVar()
+        ttk.Label(frame, text=view_data.sub[2][0][0] + ":", justify=tk.CENTER).grid(
+            row=row, column=0
+        )
+        ttk.Label(frame, text=view_data.sub[2][0][1] + ":", justify=tk.CENTER).grid(
+            row=row + 1, column=0
+        )
         entry1 = ttk.Entry(frame, textvariable=input_var1, state=tk.DISABLED)
-        entry1.grid(row=6, column=1, sticky=tk.EW)
+        entry1.grid(row=row, column=1, sticky=tk.EW)
         entry2 = ttk.Entry(frame, textvariable=input_var2, state=tk.DISABLED)
-        entry2.grid(row=7, column=1, sticky=tk.EW)
+        entry2.grid(row=row + 1, column=1, sticky=tk.EW)
         button_form_done = ttk.Button(
             frame,
             text="done",
             command=self._on_form_done,
             state=tk.DISABLED,
         )
-        button_form_done.grid(row=6, column=2)
+        button_form_done.grid(row=row, column=2)
         button_form_cancel = ttk.Button(
             frame,
             text="cancel",
             command=self._on_form_ending,
             state=tk.DISABLED,
         )
-        button_form_cancel.grid(row=7, column=2)
+        button_form_cancel.grid(row=row + 1, column=2)
 
-        self.status_text = status_text
         self.input_var1 = input_var1
         self.input_var2 = input_var2
         self.toggle_form_widgets = (
