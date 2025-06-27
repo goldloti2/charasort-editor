@@ -22,6 +22,8 @@ class EditView:
         is_new: bool = False,
     ):
         self.return_callback = return_callback
+        self.keys = [""] + list(key_list.keys())
+        self.key_list = {"": [], **key_list}
 
         self.window = window = tk.Toplevel(root)
         if is_new:
@@ -139,7 +141,10 @@ class EditView:
         ttk.Label(
             form_frame, text=view_data.opts[2][0][1] + ":", justify=tk.CENTER
         ).grid(row=0, column=2, sticky=tk.NE)
-        entry1 = ttk.Combobox(form_frame, state=tk.DISABLED)
+
+        entry1 = ttk.Combobox(
+            form_frame, values=self.keys, textvariable=input_var1, state=tk.DISABLED
+        )
         entry1.grid(row=0, column=1, sticky=tk.NE)
 
         scrollbar = tk.Scrollbar(form_frame)
