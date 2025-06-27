@@ -22,6 +22,7 @@ class EditView:
         is_new: bool = False,
     ):
         self.return_callback = return_callback
+        self.tab = tab
         self.keys = [""] + list(key_list.keys())
         self.key_list = {"": [], **key_list}
 
@@ -105,7 +106,10 @@ class EditView:
             values = item[1]
             self.status_text.set("editing...")
             self.input_var1.set(values[0])
-            self.input_var2.set(values[1])
+            if self.tab == TabType.FILTERS:
+                self.input_var2.set(values[1])
+            elif self.tab == TabType.CHARACTERS:
+                self.input_var2.set(self.key_list[values[0]])
             self._form_toggle(True)
 
     def _on_treeview_delete(self):
