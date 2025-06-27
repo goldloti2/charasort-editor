@@ -108,7 +108,12 @@ class EditView:
 
         scrollbar = tk.Scrollbar(form_frame)
         scrollbar.grid(row=0, column=4, sticky=tk.NS)
-        entry2 = tk.Listbox(form_frame, state=tk.DISABLED, yscrollcommand=scrollbar)
+        entry2 = tk.Listbox(
+            form_frame,
+            listvariable=input_var2,
+            state=tk.DISABLED,
+            yscrollcommand=scrollbar,
+        )
         entry2.grid(row=0, column=3, sticky=tk.NSEW)
         button_form_done = ttk.Button(
             frame,
