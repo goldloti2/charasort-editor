@@ -29,10 +29,6 @@ dataSet[dataSetVersion].characterData = [
     img: "T_IconRoleHead256_3_UI.webp",
     opts: {
       type: ["spectro"],
-      weapon: ["rectifier"],
-      rarity: ["s5"],
-      version: ["10"],
-      gender: ["female"],
       rover: false
     }
   },
@@ -41,10 +37,6 @@ dataSet[dataSetVersion].characterData = [
     img: "T_IconRoleHead256_4_UI.webp",
     opts: {
       type: ["spectro", "spectro", "aero", "glacio", "fusion", "electro"],
-      weapon: ["sword"],
-      rarity: ["s5"],
-      version: ["10"],
-      gender: ["female"],
       rover: true
     }
   },
