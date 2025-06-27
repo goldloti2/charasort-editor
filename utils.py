@@ -152,3 +152,15 @@ def obj_to_js(value):
     else:
         value_str = str(value)
     return value_str
+
+
+BOOL_TO_STR = {True: "✅", False: "☐"}
+STR_TO_BOOL = {v: k for k, v in BOOL_TO_STR.items()}
+
+
+def bool_to_str(value: bool):
+    return BOOL_TO_STR[value]
+
+
+def str_to_bool(value: str):
+    return STR_TO_BOOL[value]
