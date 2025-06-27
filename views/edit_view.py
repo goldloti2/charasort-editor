@@ -4,7 +4,7 @@ from functools import partial
 from tkinter import messagebox, ttk
 from typing import Callable
 
-from utils import InputData, TabType, ViewData
+from utils import InputData, TabType, ViewData, str_to_bool
 
 from .display import RecordBody
 
@@ -51,8 +51,10 @@ class EditView:
         # add input form
         form_row = sum(1 for v in view_data.model_dump().values() if v is not None) + 1
         self.status_text = tk.StringVar()
-        self.input_var1 = None
-        self.input_var2 = None
+        self.input_var1 = tk.StringVar()
+        self.input_var2 = tk.StringVar()
+        self.char_frame_listbox = None
+        self.char_frame_check = None
         self.toggle_form_widgets = ()
         self.editing_item = ()
         self.toggle_buttons = ()
@@ -86,8 +88,7 @@ class EditView:
         self.focus()
 
     def _build_character_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
-        input_var1 = tk.StringVar()
-        input_var2 = tk.StringVar()
+        input_var1 = self.input_var1
 
         form_frame = ttk.Frame(frame)
         form_frame.columnconfigure([0, 1, 2], pad=10)
@@ -106,15 +107,29 @@ class EditView:
         )
         entry1.grid(row=0, column=1, sticky=tk.NE)
 
-        scrollbar = tk.Scrollbar(form_frame)
-        scrollbar.grid(row=0, column=4, sticky=tk.NS)
-        entry2 = tk.Listbox(
-            form_frame,
-            listvariable=input_var2,
+        entry2_frame1 = ttk.Frame(form_frame)
+        entry2_frame2 = ttk.Frame(form_frame)
+        list_var = tk.StringVar(value="")
+        check_var = tk.BooleanVar(value=False)
+        entry2_frame1.variable = list_var
+        entry2_frame2.variable = check_var
+        self.char_frame_listbox = entry2_frame1
+        self.char_frame_check = entry2_frame2
+
+        scrollbar = tk.Scrollbar(entry2_frame1)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox = tk.Listbox(
+            entry2_frame1,
+            listvariable=list_var,
+            selectmode=tk.EXTENDED,
             state=tk.DISABLED,
             yscrollcommand=scrollbar,
         )
-        entry2.grid(row=0, column=3, sticky=tk.NSEW)
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        checkbuttom = ttk.Checkbutton(
+            entry2_frame2, variable=check_var, state=tk.DISABLED
+        )
+        checkbuttom.pack(side=tk.LEFT)
         button_form_done = ttk.Button(
             frame,
             text="done",
@@ -131,10 +146,10 @@ class EditView:
         button_form_cancel.grid(row=row + 1, column=2, sticky=tk.NW)
 
         self.input_var1 = input_var1
-        self.input_var2 = input_var2
         self.toggle_form_widgets = (
             entry1,
-            entry2,
+            listbox,
+            checkbuttom,
             button_form_done,
             button_form_cancel,
         )
@@ -182,8 +197,8 @@ class EditView:
         )
 
     def _build_filter_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
-        input_var1 = tk.StringVar()
-        input_var2 = tk.StringVar()
+        input_var1 = self.input_var1
+        input_var2 = self.input_var2
         ttk.Label(frame, text=view_data.sub[2][0][0] + ":", justify=tk.CENTER).grid(
             row=row, column=0
         )
@@ -241,6 +256,10 @@ class EditView:
     def _on_form_ending(self):
         self.input_var1.set("")
         self.input_var2.set("")
+        if self.char_frame_check is not None:
+            self.char_frame_check.variable.set(False)
+        if self.char_frame_listbox is not None:
+            self.char_frame_listbox.variable.set("")
         self.status_text.set("")
         self._form_toggle(False)
 
@@ -272,11 +291,7 @@ class EditView:
             self.editing_item = item[0]
             values = item[1]
             self.status_text.set("editing...")
-            self.input_var1.set(values[0])
-            if self.tab == TabType.FILTERS:
-                self.input_var2.set(values[1])
-            elif self.tab == TabType.CHARACTERS:
-                self.input_var2.set(self.key_list[values[0]])
+            self._form_variable_set(values)
             self._form_toggle(True)
 
     def _on_treeview_delete(self):
@@ -297,3 +312,21 @@ class EditView:
         else:
             for button in self.toggle_buttons:
                 button.config(state=tk.DISABLED)
+
+    def _form_variable_set(self, values: tuple[str, str]):
+        self.input_var1.set(values[0])
+
+        if self.tab == TabType.FILTERS:
+            self.input_var2.set(values[1])
+        elif self.tab == TabType.CHARACTERS:
+            option_list = self.key_list[values[0]]
+            if option_list == "bool":
+                variable = str_to_bool(values[1])
+                self.char_frame_listbox.grid_forget()
+                frame = self.char_frame_check
+            else:
+                variable = self.key_list[values[0]]
+                self.char_frame_check.grid_forget()
+                frame = self.char_frame_listbox
+            frame.grid(row=0, column=3, sticky=tk.NSEW)
+            frame.variable.set(variable)
