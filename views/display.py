@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import ttk
 from typing import Callable, Dict
 
-from utils import ButtonLabel, InputData, ViewData, WidgetType
+from utils import ButtonLabel, InputData, ViewData, WidgetType, bool_to_str
 
 
 class RecordBody:
@@ -53,7 +53,7 @@ class RecordBody:
                 tree.column("#2", minwidth=20)
                 for sub_content in content[1:]:
                     if isinstance(sub_content[1], bool):
-                        insert = (sub_content[0], "✅" if sub_content[1] else "☐")
+                        insert = (sub_content[0], bool_to_str(sub_content[1]))
                     else:
                         insert = sub_content
                     tree.insert("", tk.END, values=insert)
