@@ -23,21 +23,14 @@ class WidgetType(Enum):
 
 
 class FilterSub(BaseModel):
-    name: str
-    key: str
-
-    @field_validator("name", mode="after")
-    @classmethod
-    def name_check_empty(cls, val):
-        if not val:
-            raise ValueError('"name" should contain at least 1 character')
-        return val
+    name: str = Field(min_length=1)
+    key: str = Field(min_length=1)
 
     @field_validator("key", mode="after")
     @classmethod
-    def key_check_empty(cls, val):
-        if not val:
-            raise ValueError('"key" should contain at least 1 character')
+    def key_check_space(cls, val):
+        if " " in val:
+            raise ValueError('"key" should not contain whitespace.')
         return val
 
 
@@ -63,6 +56,13 @@ class FilterInput(BaseModel):
                     data[name] = [{"name": t[0], "key": t[1]} for t in convert]
                     break
         return data
+
+    @field_validator("key", mode="after")
+    @classmethod
+    def key_check_space(cls, val):
+        if " " in val:
+            raise ValueError('"key" should not contain whitespace.')
+        return val
 
     @field_validator("tooltip", mode="after")
     @classmethod
