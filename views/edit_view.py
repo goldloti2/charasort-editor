@@ -135,6 +135,7 @@ class EditView:
         form_frame.columnconfigure([0, 1, 2], pad=10)
         form_frame.columnconfigure(3, weight=1, pad=10)
         form_frame.grid(row=row, column=0, rowspan=2, columnspan=2, sticky=tk.NSEW)
+
         ttk.Label(
             form_frame, text=view_data.opts[2][0][0] + ":", justify=tk.CENTER
         ).grid(row=0, column=0, sticky=tk.NE)
@@ -154,14 +155,14 @@ class EditView:
         button_form_done = ttk.Button(
             frame,
             text="done",
-            # command=self._on_form_done,
+            # command=self._on_character_form_done,
             state=tk.DISABLED,
         )
         button_form_done.grid(row=row, column=2, sticky=tk.NW)
         button_form_cancel = ttk.Button(
             frame,
             text="cancel",
-            # command=self._on_form_ending,
+            command=self._on_form_ending,
             state=tk.DISABLED,
         )
         button_form_cancel.grid(row=row + 1, column=2, sticky=tk.NW)
@@ -191,7 +192,7 @@ class EditView:
         button_form_done = ttk.Button(
             frame,
             text="done",
-            command=self._on_form_done,
+            command=self._on_filter_form_done,
             state=tk.DISABLED,
         )
         button_form_done.grid(row=row, column=2)
@@ -212,8 +213,15 @@ class EditView:
             button_form_cancel,
         )
 
-    def _on_form_done(self):
+    def _on_character_form_done(self):
         values = (self.input_var1.get(), self.input_var2.get())
+        self._on_form_done(values)
+
+    def _on_filter_form_done(self):
+        values = (self.input_var1.get(), self.input_var2.get())
+        self._on_form_done(values)
+
+    def _on_form_done(self, values: tuple):
         if not (values[0] and values[1]):
             messagebox.showwarning("warning", "fields cannot be empty")
             self.focus()
