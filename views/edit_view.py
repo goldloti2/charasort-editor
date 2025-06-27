@@ -141,7 +141,10 @@ class EditView:
         ).grid(row=0, column=2, sticky=tk.NE)
         entry1 = ttk.Combobox(form_frame, state=tk.DISABLED)
         entry1.grid(row=0, column=1, sticky=tk.NE)
-        entry2 = tk.Listbox(form_frame, state=tk.DISABLED)
+
+        scrollbar = tk.Scrollbar(form_frame)
+        scrollbar.grid(row=0, column=4, sticky=tk.NS)
+        entry2 = tk.Listbox(form_frame, state=tk.DISABLED, yscrollcommand=scrollbar)
         entry2.grid(row=0, column=3, sticky=tk.NSEW)
         button_form_done = ttk.Button(
             frame,
