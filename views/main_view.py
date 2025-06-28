@@ -178,9 +178,15 @@ class View:
             return
 
         view_data = self.controller.get_empty_record(tab)
+        key_list = self.controller.get_filter_keys()
 
         self.edit_window = EditView(
-            self.root, view_data, tab, partial(self._on_add_return, tab=tab), True
+            self.root,
+            view_data,
+            key_list,
+            tab,
+            partial(self._on_add_return, tab=tab),
+            True,
         )
         self.edit_window.focus()
 
@@ -189,13 +195,12 @@ class View:
             self.edit_window.focus()
             return
 
-        # TODO: edit character
-        if tab != TabType.FILTERS:
-            return
+        key_list = self.controller.get_filter_keys()
 
         self.edit_window = EditView(
             self.root,
             frame.view_data,
+            key_list,
             tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
             False,

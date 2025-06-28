@@ -16,11 +16,15 @@ class EditView:
         self,
         root: tk.Tk,
         view_data: ViewData,
+        key_list: dict,
         tab: TabType,
         return_callback: Callable,
         is_new: bool = False,
     ):
         self.return_callback = return_callback
+        self.tab = tab
+        self.keys = [""] + list(key_list.keys())
+        self.key_list = {"": [], **key_list}
 
         self.window = window = tk.Toplevel(root)
         if is_new:
