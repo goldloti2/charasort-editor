@@ -4,7 +4,7 @@ from functools import partial
 from tkinter import messagebox, ttk
 from typing import Callable
 
-from utils import InputData, TabType, ViewData
+from utils import InputData, TabType, ViewData, str_to_bool
 
 from .display import RecordBody
 
@@ -48,18 +48,21 @@ class EditView:
         button_cancel = ttk.Button(frame, text="cancel", command=self._on_window_close)
         button_cancel.grid(row=1, column=2)
 
-        tree_row = 4
-        self.toggle_buttons = ()
-        self._build_option_buttons(frame, tree_row)
-
         # add input form
-        frame.rowconfigure([i for i in range(tree_row + 1, tree_row + 3)], pad=5)
-        self.status_text = None
-        self.input_var1 = None
-        self.input_var2 = None
+        form_row = sum(1 for v in view_data.model_dump().values() if v is not None) + 1
+        frame.rowconfigure([form_row - 1, form_row, form_row + 1], pad=5)
+        self.status_text = tk.StringVar()
+        self.input_var1 = tk.StringVar()
+        self.input_var2 = (tk.StringVar(), tk.BooleanVar())
         self.toggle_form_widgets = ()
         self.editing_item = ()
-        self._build_filter_form(frame)
+        self.toggle_buttons = ()
+        self._build_option_buttons(frame, form_row - 2)
+        ttk.Label(frame, textvariable=self.status_text, justify=tk.CENTER).grid(
+            row=form_row - 1, column=0, columnspan=2, sticky=tk.EW
+        )
+        if tab == TabType.FILTERS:
+            self._build_filter_form(frame, view_data, form_row)
 
         # add information
         record_body = RecordBody(view_data, frame, True)
@@ -90,7 +93,8 @@ class EditView:
     def _on_treeview_add(self):
         self.status_text.set("adding...")
         self.input_var1.set("")
-        self.input_var2.set("")
+        self.input_var2[0].set("")
+        self.input_var2[1].set(False)
         self.editing_item = ()
         self._form_toggle(True)
 
@@ -100,8 +104,7 @@ class EditView:
             self.editing_item = item[0]
             values = item[1]
             self.status_text.set("editing...")
-            self.input_var1.set(values[0])
-            self.input_var2.set(values[1])
+            self._form_variable_set(values)
             self._form_toggle(True)
 
     def _on_treeview_delete(self):
@@ -123,38 +126,34 @@ class EditView:
             for button in self.toggle_buttons:
                 button.config(state=tk.DISABLED)
 
-    def _build_filter_form(self, frame: ttk.Frame):
-        status_text = tk.StringVar()
-        input_var1 = tk.StringVar()
-        input_var2 = tk.StringVar()
-
-        ttk.Label(frame, textvariable=status_text, justify=tk.CENTER).grid(
-            row=5, column=0, columnspan=2, sticky=tk.EW
+    def _build_filter_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
+        input_var1 = self.input_var1
+        input_var2 = self.input_var2[0]
+        ttk.Label(frame, text=view_data.sub[2][0][0] + ":", justify=tk.CENTER).grid(
+            row=row, column=0
         )
-        ttk.Label(frame, text="name" + ":", justify=tk.CENTER).grid(row=6, column=0)
-        ttk.Label(frame, text="key" + ":", justify=tk.CENTER).grid(row=7, column=0)
+        ttk.Label(frame, text=view_data.sub[2][0][1] + ":", justify=tk.CENTER).grid(
+            row=row + 1, column=0
+        )
         entry1 = ttk.Entry(frame, textvariable=input_var1, state=tk.DISABLED)
-        entry1.grid(row=6, column=1, sticky=tk.EW)
+        entry1.grid(row=row, column=1, sticky=tk.EW)
         entry2 = ttk.Entry(frame, textvariable=input_var2, state=tk.DISABLED)
-        entry2.grid(row=7, column=1, sticky=tk.EW)
+        entry2.grid(row=row + 1, column=1, sticky=tk.EW)
         button_form_done = ttk.Button(
             frame,
             text="done",
-            command=self._on_form_done,
+            command=self._on_filter_form_done,
             state=tk.DISABLED,
         )
-        button_form_done.grid(row=6, column=2)
+        button_form_done.grid(row=row, column=2)
         button_form_cancel = ttk.Button(
             frame,
             text="cancel",
             command=self._on_form_ending,
             state=tk.DISABLED,
         )
-        button_form_cancel.grid(row=7, column=2)
+        button_form_cancel.grid(row=row + 1, column=2)
 
-        self.status_text = status_text
-        self.input_var1 = input_var1
-        self.input_var2 = input_var2
         self.toggle_form_widgets = (
             entry1,
             entry2,
@@ -162,8 +161,15 @@ class EditView:
             button_form_cancel,
         )
 
-    def _on_form_done(self):
-        values = (self.input_var1.get(), self.input_var2.get())
+    def _on_character_form_done(self):
+        values = (self.input_var1.get(), self.input_var2[0].get())
+        self._on_form_done(values)
+
+    def _on_filter_form_done(self):
+        values = (self.input_var1.get(), self.input_var2[0].get())
+        self._on_form_done(values)
+
+    def _on_form_done(self, values: tuple):
         if not (values[0] and values[1]):
             messagebox.showwarning("warning", "fields cannot be empty")
             self.focus()
@@ -177,7 +183,8 @@ class EditView:
 
     def _on_form_ending(self):
         self.input_var1.set("")
-        self.input_var2.set("")
+        self.input_var2[0].set("")
+        self.input_var2[1].set(False)
         self.status_text.set("")
         self._form_toggle(False)
 
@@ -230,3 +237,13 @@ class EditView:
             button_option_up,
             button_option_down,
         )
+
+    def _form_variable_set(self, values: tuple[str, str]):
+        self.input_var1.set(values[0])
+
+        if self.tab == TabType.FILTERS:
+            self.input_var2[0].set(values[1])
+        elif self.tab == TabType.CHARACTERS:
+            option_list = self.key_list[values[0]]
+            if option_list == "bool":
+                variable = str_to_bool(values[1])
