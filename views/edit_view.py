@@ -54,6 +54,7 @@ class EditView:
         self.status_text = tk.StringVar()
         self.input_var1 = tk.StringVar()
         self.input_var2 = (tk.StringVar(), tk.BooleanVar())
+        self.char_form_frames = ()
         self.toggle_form_widgets = ()
         self.editing_item = ()
         self.toggle_buttons = ()
@@ -63,6 +64,8 @@ class EditView:
         )
         if tab == TabType.FILTERS:
             self._build_filter_form(frame, view_data, form_row)
+        elif tab == TabType.CHARACTERS:
+            self._build_character_form(frame, view_data, form_row)
 
         # add information
         record_body = RecordBody(view_data, frame, True)
@@ -125,6 +128,78 @@ class EditView:
         else:
             for button in self.toggle_buttons:
                 button.config(state=tk.DISABLED)
+
+    def _build_character_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
+        input_var1 = self.input_var1
+        list_var = self.input_var2[0]
+        check_var = self.input_var2[1]
+
+        form_frame = ttk.Frame(frame)
+        form_frame.columnconfigure([0, 1, 2], pad=10)
+        form_frame.columnconfigure(3, weight=1, pad=10)
+        form_frame.grid(row=row, column=0, rowspan=2, columnspan=2, sticky=tk.NSEW)
+
+        ttk.Label(
+            form_frame, text=view_data.opts[2][0][0] + ":", justify=tk.CENTER
+        ).grid(row=0, column=0, sticky=tk.NE)
+        ttk.Label(
+            form_frame, text=view_data.opts[2][0][1] + ":", justify=tk.CENTER
+        ).grid(row=0, column=2, sticky=tk.NE)
+
+        entry1 = ttk.Combobox(
+            form_frame, values=self.keys, textvariable=input_var1, state=tk.DISABLED
+        )
+        entry1.grid(row=0, column=1, sticky=tk.NE)
+
+        entry2_grid_info = dict(row=0, column=3, sticky=tk.NSEW)
+        entry2_frame1 = ttk.Frame(form_frame)
+        entry2_frame2 = ttk.Frame(form_frame)
+        entry2_frame1.grid(**entry2_grid_info)
+        entry2_frame2.grid(**entry2_grid_info)
+        entry2_frame1.grid_remove()
+        entry2_frame2.grid_remove()
+
+        scrollbar = tk.Scrollbar(entry2_frame1)
+        scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+        listbox = tk.Listbox(
+            entry2_frame1,
+            listvariable=list_var,
+            selectmode=tk.EXTENDED,
+            state=tk.DISABLED,
+            yscrollcommand=scrollbar,
+        )
+        listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+
+        checkbuttom = ttk.Checkbutton(
+            entry2_frame2, variable=check_var, state=tk.DISABLED
+        )
+        checkbuttom.pack(side=tk.LEFT)
+
+        # TODO: input_var1.trace()
+
+        button_form_done = ttk.Button(
+            frame,
+            text="done",
+            # command=self._on_character_form_done,
+            state=tk.DISABLED,
+        )
+        button_form_done.grid(row=row, column=2, sticky=tk.NW)
+        button_form_cancel = ttk.Button(
+            frame,
+            text="cancel",
+            command=self._on_form_ending,
+            state=tk.DISABLED,
+        )
+        button_form_cancel.grid(row=row + 1, column=2, sticky=tk.NW)
+
+        self.char_form_frames = (entry2_frame1, entry2_frame2)
+        self.toggle_form_widgets = (
+            entry1,
+            listbox,
+            checkbuttom,
+            button_form_done,
+            button_form_cancel,
+        )
 
     def _build_filter_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
         input_var1 = self.input_var1
@@ -247,3 +322,11 @@ class EditView:
             option_list = self.key_list[values[0]]
             if option_list == "bool":
                 variable = str_to_bool(values[1])
+                self.char_form_frames[0].grid_remove()
+                self.char_form_frames[1].grid()
+                self.input_var2[1].set(variable)
+            else:
+                variable = self.key_list[values[0]]
+                self.char_form_frames[0].grid()
+                self.char_form_frames[1].grid_remove()
+                self.input_var2[0].set(variable)
