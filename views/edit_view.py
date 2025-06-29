@@ -176,20 +176,22 @@ class EditView:
         )
         checkbuttom.pack(side=tk.LEFT)
 
+        button_frame = ttk.Frame(frame)
+        button_frame.grid(row=row, column=2, rowspan=2, sticky=tk.N)
         button_form_done = ttk.Button(
-            frame,
+            button_frame,
             text="done",
             # command=self._on_character_form_done,
             state=tk.DISABLED,
         )
-        button_form_done.grid(row=row, column=2, sticky=tk.NW)
+        button_form_done.pack(fill=tk.X, expand=1)
         button_form_cancel = ttk.Button(
-            frame,
+            button_frame,
             text="cancel",
             command=self._on_form_ending,
             state=tk.DISABLED,
         )
-        button_form_cancel.grid(row=row + 1, column=2, sticky=tk.NW)
+        button_form_cancel.pack(fill=tk.X, expand=1)
 
         self.char_form_frames = (entry2_frame1, entry2_frame2)
         self.toggle_form_widgets = (
