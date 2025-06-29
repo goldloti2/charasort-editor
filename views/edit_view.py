@@ -109,6 +109,8 @@ class EditView:
             self.status_text.set("editing...")
             self._form_variable_set(values)
             self._form_toggle(True)
+            if self.tab == TabType.CHARACTERS:
+                self.locked_entry.config(state=tk.DISABLED)
 
     def _on_treeview_delete(self):
         if self.record_body.treeview_delete():
@@ -151,6 +153,7 @@ class EditView:
         )
         entry1.grid(row=0, column=1, sticky=tk.NE)
         input_var1.trace_add("write", self._on_var1_change)
+        self.locked_entry = entry1
 
         entry2_grid_info = dict(row=0, column=3, sticky=tk.NSEW)
         entry2_frame1 = ttk.Frame(form_frame)
