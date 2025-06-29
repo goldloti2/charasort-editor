@@ -150,6 +150,7 @@ class EditView:
             form_frame, values=self.keys, textvariable=input_var1, state=tk.DISABLED
         )
         entry1.grid(row=0, column=1, sticky=tk.NE)
+        input_var1.trace_add("write", self._on_var1_change)
 
         entry2_grid_info = dict(row=0, column=3, sticky=tk.NSEW)
         entry2_frame1 = ttk.Frame(form_frame)
@@ -174,8 +175,6 @@ class EditView:
             entry2_frame2, variable=check_var, state=tk.DISABLED
         )
         checkbuttom.pack(side=tk.LEFT)
-
-        # TODO: input_var1.trace()
 
         button_form_done = ttk.Button(
             frame,
@@ -235,6 +234,17 @@ class EditView:
             button_form_done,
             button_form_cancel,
         )
+
+    def _on_var1_change(self, var, index, mode):
+        input_var1 = self.input_var1.get()
+        option_list = self.key_list[input_var1]
+        if option_list == "bool":
+            self.char_form_frames[0].grid_remove()
+            self.char_form_frames[1].grid()
+        else:
+            self.input_var2[0].set(option_list)
+            self.char_form_frames[0].grid()
+            self.char_form_frames[1].grid_remove()
 
     def _on_character_form_done(self):
         values = (self.input_var1.get(), self.input_var2[0].get())
@@ -322,11 +332,6 @@ class EditView:
             option_list = self.key_list[values[0]]
             if option_list == "bool":
                 variable = str_to_bool(values[1])
-                self.char_form_frames[0].grid_remove()
-                self.char_form_frames[1].grid()
                 self.input_var2[1].set(variable)
             else:
-                variable = self.key_list[values[0]]
-                self.char_form_frames[0].grid()
-                self.char_form_frames[1].grid_remove()
-                self.input_var2[0].set(variable)
+                self.input_var2[0].set(option_list)
