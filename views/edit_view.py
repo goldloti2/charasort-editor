@@ -107,10 +107,10 @@ class EditView:
             self.editing_item = item[0]
             values = item[1]
             self.status_text.set("editing...")
-            self._form_variable_set(values)
             self._form_toggle(True)
             if self.tab == TabType.CHARACTERS:
                 self.locked_entry.config(state=tk.DISABLED)
+            self._form_variable_set(values)
 
     def _on_treeview_delete(self):
         if self.record_body.treeview_delete():
@@ -168,11 +168,12 @@ class EditView:
         listbox = tk.Listbox(
             entry2_frame1,
             listvariable=list_var,
-            selectmode=tk.EXTENDED,
+            selectmode=tk.MULTIPLE,
             state=tk.DISABLED,
             yscrollcommand=scrollbar,
         )
         listbox.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+        self.char_listbox = listbox
 
         checkbuttom = ttk.Checkbutton(
             entry2_frame2, variable=check_var, state=tk.DISABLED
@@ -339,4 +340,6 @@ class EditView:
                 variable = str_to_bool(values[1])
                 self.input_var2[1].set(variable)
             else:
-                self.input_var2[0].set(option_list)
+                selected = values[1].split()
+                for item in selected:
+                    self.char_listbox.select_set(option_list.index(item))
