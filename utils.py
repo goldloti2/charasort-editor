@@ -48,13 +48,12 @@ class FilterInput(BaseModel):
         if not isinstance(data, dict):
             return data
         for name in ["sub", "tree"]:
-            if name in data:
-                convert = data.get(name)
-                if not isinstance(convert, (list, tuple)):
-                    continue
-                if all(isinstance(t, (tuple, list)) and len(t) == 2 for t in convert):
-                    data[name] = [{"name": t[0], "key": t[1]} for t in convert]
-                    break
+            convert = data.get(name)
+            if isinstance(convert, (list, tuple)) and all(
+                isinstance(t, (tuple, list)) and len(t) == 2 for t in convert
+            ):
+                data[name] = [{"name": t[0], "key": t[1]} for t in convert]
+                break
         return data
 
     @field_validator("key", mode="after")
