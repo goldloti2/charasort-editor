@@ -21,7 +21,7 @@ class CharacterModel(BaseModel):
     @classmethod
     def build_view_data(cls, node: dict):
         opts = [("key", "option")]
-        node_opts = node["opts"]
+        node_opts = node.get("opts", {})
         for opt in node_opts:
             opts.append((opt, node_opts[opt]))
         view_data = ViewData(

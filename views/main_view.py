@@ -173,10 +173,6 @@ class View:
             self.edit_window.focus()
             return
 
-        # TODO: add character
-        if tab != TabType.FILTERS:
-            return
-
         view_data = self.controller.get_empty_record(tab)
         key_list = self.controller.get_filter_keys()
 
