@@ -185,7 +185,7 @@ class EditView:
         button_form_done = ttk.Button(
             button_frame,
             text="done",
-            # command=self._on_character_form_done,
+            command=self._on_character_form_done,
             state=tk.DISABLED,
         )
         button_form_done.pack(fill=tk.X, expand=1)
@@ -253,8 +253,15 @@ class EditView:
             self.char_form_frames[1].grid_remove()
 
     def _on_character_form_done(self):
-        values = (self.input_var1.get(), self.input_var2[0].get())
-        self._on_form_done(values)
+        input_var1 = self.input_var1.get()
+        option_list = self.key_list[input_var1]
+        if option_list == "bool":
+            input_var2 = self.input_var2[1].get()
+        else:
+            selected = self.char_listbox.curselection()
+            input_var2 = [option_list[i] for i in selected]
+            print(input_var2)
+        self._on_form_done((input_var1, input_var2))
 
     def _on_filter_form_done(self):
         values = (self.input_var1.get(), self.input_var2[0].get())
