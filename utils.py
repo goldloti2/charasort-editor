@@ -22,6 +22,33 @@ class WidgetType(Enum):
     SUB_FRAME = "sub_frame"
 
 
+class CharacterInput(BaseModel):
+    name: str = Field(min_length=1)
+    img: str = Field(min_length=1)
+    opts: dict[str, list[str] | bool] = Field(alias="tree")
+    model_config = {"populate_by_name": True}
+
+    @model_validator(mode="before")
+    @classmethod
+    def convert_input(cls, data):
+        if not isinstance(data, dict):
+            return data
+        for name in ["opts", "tree"]:
+            convert = data.get(name)
+            if isinstance(convert, (list, tuple)) and all(
+                isinstance(t, (tuple, list)) and len(t) == 2 for t in convert
+            ):
+                data[name] = {
+                    t[0]: val
+                    if isinstance(val := str_to_bool(t[1]), bool)
+                    else t[1].split()
+                    for t in convert
+                }
+                break
+        print(data)
+        return data
+
+
 class FilterSub(BaseModel):
     name: str = Field(min_length=1)
     key: str = Field(min_length=1)
@@ -159,8 +186,8 @@ STR_TO_BOOL = {v: k for k, v in BOOL_TO_STR.items()}
 
 
 def bool_to_str(value: bool):
-    return BOOL_TO_STR[value]
+    return BOOL_TO_STR.get(value)
 
 
 def str_to_bool(value: str):
-    return STR_TO_BOOL[value]
+    return STR_TO_BOOL.get(value)
