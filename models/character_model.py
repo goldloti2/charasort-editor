@@ -2,7 +2,7 @@ import logging
 
 from calmjs.parse import asttypes
 
-from utils import InputData, ViewData, WidgetType
+from utils import CharacterInput, InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 
@@ -14,10 +14,9 @@ class CharacterModel(BaseModel):
         super().__init__(tree)
         logger.info(f"initialized, get {len(self.tree_list)} data")
 
-    # TODO: character validate
     @classmethod
     def validate(cls, input_data: InputData):
-        raise NotImplementedError(f"{cls.__name__} validate")
+        return CharacterInput(**input_data).model_dump(exclude_defaults=True)
 
     @classmethod
     def build_view_data(cls, node: dict):
