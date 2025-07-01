@@ -7,12 +7,18 @@ from typing import TYPE_CHECKING, Callable, Dict
 
 from utils import ButtonLabel, InputData, TabType, ViewData
 
+from .character_edit import CharacterEditView
 from .display import RecordFrame
-from .edit_view import EditView
+from .filter_edit import FilterEditView
 from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
     from control import Controller
+
+EDIT_VIEW_FACTORY = {
+    TabType.FILTERS: FilterEditView,
+    TabType.CHARACTERS: CharacterEditView,
+}
 
 
 logger = logging.getLogger(__name__)
@@ -175,12 +181,10 @@ class View:
 
         view_data = self.controller.get_empty_record(tab)
         key_list = self.controller.get_filter_keys()
-
-        self.edit_window = EditView(
+        self.edit_window = EDIT_VIEW_FACTORY[tab](
             self.root,
             view_data,
             key_list,
-            tab,
             partial(self._on_add_return, tab=tab),
             True,
         )
@@ -192,12 +196,10 @@ class View:
             return
 
         key_list = self.controller.get_filter_keys()
-
-        self.edit_window = EditView(
+        self.edit_window = EDIT_VIEW_FACTORY[tab](
             self.root,
             frame.view_data,
             key_list,
-            tab,
             partial(self._on_edit_return, index=frame.index, tab=tab),
             False,
         )
