@@ -4,6 +4,8 @@ from functools import partial
 from tkinter import messagebox, ttk
 from typing import Callable
 
+from edit_view import BaseEditView
+
 from utils import InputData, TabType, ViewData, str_to_bool
 
 from .display import RecordBody
@@ -11,7 +13,7 @@ from .display import RecordBody
 logger = logging.getLogger(__name__)
 
 
-class BaseEditView:
+class CharacterEditView(BaseEditView):
     def __init__(
         self,
         root: tk.Tk,
