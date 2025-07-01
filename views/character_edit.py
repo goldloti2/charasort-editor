@@ -73,31 +73,10 @@ class CharacterEditView(BaseEditView):
         )
         checkbuttom.pack(side=tk.LEFT)
 
-        button_frame = ttk.Frame(frame)
-        button_frame.grid(row=row, column=2, rowspan=2, sticky=tk.N)
-        button_form_done = ttk.Button(
-            button_frame,
-            text="done",
-            command=self._on_form_done,
-            state=tk.DISABLED,
-        )
-        button_form_done.pack(fill=tk.X, expand=1)
-        button_form_cancel = ttk.Button(
-            button_frame,
-            text="cancel",
-            command=self._on_form_ending,
-            state=tk.DISABLED,
-        )
-        button_form_cancel.pack(fill=tk.X, expand=1)
+        self._build_form_buttons(frame, row)
 
         self.char_form_frames = (entry2_frame1, entry2_frame2)
-        self.toggle_widgets = (
-            entry1,
-            listbox,
-            checkbuttom,
-            button_form_done,
-            button_form_cancel,
-        )
+        self.toggle_widgets = (entry1, listbox, checkbuttom) + self.toggle_widgets
 
     def _form_variable_set(self, values: tuple[str, str]):
         self.input_var1.set(values[0])

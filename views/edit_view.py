@@ -127,6 +127,29 @@ class BaseEditView(ABC):
             button_option_down,
         )
 
+    def _build_form_buttons(self, frame: ttk.Frame, row: int):
+        button_frame = ttk.Frame(frame)
+        button_frame.grid(row=row, column=2, rowspan=2, sticky=tk.N)
+        button_form_done = ttk.Button(
+            button_frame,
+            text="done",
+            command=self._on_form_done,
+            state=tk.DISABLED,
+        )
+        button_form_done.pack(fill=tk.X, expand=1)
+        button_form_cancel = ttk.Button(
+            button_frame,
+            text="cancel",
+            command=self._on_form_ending,
+            state=tk.DISABLED,
+        )
+        button_form_cancel.pack(fill=tk.X, expand=1)
+
+        self.toggle_widgets = (
+            button_form_done,
+            button_form_cancel,
+        )
+
     def _form_toggle(self, enable: bool):
         if enable:
             for widget in self.toggle_widgets:

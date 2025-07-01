@@ -34,27 +34,10 @@ class FilterEditView(BaseEditView):
         entry1.grid(row=row, column=1, sticky=tk.EW)
         entry2 = ttk.Entry(frame, textvariable=input_var2, state=tk.DISABLED)
         entry2.grid(row=row + 1, column=1, sticky=tk.EW)
-        button_form_done = ttk.Button(
-            frame,
-            text="done",
-            command=self._on_form_done,
-            state=tk.DISABLED,
-        )
-        button_form_done.grid(row=row, column=2)
-        button_form_cancel = ttk.Button(
-            frame,
-            text="cancel",
-            command=self._on_form_ending,
-            state=tk.DISABLED,
-        )
-        button_form_cancel.grid(row=row + 1, column=2)
 
-        self.toggle_widgets = (
-            entry1,
-            entry2,
-            button_form_done,
-            button_form_cancel,
-        )
+        self._build_form_buttons(frame, row)
+
+        self.toggle_widgets = (entry1, entry2) + self.toggle_widgets
 
     def _form_variable_set(self, values: tuple[str, str]):
         self.input_var1.set(values[0])
