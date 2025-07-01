@@ -18,6 +18,37 @@ This editor parses a JavaScript data file (typically found at `src/js/data/YYYY-
 
 After making edits, the modified data can either overwrite the original file or be saved to a new one.
 
+## Usage
+
+Start the editor with `main.py`.
+
+- Menu bar
+  - `Open`: Open JavaScript file.
+  - `Save`: Save current change to the original file.
+  - `Save To`: Save to a new file. Default name is `YYYY-MM-DD.js`.
+- Tab
+  - `Filters`: Show filters data.
+    - `edit`: Edit this data.
+    - `delete`: Delete this data.
+    - `↑`: Move this data upward.
+    - `↓`: Move this data downward.
+    - `Add New Data`: Open an empty data.
+  - `Characters`: Show characters data.
+    - `edit`: Edit this data.
+    - `delete`: Delete this data.
+    - `Add New Data`: Open an empty data.
+- Edit window
+    - `save`: Save the change.
+    - `cancel`: Discard the change.
+    - `add option`: Add new option.
+    - `edit option`: Edit selected `option`.
+    - `delete option`: Delete selected `option`.
+    - `↑`: Move selected `option` upward.
+    - `↓`: Move selected `option` downward.
+    - `done`: Done editing `option`.
+    - `cancel`: Discard editing `option`.
+      - *note: `option` means `sub` in Filters or `filter options` in Characters.*
+
 ## Data Format
 
 ### Filters
@@ -60,5 +91,3 @@ Each character entry follows this format:
 
 - Each `key` in `opts` must match a corresponding `key` defined in the Filters.
 - If a filter includes a `sub` field, the corresponding `opts[key]` should be a list of strings referencing valid `sub.key` values.
-
-## Usage (TBD)
