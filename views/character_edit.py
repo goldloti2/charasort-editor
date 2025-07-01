@@ -20,7 +20,7 @@ class CharacterEditView(BaseEditView):
         is_new: bool = False,
     ):
         self.keys = [""] + list(key_list.keys())
-        self.key_list = {"": [], **key_list}
+        self.key_list = {"": None, **key_list}
         self.input_var2 = (tk.StringVar(), tk.BooleanVar())
         super().__init__(root, view_data, return_callback, is_new)
 
@@ -104,9 +104,12 @@ class CharacterEditView(BaseEditView):
         if option_list == "bool":
             self.char_form_frames[0].grid_remove()
             self.char_form_frames[1].grid()
-        else:
+        elif isinstance(option_list, list):
             self.input_var2[0].set(option_list)
             self.char_form_frames[0].grid()
+            self.char_form_frames[1].grid_remove()
+        else:
+            self.char_form_frames[0].grid_remove()
             self.char_form_frames[1].grid_remove()
 
     def _get_form_variables(self):
