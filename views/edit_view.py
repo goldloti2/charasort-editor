@@ -86,51 +86,6 @@ class EditView:
         messagebox.showwarning("validation failed", err_msg)
         self.focus()
 
-    def _on_window_save(self):
-        input_data = self.record_body.get_input_data()
-        self._on_window_close(input_data)
-
-    def _on_window_close(self, save: InputData = None):
-        self.return_callback(save)
-
-    def _on_treeview_add(self):
-        self.status_text.set("adding...")
-        self.input_var1.set("")
-        self.input_var2[0].set("")
-        self.input_var2[1].set(False)
-        self.editing_item = ()
-        self._form_toggle(True)
-
-    def _on_treeview_edit(self):
-        item = self.record_body.treeview_selected()
-        if item:
-            self.editing_item = item[0]
-            values = item[1]
-            self.status_text.set("editing...")
-            self._form_toggle(True)
-            if self.tab == TabType.CHARACTERS:
-                self.locked_entry.config(state=tk.DISABLED)
-            self._form_variable_set(values)
-
-    def _on_treeview_delete(self):
-        if self.record_body.treeview_delete():
-            self._on_form_ending()
-            self.status_text.set("deleted!")
-            self._treeview_toggle(False)
-
-    def _on_treeview_move(self, direction: int):
-        if self.record_body.treeview_move(direction):
-            self._on_form_ending()
-            self.status_text.set("moved!")
-
-    def _treeview_toggle(self, enable: bool):
-        if enable:
-            for button in self.toggle_buttons:
-                button.config(state=tk.NORMAL)
-        else:
-            for button in self.toggle_buttons:
-                button.config(state=tk.DISABLED)
-
     def _build_character_form(self, frame: ttk.Frame, view_data: ViewData, row: int):
         input_var1 = self.input_var1
         list_var = self.input_var2[0]
@@ -241,6 +196,116 @@ class EditView:
             button_form_cancel,
         )
 
+    def _build_option_buttons(self, frame: ttk.Frame, start_row: int):
+        frame_edit = ttk.Frame(frame)
+        frame_edit.grid(row=start_row, column=2, sticky=tk.N)
+        button_option_add = ttk.Button(
+            frame_edit, text="add option", command=self._on_treeview_add
+        )
+        button_option_add.pack(fill=tk.X)
+        button_option_edit = ttk.Button(
+            frame_edit,
+            text="edit option",
+            command=self._on_treeview_edit,
+            state=tk.DISABLED,
+        )
+        button_option_edit.pack(fill=tk.X)
+        button_option_delete = ttk.Button(
+            frame_edit,
+            text="delete option",
+            command=self._on_treeview_delete,
+            state=tk.DISABLED,
+        )
+        button_option_delete.pack(fill=tk.X)
+        button_option_up = ttk.Button(
+            frame_edit,
+            text="↑",
+            command=partial(self._on_treeview_move, -1),
+            state=tk.DISABLED,
+        )
+        button_option_up.pack(fill=tk.X)
+        button_option_down = ttk.Button(
+            frame_edit,
+            text="↓",
+            command=partial(self._on_treeview_move, 1),
+            state=tk.DISABLED,
+        )
+        button_option_down.pack(fill=tk.X)
+        self.toggle_buttons = (
+            button_option_edit,
+            button_option_delete,
+            button_option_up,
+            button_option_down,
+        )
+
+    def _form_toggle(self, enable: bool):
+        if enable:
+            for widget in self.toggle_form_widgets:
+                widget.config(state=tk.NORMAL)
+        else:
+            for widget in self.toggle_form_widgets:
+                widget.config(state=tk.DISABLED)
+
+    def _form_variable_set(self, values: tuple[str, str]):
+        self.input_var1.set(values[0])
+
+        if self.tab == TabType.FILTERS:
+            self.input_var2[0].set(values[1])
+        elif self.tab == TabType.CHARACTERS:
+            option_list = self.key_list[values[0]]
+            if option_list == "bool":
+                variable = str_to_bool(values[1])
+                self.input_var2[1].set(variable)
+            else:
+                selected = values[1].split()
+                for item in selected:
+                    self.char_listbox.select_set(option_list.index(item))
+
+    def _treeview_toggle(self, enable: bool):
+        if enable:
+            for button in self.toggle_buttons:
+                button.config(state=tk.NORMAL)
+        else:
+            for button in self.toggle_buttons:
+                button.config(state=tk.DISABLED)
+
+    def _on_window_save(self):
+        input_data = self.record_body.get_input_data()
+        self._on_window_close(input_data)
+
+    def _on_window_close(self, save: InputData = None):
+        self.return_callback(save)
+
+    def _on_treeview_add(self):
+        self.status_text.set("adding...")
+        self.input_var1.set("")
+        self.input_var2[0].set("")
+        self.input_var2[1].set(False)
+        self.editing_item = ()
+        self._form_toggle(True)
+
+    def _on_treeview_edit(self):
+        item = self.record_body.treeview_selected()
+        if item:
+            self.editing_item = item[0]
+            values = item[1]
+            self.status_text.set("editing...")
+            self._form_toggle(True)
+            if self.tab == TabType.CHARACTERS:
+                self.locked_entry.config(state=tk.DISABLED)
+            self._form_variable_set(values)
+
+    def _on_treeview_delete(self):
+        if self.record_body.treeview_delete():
+            self._on_form_ending()
+            self.status_text.set("deleted!")
+            self._treeview_toggle(False)
+
+    def _on_treeview_move(self, direction: int):
+        if self.record_body.treeview_move(direction):
+            self._on_form_ending()
+            self.status_text.set("moved!")
+
     def _on_var1_change(self, var, index, mode):
         input_var1 = self.input_var1.get()
         option_list = self.key_list[input_var1]
@@ -285,68 +350,3 @@ class EditView:
         self.input_var2[1].set(False)
         self.status_text.set("")
         self._form_toggle(False)
-
-    def _form_toggle(self, enable: bool):
-        if enable:
-            for widget in self.toggle_form_widgets:
-                widget.config(state=tk.NORMAL)
-        else:
-            for widget in self.toggle_form_widgets:
-                widget.config(state=tk.DISABLED)
-
-    def _build_option_buttons(self, frame: ttk.Frame, start_row: int):
-        frame_edit = ttk.Frame(frame)
-        frame_edit.grid(row=start_row, column=2, sticky=tk.N)
-        button_option_add = ttk.Button(
-            frame_edit, text="add option", command=self._on_treeview_add
-        )
-        button_option_add.pack(fill=tk.X)
-        button_option_edit = ttk.Button(
-            frame_edit,
-            text="edit option",
-            command=self._on_treeview_edit,
-            state=tk.DISABLED,
-        )
-        button_option_edit.pack(fill=tk.X)
-        button_option_delete = ttk.Button(
-            frame_edit,
-            text="delete option",
-            command=self._on_treeview_delete,
-            state=tk.DISABLED,
-        )
-        button_option_delete.pack(fill=tk.X)
-        button_option_up = ttk.Button(
-            frame_edit,
-            text="↑",
-            command=partial(self._on_treeview_move, -1),
-            state=tk.DISABLED,
-        )
-        button_option_up.pack(fill=tk.X)
-        button_option_down = ttk.Button(
-            frame_edit,
-            text="↓",
-            command=partial(self._on_treeview_move, 1),
-            state=tk.DISABLED,
-        )
-        button_option_down.pack(fill=tk.X)
-        self.toggle_buttons = (
-            button_option_edit,
-            button_option_delete,
-            button_option_up,
-            button_option_down,
-        )
-
-    def _form_variable_set(self, values: tuple[str, str]):
-        self.input_var1.set(values[0])
-
-        if self.tab == TabType.FILTERS:
-            self.input_var2[0].set(values[1])
-        elif self.tab == TabType.CHARACTERS:
-            option_list = self.key_list[values[0]]
-            if option_list == "bool":
-                variable = str_to_bool(values[1])
-                self.input_var2[1].set(variable)
-            else:
-                selected = values[1].split()
-                for item in selected:
-                    self.char_listbox.select_set(option_list.index(item))
