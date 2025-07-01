@@ -8,7 +8,9 @@ from typing import TYPE_CHECKING, Callable, Dict
 from utils import ButtonLabel, InputData, TabType, ViewData
 
 from .display import RecordFrame
-from .edit_view import EditView
+
+# from .character_edit import CharacterEditView
+from .filter_edit import FilterEditView
 from .widgets import VerticalScrolledFrame
 
 if TYPE_CHECKING:
@@ -174,16 +176,16 @@ class View:
             return
 
         view_data = self.controller.get_empty_record(tab)
-        key_list = self.controller.get_filter_keys()
 
-        self.edit_window = EditView(
-            self.root,
-            view_data,
-            key_list,
-            tab,
-            partial(self._on_add_return, tab=tab),
-            True,
-        )
+        if tab == TabType.FILTERS:
+            self.edit_window = FilterEditView(
+                self.root,
+                view_data,
+                partial(self._on_add_return, tab=tab),
+                True,
+            )
+        else:
+            return
         self.edit_window.focus()
 
     def _on_button_edit(self, frame: RecordFrame, tab: TabType):
@@ -191,16 +193,15 @@ class View:
             self.edit_window.focus()
             return
 
-        key_list = self.controller.get_filter_keys()
-
-        self.edit_window = EditView(
-            self.root,
-            frame.view_data,
-            key_list,
-            tab,
-            partial(self._on_edit_return, index=frame.index, tab=tab),
-            False,
-        )
+        if tab == TabType.FILTERS:
+            self.edit_window = FilterEditView(
+                self.root,
+                frame.view_data,
+                partial(self._on_edit_return, index=frame.index, tab=tab),
+                False,
+            )
+        else:
+            return
         self.edit_window.focus()
 
     def _on_button_delete(self, frame: RecordFrame, tab: TabType):
