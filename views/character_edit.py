@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Callable
 
-from utils import ViewData, str_to_bool
+from utils import ViewData, bool_to_str, str_to_bool
 
 from .edit_view import BaseEditView
 
@@ -134,7 +134,7 @@ class CharacterEditView(BaseEditView):
         input_var1 = self.input_var1.get()
         option_list = self.key_list[input_var1]
         if option_list == "bool":
-            input_var2 = self.input_var2[1].get()
+            input_var2 = bool_to_str(self.input_var2[1].get())
         else:
             selected = self.char_listbox.curselection()
             input_var2 = [option_list[i] for i in selected]
