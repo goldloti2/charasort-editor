@@ -48,7 +48,7 @@ class FilterEditView(BaseEditView):
         super()._on_treeview_add()
         self.input_var2.set("")
 
-    def _get_form_variable(self):
+    def _get_form_variables(self):
         return (self.input_var1.get(), self.input_var2.get())
 
     def _on_form_ending(self):

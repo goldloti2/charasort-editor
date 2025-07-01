@@ -208,13 +208,13 @@ class BaseEditView(ABC):
             self.status_text.set("moved!")
 
     @abstractmethod
-    def _get_form_variable(self) -> tuple:
+    def _get_form_variables(self) -> tuple:
         raise NotImplementedError(
-            f"{self.__class__.__name__} not implement '_get_form_variable'"
+            f"{self.__class__.__name__} not implement '_get_form_variables'"
         )
 
     def _on_form_done(self):
-        values = self._get_form_variable()
+        values = self._get_form_variables()
         if not (values[0] and values[1]):
             messagebox.showwarning("warning", "fields cannot be empty")
             self.focus()

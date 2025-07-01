@@ -46,7 +46,7 @@ class CharacterEditView(BaseEditView):
         )
         entry1.grid(row=0, column=1, sticky=tk.NE)
         input_var1.trace_add("write", self._on_var1_change)
-        self.locked_entry = entry1
+        self.char_combobox = entry1
 
         entry2_grid_info = dict(row=0, column=3, sticky=tk.NSEW)
         entry2_frame1 = ttk.Frame(form_frame)
@@ -96,7 +96,7 @@ class CharacterEditView(BaseEditView):
 
     def _on_treeview_edit(self):
         super()._on_treeview_edit()
-        self.locked_entry.config(state=tk.DISABLED)
+        self.char_combobox.config(state=tk.DISABLED)
 
     def _on_var1_change(self, var, index, mode):
         input_var1 = self.input_var1.get()
@@ -109,7 +109,7 @@ class CharacterEditView(BaseEditView):
             self.char_form_frames[0].grid()
             self.char_form_frames[1].grid_remove()
 
-    def _get_form_variable(self):
+    def _get_form_variables(self):
         input_var1 = self.input_var1.get()
         option_list = self.key_list[input_var1]
         if option_list == "bool":
