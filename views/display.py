@@ -127,6 +127,9 @@ class RecordBody:
             return item, self.tree.item(item, "values")
         return None
 
+    def treeview_get_all(self):
+        return [self.tree.item(item, "values") for item in self.tree.get_children()]
+
     def add_treeview_callbacks(
         self, select_callback: Callable, deselect_callback: Callable
     ):
