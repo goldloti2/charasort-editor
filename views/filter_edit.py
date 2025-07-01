@@ -57,7 +57,7 @@ class FilterEditView(BaseEditView):
         self.input_var1 = tk.StringVar()
         self.input_var2 = (tk.StringVar(), tk.BooleanVar())
         self.char_form_frames = ()
-        self.toggle_form_widgets = ()
+        self.toggle_widgets = ()
         self.editing_item = ()
         self.toggle_buttons = ()
         self._build_option_buttons(frame, form_row - 2)
@@ -155,7 +155,7 @@ class FilterEditView(BaseEditView):
         button_form_cancel.pack(fill=tk.X, expand=1)
 
         self.char_form_frames = (entry2_frame1, entry2_frame2)
-        self.toggle_form_widgets = (
+        self.toggle_widgets = (
             entry1,
             listbox,
             checkbuttom,
@@ -191,7 +191,7 @@ class FilterEditView(BaseEditView):
         )
         button_form_cancel.grid(row=row + 1, column=2)
 
-        self.toggle_form_widgets = (
+        self.toggle_widgets = (
             entry1,
             entry2,
             button_form_done,
@@ -242,10 +242,10 @@ class FilterEditView(BaseEditView):
 
     def _form_toggle(self, enable: bool):
         if enable:
-            for widget in self.toggle_form_widgets:
+            for widget in self.toggle_widgets:
                 widget.config(state=tk.NORMAL)
         else:
-            for widget in self.toggle_form_widgets:
+            for widget in self.toggle_widgets:
                 widget.config(state=tk.DISABLED)
 
     def _form_variable_set(self, values: tuple[str, str]):
