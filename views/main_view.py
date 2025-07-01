@@ -15,6 +15,11 @@ from .widgets import VerticalScrolledFrame
 if TYPE_CHECKING:
     from control import Controller
 
+EDIT_VIEW_FACTORY = {
+    TabType.FILTERS: FilterEditView,
+    TabType.CHARACTERS: CharacterEditView,
+}
+
 
 logger = logging.getLogger(__name__)
 
@@ -175,25 +180,14 @@ class View:
             return
 
         view_data = self.controller.get_empty_record(tab)
-
-        if tab == TabType.FILTERS:
-            self.edit_window = FilterEditView(
-                self.root,
-                view_data,
-                partial(self._on_add_return, tab=tab),
-                True,
-            )
-        elif tab == TabType.CHARACTERS:
-            key_list = self.controller.get_filter_keys()
-            self.edit_window = CharacterEditView(
-                self.root,
-                view_data,
-                key_list,
-                partial(self._on_add_return, tab=tab),
-                True,
-            )
-        else:
-            return
+        key_list = self.controller.get_filter_keys()
+        self.edit_window = EDIT_VIEW_FACTORY[tab](
+            self.root,
+            view_data,
+            key_list,
+            partial(self._on_add_return, tab=tab),
+            True,
+        )
         self.edit_window.focus()
 
     def _on_button_edit(self, frame: RecordFrame, tab: TabType):
@@ -201,24 +195,14 @@ class View:
             self.edit_window.focus()
             return
 
-        if tab == TabType.FILTERS:
-            self.edit_window = FilterEditView(
-                self.root,
-                frame.view_data,
-                partial(self._on_edit_return, index=frame.index, tab=tab),
-                False,
-            )
-        elif tab == TabType.CHARACTERS:
-            key_list = self.controller.get_filter_keys()
-            self.edit_window = CharacterEditView(
-                self.root,
-                frame.view_data,
-                key_list,
-                partial(self._on_edit_return, index=frame.index, tab=tab),
-                False,
-            )
-        else:
-            return
+        key_list = self.controller.get_filter_keys()
+        self.edit_window = EDIT_VIEW_FACTORY[tab](
+            self.root,
+            frame.view_data,
+            key_list,
+            partial(self._on_edit_return, index=frame.index, tab=tab),
+            False,
+        )
         self.edit_window.focus()
 
     def _on_button_delete(self, frame: RecordFrame, tab: TabType):
