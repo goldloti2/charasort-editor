@@ -7,9 +7,8 @@ from typing import TYPE_CHECKING, Callable, Dict
 
 from utils import ButtonLabel, InputData, TabType, ViewData
 
+from .character_edit import CharacterEditView
 from .display import RecordFrame
-
-# from .character_edit import CharacterEditView
 from .filter_edit import FilterEditView
 from .widgets import VerticalScrolledFrame
 
@@ -184,6 +183,15 @@ class View:
                 partial(self._on_add_return, tab=tab),
                 True,
             )
+        elif tab == TabType.CHARACTERS:
+            key_list = self.controller.get_filter_keys()
+            self.edit_window = CharacterEditView(
+                self.root,
+                view_data,
+                key_list,
+                partial(self._on_add_return, tab=tab),
+                True,
+            )
         else:
             return
         self.edit_window.focus()
@@ -197,6 +205,15 @@ class View:
             self.edit_window = FilterEditView(
                 self.root,
                 frame.view_data,
+                partial(self._on_edit_return, index=frame.index, tab=tab),
+                False,
+            )
+        elif tab == TabType.CHARACTERS:
+            key_list = self.controller.get_filter_keys()
+            self.edit_window = CharacterEditView(
+                self.root,
+                frame.view_data,
+                key_list,
                 partial(self._on_edit_return, index=frame.index, tab=tab),
                 False,
             )
