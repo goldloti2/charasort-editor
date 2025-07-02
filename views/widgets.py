@@ -51,7 +51,21 @@ class VerticalScrolledFrame(ttk.Frame):
         canvas.bind("<Configure>", _configure_canvas)
 
         def _on_mousewheel(event):
+            widget_under_mouse = event.widget.winfo_containing(
+                event.x_root, event.y_root
+            )
+            if isinstance(widget_under_mouse, ttk.Treeview):
+                return
+
             delta = (int)(event.delta / 120)
             canvas.yview_scroll(-1 * delta, "units")
 
-        canvas.bind_all("<MouseWheel>", _on_mousewheel)
+        def _on_mouse_enter(event):
+            canvas.bind_all("<MouseWheel>", _on_mousewheel)
+
+        self.bind("<Enter>", _on_mouse_enter)
+
+        def _on_mouse_leave(event):
+            canvas.unbind_all("<MouseWheel>")
+
+        self.bind("<Leave>", _on_mouse_leave)
