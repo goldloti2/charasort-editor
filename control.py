@@ -88,18 +88,18 @@ class Controller:
     def get_filter_keys(self):
         return self.repo.get_filter_keys()
 
-    def move_filter(self, index: int, direction: int):
+    def move_record(self, index: int, tab: TabType, direction: int):
         try:
-            self.repo.move_filter(index, direction)
+            self.repo.move(index, tab, direction)
         except IndexError as e:
             logger.error(e)
             logger.debug("", exc_info=e)
             self.window.show_error(
-                f"Index #{index}{direction:+} in filter is out of range."
+                f"Index #{index}{direction:+} in {tab.value} is out of range."
             )
         else:
-            logger.info(f"swap success: filters, #{index}{direction:+}")
-            self._update_tab(TabType.FILTERS)
+            logger.info(f"swap success: {tab.value}, #{index}{direction:+}")
+            self._update_tab(tab)
 
     def _update_tab(self, tab: TabType):
         try:

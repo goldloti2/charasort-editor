@@ -72,12 +72,11 @@ class View:
 
         parent = self.tabs[tab]
         callbacks = self._create_button_callbacks(tab)
-        is_filter_tab = tab is TabType.FILTERS
         last_index = len(view_list) - 1
 
         for idx, view_data in enumerate(view_list):
-            is_first = (idx == 0) and is_filter_tab
-            is_last = (idx == last_index) and is_filter_tab
+            is_first = idx == 0
+            is_last = idx == last_index
             try:
                 self._build_display_frame(
                     parent, view_data, idx, callbacks, is_first, is_last
@@ -142,10 +141,9 @@ class View:
         callbacks = {
             ButtonLabel.EDIT: partial(self._on_button_edit, tab=tab),
             ButtonLabel.DELETE: partial(self._on_button_delete, tab=tab),
+            ButtonLabel.MOVEUP: partial(self._on_button_move, tab=tab, direction=-1),
+            ButtonLabel.MOVEDOWN: partial(self._on_button_move, tab=tab, direction=1),
         }
-        if tab is TabType.FILTERS:
-            callbacks[ButtonLabel.MOVEUP] = partial(self._on_button_move, direction=-1)
-            callbacks[ButtonLabel.MOVEDOWN] = partial(self._on_button_move, direction=1)
         return callbacks
 
     def _on_menu_open(self):
@@ -209,9 +207,9 @@ class View:
         if not self.edit_window:
             self.controller.delete_record(frame.index, tab)
 
-    def _on_button_move(self, frame: RecordFrame, direction: int):
+    def _on_button_move(self, frame: RecordFrame, tab: TabType, direction: int):
         if not self.edit_window:
-            self.controller.move_filter(frame.index, direction)
+            self.controller.move_record(frame.index, tab, direction)
 
     def _on_add_return(self, save: InputData, tab: TabType):
         if save is not None:

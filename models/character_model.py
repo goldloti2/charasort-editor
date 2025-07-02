@@ -5,11 +5,12 @@ from calmjs.parse import asttypes
 from utils import CharacterInput, InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
+from .sort_mixin import SortMixin
 
 logger = logging.getLogger(__name__)
 
 
-class CharacterModel(BaseModel):
+class CharacterModel(BaseModel, SortMixin):
     def __init__(self, tree: asttypes.Array):
         super().__init__(tree)
         logger.info(f"initialized, get {len(self.tree_list)} data")

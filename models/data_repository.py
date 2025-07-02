@@ -62,8 +62,8 @@ class DataRepository:
     def get_filter_keys(self):
         return self.models[TabType.FILTERS].get_filter_keys()
 
-    def move_filter(self, index: int, direction: int):
-        self.models[TabType.FILTERS].swap(index, direction)
+    def move(self, index: int, tab: TabType, direction: int):
+        self.models[tab].swap(index, direction)
 
     def read(self, tab: TabType):
         return self.models[tab].read()
