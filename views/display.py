@@ -146,7 +146,7 @@ class RecordBody:
         select = self.tree.selection()
         if select:
             item = self.tree.item(select, "values")
-            label.config(text=item[1])
+            label.config(text=f"{item[0]}:\n{item[1]}")
             label.place(
                 anchor=tk.NW,
                 x=event.x + self.tree.master.winfo_x(),
