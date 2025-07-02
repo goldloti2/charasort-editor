@@ -94,7 +94,7 @@ class CharacterEditView(BaseEditView):
         self.input_var2[0].set("")
         self.input_var2[1].set(False)
         existed_keys = set(item[0] for item in self.record_body.treeview_get_all())
-        avaliable_keys = list(set(self.keys).difference(existed_keys))
+        avaliable_keys = [key for key in self.keys if key not in existed_keys]
         self.char_combobox.config(values=avaliable_keys)
 
     def _on_treeview_edit(self):
