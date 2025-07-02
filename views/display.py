@@ -69,6 +69,10 @@ class RecordBody:
                     "<Escape>",
                     partial(self._on_treeview_deselect, label=detail_label),
                 )
+                tree.bind(
+                    "<Leave>",
+                    partial(self._on_treeview_mouse_leave, label=detail_label),
+                )
                 tree.pack(expand=1, fill=tk.BOTH)
                 self.tree = tree
             else:
@@ -157,6 +161,17 @@ class RecordBody:
         label.place_forget()
         for callback in self.treeview_deselect_callback:
             callback()
+
+    def _on_treeview_mouse_leave(self, event: tk.Event, label: ttk.Label):
+        if not (
+            label.winfo_rootx()
+            <= event.x_root
+            <= label.winfo_rootx() + label.winfo_width()
+            and label.winfo_rooty()
+            <= event.y_root
+            <= label.winfo_rooty() + label.winfo_height()
+        ):
+            label.place_forget()
 
 
 class RecordFrame(ttk.Frame):
