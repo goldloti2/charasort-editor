@@ -45,7 +45,7 @@ class DataRepository:
         return self.models[tab].build_view_data({})
 
     def save_file(self, path: str):
-        with open(path, "w") as file:
+        with open(path, "w", encoding="UTF-8") as file:
             print(self.tree, file=file)
 
     def add(self, input_data: InputData, tab: TabType):
