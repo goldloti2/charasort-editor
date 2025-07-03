@@ -18,15 +18,11 @@ class BaseEditView(ABC):
         root: tk.Tk,
         view_data: ViewData,
         return_callback: Callable,
-        is_new: bool = False,
+        title: str,
     ):
         self.return_callback = return_callback
 
         self.window = window = tk.Toplevel(root)
-        if is_new:
-            title = "adding new data..."
-        else:
-            title = f"'{view_data.name[2]}' editing..."
         window.title(title)
         window.geometry("600x500")
         window.resizable(False, True)

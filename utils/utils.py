@@ -11,6 +11,7 @@ class TabType(Enum):
 
 class ButtonLabel(Enum):
     EDIT = "edit"
+    COPY = "copy"
     DELETE = "delete"
     MOVEUP = "↑"
     MOVEDOWN = "↓"

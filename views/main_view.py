@@ -140,6 +140,7 @@ class View:
     def _create_button_callbacks(self, tab: TabType):
         callbacks = {
             ButtonLabel.EDIT: partial(self._on_button_edit, tab=tab),
+            ButtonLabel.COPY: partial(self._on_button_copy, tab=tab),
             ButtonLabel.DELETE: partial(self._on_button_delete, tab=tab),
             ButtonLabel.MOVEUP: partial(self._on_button_move, tab=tab, direction=-1),
             ButtonLabel.MOVEDOWN: partial(self._on_button_move, tab=tab, direction=1),
@@ -184,7 +185,22 @@ class View:
             view_data,
             key_list,
             partial(self._on_add_return, tab=tab),
-            True,
+            "adding new data...",
+        )
+        self.edit_window.focus()
+
+    def _on_button_copy(self, frame: RecordFrame, tab: TabType):
+        if self.edit_window:
+            self.edit_window.focus()
+            return
+
+        key_list = self.controller.get_filter_keys()
+        self.edit_window = EDIT_VIEW_FACTORY[tab](
+            self.root,
+            frame.view_data,
+            key_list,
+            partial(self._on_add_return, tab=tab),
+            f"copy from '{frame.view_data.name[2]}'...",
         )
         self.edit_window.focus()
 
@@ -199,7 +215,7 @@ class View:
             frame.view_data,
             key_list,
             partial(self._on_edit_return, index=frame.index, tab=tab),
-            False,
+            f"'{frame.view_data.name[2]}' editing...",
         )
         self.edit_window.focus()
 
