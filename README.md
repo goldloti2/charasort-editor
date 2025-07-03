@@ -20,7 +20,8 @@ After making edits, the modified data can either overwrite the original file or 
 
 ## Usage
 
-Start the editor with `main.py`.
+For Windows, run `run.bat`.
+If you are first time runnig the command file, it will automatically create virtual environment in `.venv`, install required packages, and start the editor.
 
 - Menu bar
   - `Open`: Open JavaScript file.
@@ -28,26 +29,23 @@ Start the editor with `main.py`.
   - `Save To`: Save to a new file. Default name is `YYYY-MM-DD.js`.
 - Tab
   - `Filters`: Show filters data.
+  - `Characters`: Show characters data.
     - `edit`: Edit this data.
     - `delete`: Delete this data.
     - `↑`: Move this data upward.
     - `↓`: Move this data downward.
     - `Add New Data`: Open an empty data.
-  - `Characters`: Show characters data.
-    - `edit`: Edit this data.
-    - `delete`: Delete this data.
-    - `Add New Data`: Open an empty data.
 - Edit window
-    - `save`: Save the change.
-    - `cancel`: Discard the change.
-    - `add option`: Add new option.
-    - `edit option`: Edit selected `option`.
-    - `delete option`: Delete selected `option`.
-    - `↑`: Move selected `option` upward.
-    - `↓`: Move selected `option` downward.
-    - `done`: Done editing `option`.
-    - `cancel`: Discard editing `option`.
-      - *note: `option` means `sub` in Filters or `filter options` in Characters.*
+  - `save`: Save the change.
+  - `cancel`: Discard the change.
+  - `add option`: Add new option.
+  - `edit option`: Edit selected `option`.
+  - `delete option`: Delete selected `option`.
+  - `↑`: Move selected `option` upward.
+  - `↓`: Move selected `option` downward.
+  - `done`: Done editing `option`.
+  - `cancel`: Discard editing `option`.
+    - *note: `option` means `sub` in Filters or `filter options` in Characters.*
 
 ## Data Format
 
