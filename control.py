@@ -1,7 +1,7 @@
 import logging
 
 from models import DataRepository
-from utils import InputData, TabType
+from utils.utils import InputData, TabType
 from views import View
 
 logger = logging.getLogger(__name__)

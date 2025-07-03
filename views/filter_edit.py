@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import Callable
 
-from utils import ViewData
+from utils.utils import ViewData
 
 from .edit_view import BaseEditView
 

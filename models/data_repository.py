@@ -3,7 +3,7 @@ import logging
 from calmjs.parse import asttypes, es5, io
 from calmjs.parse.walkers import Walker
 
-from utils import InputData, TabType
+from utils.utils import InputData, TabType
 
 from .character_model import CharacterModel
 from .filter_model import FilterModel

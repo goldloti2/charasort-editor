@@ -2,7 +2,7 @@ import logging
 
 from calmjs.parse import asttypes
 
-from utils import FilterInput, InputData, ViewData, WidgetType
+from utils.utils import FilterInput, InputData, ViewData, WidgetType
 
 from .base_model import BaseModel
 from .sort_mixin import SortMixin

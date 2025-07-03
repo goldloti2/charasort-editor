@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 from calmjs.parse import asttypes, es5
 from calmjs.parse.walkers import Walker
 
-from utils import InputData, TreeData, ViewData, obj_to_js
+from utils.utils import InputData, TreeData, ViewData, obj_to_js
 
 walker = Walker()
 

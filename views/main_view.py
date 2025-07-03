@@ -5,7 +5,7 @@ from functools import partial
 from tkinter import filedialog, messagebox, ttk
 from typing import TYPE_CHECKING, Callable, Dict
 
-from utils import ButtonLabel, InputData, TabType, ViewData
+from utils.utils import ButtonLabel, InputData, TabType, ViewData
 
 from .character_edit import CharacterEditView
 from .display import RecordFrame

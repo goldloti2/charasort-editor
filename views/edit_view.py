@@ -5,7 +5,7 @@ from functools import partial
 from tkinter import messagebox, ttk
 from typing import Callable
 
-from utils import InputData, ViewData
+from utils.utils import InputData, ViewData
 
 from .display import RecordBody
 

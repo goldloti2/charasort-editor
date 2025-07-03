@@ -3,7 +3,7 @@ from functools import partial
 from tkinter import ttk
 from typing import Callable, Dict
 
-from utils import ButtonLabel, InputData, ViewData, WidgetType, bool_to_str
+from utils.utils import ButtonLabel, InputData, ViewData, WidgetType, bool_to_str
 
 
 class RecordBody:
